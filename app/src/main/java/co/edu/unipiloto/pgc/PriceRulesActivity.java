@@ -6,12 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
@@ -26,7 +21,7 @@ public class PriceRulesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_price_rules);
         Intent intent = getIntent();
         rules=(ArrayList<Rule>) intent.getSerializableExtra("rules");
-        transactions=(ArrayList<Transaction>)  intent.getSerializableExtra("transactions");
+        transactions=(ArrayList<Transaction>) intent.getSerializableExtra("transactions");
         if(rules==null)
             rules = new ArrayList<>();
         TextView textoReglas = findViewById(R.id.textoReglas);

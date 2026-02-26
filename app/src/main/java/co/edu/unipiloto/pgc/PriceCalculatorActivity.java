@@ -2,17 +2,11 @@ package co.edu.unipiloto.pgc;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.SurfaceControl;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
@@ -28,6 +22,9 @@ public class PriceCalculatorActivity extends AppCompatActivity {
         Intent intent = getIntent();
         rules=(ArrayList<Rule>) intent.getSerializableExtra("rules");
         transactions=(ArrayList<Transaction>) intent.getSerializableExtra("transactions");
+        if (rules == null)
+            rules = new ArrayList<>();
+
         if(transactions==null)
             transactions = new ArrayList<>();
         TextView textoTransacciones = findViewById(R.id.textoTransacciones);
@@ -64,7 +61,7 @@ public class PriceCalculatorActivity extends AppCompatActivity {
             }
         }
         TextView textoTransacciones = findViewById(R.id.textoTransacciones);
-            transactions.add(new Transaction(tipo, totalReal, volumen));
+        transactions.add(new Transaction(tipo, totalReal, volumen));
         String textoCompleto="";
         for(int i=0; i<transactions.size(); i++) {
             textoCompleto += "Transacciones " + (i + 1) + ": Tipo: " + transactions.get(i).getTipo()
@@ -79,7 +76,9 @@ public class PriceCalculatorActivity extends AppCompatActivity {
         Spinner actividades = findViewById(R.id.actividades);
         Intent intent = new Intent(this, PriceRulesActivity.class);
         intent.putExtra("rules",rules);
-        intent.putExtra("transactions", transactions);
+        if (transactions!=null) {
+            intent.putExtra("transactions", transactions);
+        }
         startActivity(intent);
     }
 }

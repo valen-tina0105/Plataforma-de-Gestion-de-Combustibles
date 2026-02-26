@@ -10,7 +10,6 @@ public class Transaction implements Serializable {
     private int total;
     private int volumen;
     private Date fecha;
-    private SimpleDateFormat formatter;
 
     private String fechaFormateada;
 
@@ -19,7 +18,7 @@ public class Transaction implements Serializable {
         this.total = total;
         this.volumen = volumen;
         fecha = new Date();
-        formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         fechaFormateada = formatter.format(fecha);
     }
 
@@ -53,14 +52,6 @@ public class Transaction implements Serializable {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
-    }
-
-    public SimpleDateFormat getFormatter() {
-        return formatter;
-    }
-
-    public void setFormatter(SimpleDateFormat formatter) {
-        this.formatter = formatter;
     }
 
     public String getFechaFormateada() {
