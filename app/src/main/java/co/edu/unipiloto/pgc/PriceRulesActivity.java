@@ -63,10 +63,16 @@ public class PriceRulesActivity extends AppCompatActivity {
 
     public void onChangeActivity(View view){
         Spinner actividades = findViewById(R.id.actividades);
-        Intent intent = new Intent(this, PriceCalculatorActivity.class);
-        intent.putExtra("rules",rules);
-        intent.putExtra("transactions", transactions);
-        startActivity(intent);
+        switch (actividades.getSelectedItem().toString()){
+            case "Configurar Precio":
+                break;
+            case "Calcular Precio":
+                Intent intent = new Intent(this, PriceCalculatorActivity.class);
+                intent.putExtra("rules",rules);
+                intent.putExtra("transactions", transactions);
+                startActivity(intent);
+                break;
+        }
     }
 
 }

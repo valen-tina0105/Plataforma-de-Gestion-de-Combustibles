@@ -30,7 +30,8 @@ public class PriceCalculatorActivity extends AppCompatActivity {
         TextView textoTransacciones = findViewById(R.id.textoTransacciones);
         String textoCompleto="";
         for(int i=0; i<transactions.size(); i++) {
-            textoCompleto += "Transacciones " + (i + 1) + ": Tipo: " + transactions.get(i).getTipo()
+            textoCompleto += "Transacciones " + (i + 1) + ": Fecha: " +transactions.get(i).getFechaFormateada()
+                    + " Tipo: " + transactions.get(i).getTipo()
                     + " Volumen: " +transactions.get(i).getVolumen() + " Total: "
                     + transactions.get(i).getTotal() + "$\n";
         }
@@ -64,7 +65,8 @@ public class PriceCalculatorActivity extends AppCompatActivity {
         transactions.add(new Transaction(tipo, totalReal, volumen));
         String textoCompleto="";
         for(int i=0; i<transactions.size(); i++) {
-            textoCompleto += "Transacciones " + (i + 1) + ": Tipo: " + transactions.get(i).getTipo()
+            textoCompleto += "Transacciones " + (i + 1) + ": Fecha: " + transactions.get(i).getFechaFormateada()
+                    + " Tipo: " + transactions.get(i).getTipo()
                     + " Volumen: " +transactions.get(i).getVolumen() + " Total: "
                     + transactions.get(i).getTotal() + "$\n";
         }
@@ -74,11 +76,17 @@ public class PriceCalculatorActivity extends AppCompatActivity {
 
     public void onChangeActivity(View view){
         Spinner actividades = findViewById(R.id.actividades);
-        Intent intent = new Intent(this, PriceRulesActivity.class);
-        intent.putExtra("rules",rules);
-        if (transactions!=null) {
-            intent.putExtra("transactions", transactions);
+        switch (actividades.getSelectedItem().toString()){
+            case "Configurar Precio":
+                Intent intent = new Intent(this, PriceRulesActivity.class);
+                intent.putExtra("rules",rules);
+                if (transactions!=null) {
+                    intent.putExtra("transactions", transactions);
+                }
+                startActivity(intent);
+                break;
+            case "Calcular Precio":
+                break;
         }
-        startActivity(intent);
     }
 }
