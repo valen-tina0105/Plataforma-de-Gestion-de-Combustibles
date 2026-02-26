@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Plataforma de Gestion de Combustibles</string>
+    <string name="tituloConfigurar">Configurar precio por tipo de vehiculo</string>
+    <string name="vehiculo">Seleccione el tipo de vehiculo</string>
+    <string name="editarPrecio">Digite el precio a asignar</string>
+    <string name="precio">Precio</string>
+    <string name="btnGuardar">Guardar</string>
+    <string-array name="tipos">
+        <item>Servicio particular</item>
+        <item>Oficiales</item>
+        <item>Diplomáticos</item>
+        <item>Camperos y Cuatrimotos</item>
+    </string-array>
+    <string name="reglas">Reglas:</string>
+    <string name="actividad">Seleccione la Actividad</string>
+    <string-array name="actividades">
+        <item>Configurar Precio</item>
+        <item>Calcular Precio</item>
+    </string-array>
+    <string name="btnCambiar">Cambiar de Actividad</string>
+    <string name="tituloCalcular">Calcular Automáticamente Precio del Combustible Según Normativa</string>
+    <string name="editarCombustible">Digite el volumen del combustible</string>
+    <string name="combustible">Volumen</string>
+    <string name="btnCalcular">Calcular</string>
+    <string name="total">Total: 0$</string>
+</resources>
