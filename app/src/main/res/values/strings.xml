@@ -23,4 +23,5 @@
     <string name="combustible">Volumen</string>
     <string name="btnCalcular">Calcular</string>
     <string name="total">Total: 0$</string>
+    <string name="transacciones">Transacciones:</string>
 </resources>

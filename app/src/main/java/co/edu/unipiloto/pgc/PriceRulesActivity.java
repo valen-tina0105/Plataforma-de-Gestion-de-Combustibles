@@ -18,13 +18,15 @@ import java.util.ArrayList;
 public class PriceRulesActivity extends AppCompatActivity {
 
     private ArrayList<Rule> rules;
+    private ArrayList<Transaction> transactions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_rules);
         Intent intent = getIntent();
-        rules=(ArrayList<Rule>) intent.getSerializableExtra("array");
+        rules=(ArrayList<Rule>) intent.getSerializableExtra("rules");
+        transactions=(ArrayList<Transaction>)  intent.getSerializableExtra("transactions");
         if(rules==null)
             rules = new ArrayList<>();
         TextView textoReglas = findViewById(R.id.textoReglas);
@@ -40,6 +42,9 @@ public class PriceRulesActivity extends AppCompatActivity {
         Spinner tipos = findViewById(R.id.tipos);
         String tipo = tipos.getSelectedItem().toString();
         EditText precio = findViewById(R.id.precio);
+        if(precio.getText().toString().equals("")){
+            return;
+        }
         TextView textoReglas = findViewById(R.id.textoReglas);
         int textoPrecio = Integer.parseInt(precio.getText().toString());
         boolean tipoExiste = false;
@@ -64,7 +69,8 @@ public class PriceRulesActivity extends AppCompatActivity {
     public void onChangeActivity(View view){
         Spinner actividades = findViewById(R.id.actividades);
         Intent intent = new Intent(this, PriceCalculatorActivity.class);
-        intent.putExtra("array",rules);
+        intent.putExtra("rules",rules);
+        intent.putExtra("transactions", transactions);
         startActivity(intent);
     }
 
