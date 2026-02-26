@@ -23,7 +23,17 @@ public class PriceRulesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_rules);
-        rules = new ArrayList<>();
+        Intent intent = getIntent();
+        rules=(ArrayList<Rule>) intent.getSerializableExtra("array");
+        if(rules==null)
+            rules = new ArrayList<>();
+        TextView textoReglas = findViewById(R.id.textoReglas);
+        String textoCompleto="";
+        for(int i=0; i<rules.size(); i++) {
+            textoCompleto += "Regla " + (i + 1) + ": Tipo: " + rules.get(i).getTipo()
+                    + " Precio: " + rules.get(i).getPrecio() + "$\n";
+        }
+        textoReglas.setText(textoCompleto);
     }
 
     public void onSendRule(View view) {

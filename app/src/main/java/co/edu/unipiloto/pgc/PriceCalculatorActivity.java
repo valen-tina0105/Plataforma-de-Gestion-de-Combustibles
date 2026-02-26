@@ -38,9 +38,10 @@ public class PriceCalculatorActivity extends AppCompatActivity {
             total.setText("No hay ninguna regla establecida");
         }
         for (int i = 0; i < rules.size(); i++) {
-            if (rules.get(i).getTipo().equals(tipo)) {
+            if (rules.get(i).getTipo().equalsIgnoreCase(tipo)) {
                 totalReal = volumen*rules.get(i).getPrecio();
                 total.setText("Total: "+totalReal+"$");
+                break;
             } else {
                 total.setText("Regla no establecida");
             }
@@ -50,6 +51,7 @@ public class PriceCalculatorActivity extends AppCompatActivity {
     public void onChangeActivity(View view){
         Spinner actividades = findViewById(R.id.actividades);
         Intent intent = new Intent(this, PriceRulesActivity.class);
+        intent.putExtra("array",rules);
         startActivity(intent);
     }
 }
