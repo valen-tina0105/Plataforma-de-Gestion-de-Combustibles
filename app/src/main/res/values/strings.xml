@@ -16,6 +16,9 @@
     <string-array name="actividades">
         <item>Configurar Precio</item>
         <item>Calcular Precio</item>
+        <item>Crear Usuario</item>
+        <item>Iniciar Sesión</item>
+        <item>Registrar Entrada</item>
     </string-array>
     <string name="btnCambiar">Cambiar de Actividad</string>
     <string name="tituloCalcular">Calcular Automáticamente Precio del Combustible Según Normativa</string>
@@ -24,4 +27,30 @@
     <string name="btnCalcular">Calcular</string>
     <string name="total">Total: 0$</string>
     <string name="transacciones">Transacciones:</string>
+    <string name="tituloCreate">Crear Usuarios</string>
+    <string name="usuario">Nombre de Usuario: </string>
+    <string name="textoUsuario">Usuario</string>
+    <string name="rol">Seleccione el rol: </string>
+    <string-array name="roles">
+        <item>Estación de servicio</item>
+        <item>Distribuidor mayorista</item>
+        <item>Autoridad reguladora</item>
+    </string-array>
+    <string name="contraseña">Contraseña: </string>
+    <string name="textoContrasenia">Contraseña</string>
+    <string name="btnCrear">Crear Usuario</string>
+    <string name="bienvenido">Bienvenido</string>
+    <string name="btnLogIn">Iniciar Sesión</string>
+    <string name="tituloFuelOutlet">Registar Entradas de Combustible</string>
+    <string name="tipo">Tipo de combustible: </string>
+    <string-array name="tipoCombustible">
+        <item>Gasolina Corriente</item>
+        <item>Gasolina Extra</item>
+        <item>ACPM(Diésel)</item>
+        <item>Gas Natural Vehicular</item>
+    </string-array>
+    <string name="cantidad">Cantidad(Galones): </string>
+    <string name="textoCantidad">Cantidad</string>
+    <string name="btnRegistrar">Registrar</string>
+    <string name="registros">Registros: </string>
 </resources>

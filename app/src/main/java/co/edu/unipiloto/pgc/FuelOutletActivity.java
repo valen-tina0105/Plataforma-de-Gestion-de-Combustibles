@@ -6,61 +6,59 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
-public class PriceRulesActivity extends AppCompatActivity {
+public class FuelOutletActivity extends AppCompatActivity {
 
     private ArrayList<Rule> rules;
     private ArrayList<Transaction> transactions;
+    private ArrayList<User> users;
     private ArrayList<Register> registers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_price_rules);
+        setContentView(R.layout.activity_fuel_outlet);
         Intent intent = getIntent();
         rules=(ArrayList<Rule>) intent.getSerializableExtra("rules");
         transactions=(ArrayList<Transaction>) intent.getSerializableExtra("transactions");
         registers=(ArrayList<Register>) intent.getSerializableExtra("registers");
-        if(rules==null)
-            rules = new ArrayList<>();
-        TextView textoReglas = findViewById(R.id.textoReglas);
+        if (registers == null)
+            registers = new ArrayList<>();
+        TextView textoRegistros = findViewById(R.id.textoRegistros);
         String textoCompleto="";
-        for(int i=0; i<rules.size(); i++) {
-            textoCompleto += "Regla " + (i + 1) + ": Tipo: " + rules.get(i).getTipo()
-                    + " Precio: " + rules.get(i).getPrecio() + "$\n";
+        for(int i=0; i<registers.size(); i++) {
+            textoCompleto += "Entrada " + (i + 1) + ": Fecha: " + registers.get(i).getFechaFormateada()
+                    + " Tipo: " + registers.get(i).getTipo()
+                    + " Cantidad: " +registers.get(i).getCantidad() + "$\n";
         }
-        textoReglas.setText(textoCompleto);
+        textoRegistros.setText(textoCompleto);
     }
 
-    public void onSendRule(View view) {
-        Spinner tipos = findViewById(R.id.tipos);
-        String tipo = tipos.getSelectedItem().toString();
-        EditText precio = findViewById(R.id.precio);
-        if(precio.getText().toString().isEmpty()){
+    public void onEntryRegister(View view){
+        EditText textoCantidad = findViewById(R.id.textoCantidad);
+        Spinner tipoCombustible = findViewById(R.id.tipoCombustible);
+        if (textoCantidad.getText().toString().isEmpty()){
             return;
         }
-        TextView textoReglas = findViewById(R.id.textoReglas);
-        int textoPrecio = Integer.parseInt(precio.getText().toString());
-        boolean tipoExiste = false;
-        for (int i = 0; i < rules.size(); i++) {
-            if (rules.get(i).getTipo().equals(tipo)) {
-                tipoExiste = true;
-                rules.get(i).setPrecio(textoPrecio);
-            }
-        }
-        if (!tipoExiste) {
-            rules.add(new Rule(tipo, textoPrecio));
-        }
+
+        TextView textoRegistros = findViewById(R.id.textoRegistros);
+        registers.add(new Register(tipoCombustible.getSelectedItem().toString(), Integer.parseInt(textoCantidad.getText().toString())));
         String textoCompleto="";
-        for(int i=0; i<rules.size(); i++) {
-            textoCompleto += "Regla " + (i + 1) + ": Tipo: " + rules.get(i).getTipo()
-                    + " Precio: " + rules.get(i).getPrecio() + "$\n";
+        for(int i=0; i<registers.size(); i++) {
+            textoCompleto += "Entrada " + (i + 1) + ": Fecha: " + registers.get(i).getFechaFormateada()
+                    + " Tipo: " + registers.get(i).getTipo()
+                    + " Cantidad: " +registers.get(i).getCantidad() + "gal\n";
         }
-        textoReglas.setText(textoCompleto);
-        precio.setText("");
+        textoRegistros.setText(textoCompleto);
+        textoCantidad.setText("");
     }
 
     public void onChangeActivity(View view){
@@ -68,6 +66,11 @@ public class PriceRulesActivity extends AppCompatActivity {
         Intent intent;
         switch (actividades.getSelectedItem().toString()){
             case "Configurar Precio":
+                intent = new Intent(this, PriceRulesActivity.class);
+                intent.putExtra("rules",rules);
+                intent.putExtra("transactions", transactions);
+                intent.putExtra("registers", registers);
+                startActivity(intent);
                 break;
             case "Calcular Precio":
                 intent = new Intent(this, PriceCalculatorActivity.class);
@@ -90,14 +93,8 @@ public class PriceRulesActivity extends AppCompatActivity {
                 intent.putExtra("registers", registers);
                 startActivity(intent);
                 break;
-            case "Registrar Entrada":
-                intent = new Intent(this, FuelOutletActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
+            case "Registar Entrada":
                 break;
         }
     }
-
 }
