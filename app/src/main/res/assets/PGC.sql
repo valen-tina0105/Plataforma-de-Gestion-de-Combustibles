@@ -42,8 +42,11 @@ CREATE TABLE IF NOT EXISTS Registros (
 );
 
 INSERT OR IGNORE INTO roles (id, nombre) VALUES
-(1, 'distribuidor_mayorista'),
-(2, 'estacion_de_servicio'),
-(3, 'autoridad_reguladora'),
-(4, 'admin_usuarios'),
-(5, 'admin_reglas');
+(1, 'Estacion de servicio'),
+(2, 'Distribuidor mayorista'),
+(3, 'Autoridad reguladora'),
+(4, 'Administrador de usuarios'),
+(5, 'Administrador de reglas');
+
+INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
+('admin_users', 'admin123', 4);

@@ -77,8 +77,8 @@ public class PriceCalculatorActivity extends AppCompatActivity {
         String textoCompleto="";
         for(int i=0; i<transactions.size(); i++) {
             textoCompleto += "Transaccion " + (i + 1) + ": Fecha: " + transactions.get(i).getFechaFormateada()
-                    + " Tipo: " + transactions.get(i).getTipo()
-                    + " Volumen: " +transactions.get(i).getVolumen() + " Total: "
+                    + " Tipo: " + transactions.get(i).getTipoVehiculo()
+                    + " Volumen: " +transactions.get(i).getCantidad() + " Total: "
                     + transactions.get(i).getTotal() + "$\n";
         }
         textoTransacciones.setText(textoCompleto);
@@ -89,34 +89,10 @@ public class PriceCalculatorActivity extends AppCompatActivity {
         Spinner actividades = findViewById(R.id.actividades);
         Intent intent;
         switch (actividades.getSelectedItem().toString()){
-            case "Configurar Precio":
-                intent = new Intent(this, PriceRulesActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
             case "Calcular Precio":
-                break;
-            case "Crear Usuario":
-                intent = new Intent(this, CreateUsersActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-            case "Iniciar Sesión":
-                intent = new Intent(this, LogInActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
                 break;
             case "Registrar Entrada":
                 intent = new Intent(this, FuelOutletActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
                 startActivity(intent);
                 break;
         }

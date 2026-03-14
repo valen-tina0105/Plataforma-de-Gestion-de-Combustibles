@@ -71,41 +71,4 @@ public class PriceRulesActivity extends AppCompatActivity {
         precio.setText("");
     }
 
-    public void onChangeActivity(View view){
-        Spinner actividades = findViewById(R.id.actividades);
-        Intent intent;
-        switch (actividades.getSelectedItem().toString()){
-            case "Configurar Precio":
-                break;
-            case "Calcular Precio":
-                intent = new Intent(this, PriceCalculatorActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-            case "Crear Usuario":
-                intent = new Intent(this, CreateUsersActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-            case "Iniciar Sesión":
-                intent = new Intent(this, LogInActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-            case "Registrar Entrada":
-                intent = new Intent(this, FuelOutletActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-        }
-    }
-
 }

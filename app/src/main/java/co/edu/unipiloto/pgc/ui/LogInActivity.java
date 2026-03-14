@@ -22,53 +22,43 @@ import co.edu.unipiloto.pgc.model.User;
 public class LogInActivity extends AppCompatActivity {
     private ArrayList<User> users;
     private ArrayList<Rol> roles;
+    private UserDAO userDAO;
+    private RolDAO rolDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
         Intent intent = getIntent();
-        UserDAO userDAO = new UserDAO(this);
+        userDAO = new UserDAO(this);
         users = userDAO.getAllUsers();
-        RolDAO rolDAO = new RolDAO(this);
+        rolDAO = new RolDAO(this);
         roles = rolDAO.getAllRoles();
-
     }
 
-    public void onChangeActivity(View view){
-        Spinner actividades = findViewById(R.id.actividades);
+    public void onLogIn(View view){
+        EditText textoUsuario = findViewById(R.id.textoUsuario),
+                textoContrasenia = findViewById(R.id.textoContrasenia);
+        User user = userDAO.logIn(textoUsuario.getText().toString(),textoContrasenia.getText().toString());
         Intent intent;
-        switch (actividades.getSelectedItem().toString()){
-            case "Configurar Precio":
-                intent = new Intent(this, PriceRulesActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-            case "Calcular Precio":
-                intent = new Intent(this, PriceCalculatorActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-            case "Crear Usuario":
-                intent = new Intent(this, CreateUsersActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-            case "Iniciar Sesión":
-                break;
-            case "Registrar Entrada":
+        switch (user.getRol().getNombre()) {
+            case "Estacion de servicio":
                 intent = new Intent(this, FuelOutletActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
+                startActivity(intent);
+                break;
+            case "Distribuidor mayorista":
+                break;
+            case "Autoridad reguladora":
+                break;
+            case "Administrador de usuarios":
+                intent = new Intent(this, CreateUsersActivity.class);
+                startActivity(intent);
+                break;
+            case "Administrador de reglas":
+                intent = new Intent(this, PriceRulesActivity.class);
                 startActivity(intent);
                 break;
         }
     }
+
 }

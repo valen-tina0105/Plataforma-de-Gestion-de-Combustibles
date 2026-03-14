@@ -24,20 +24,21 @@ public class CreateUsersActivity extends AppCompatActivity {
 
     private ArrayList<User> users;
     private ArrayList<Rol> roles;
-    private UserDAO userDAO = new UserDAO(this);
-    private RolDAO rolDAO = new RolDAO(this);
+    private UserDAO userDAO;
+    private RolDAO rolDAO;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_users);
-        Intent intent = getIntent();
+        userDAO = new UserDAO(this);
+        users = userDAO.getAllUsers();
+        rolDAO = new RolDAO(this);
+        roles = rolDAO.getAllRoles();
     }
 
     public void onCreateUser(View view) {
-        users = userDAO.getAllUsers();
-        roles = rolDAO.getAllRoles();
         EditText textoUsuario = findViewById(R.id.textoUsuario),
                 textoContrasenia = findViewById(R.id.textoContrasenia);
         Spinner roles = findViewById(R.id.roles);
@@ -62,40 +63,4 @@ public class CreateUsersActivity extends AppCompatActivity {
         textoContrasenia.setText("");
     }
 
-    public void onChangeActivity(View view){
-        Spinner actividades = findViewById(R.id.actividades);
-        Intent intent;
-        switch (actividades.getSelectedItem().toString()){
-            case "Configurar Precio":
-                intent = new Intent(this, PriceRulesActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-            case "Calcular Precio":
-                intent = new Intent(this, PriceCalculatorActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-            case "Crear Usuario":
-                break;
-            case "Iniciar Sesión":
-                intent = new Intent(this, LogInActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-            case "Registrar Entrada":
-                intent = new Intent(this, FuelOutletActivity.class);
-                intent.putExtra("rules",rules);
-                intent.putExtra("transactions", transactions);
-                intent.putExtra("registers", registers);
-                startActivity(intent);
-                break;
-        }
-    }
 }

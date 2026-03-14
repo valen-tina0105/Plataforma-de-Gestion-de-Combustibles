@@ -22,7 +22,7 @@ public class UserDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT u.id, u.username, u.password, r.id, r.nombre, u.id " +
+                "SELECT u.id, u.username, u.password, r.id, r.nombre " +
                         "FROM Users u " +
                         "INNER JOIN Rol r ON u.id_rol = r.id",
                 null
@@ -47,6 +47,35 @@ public class UserDAO {
         return users;
     }
 
+    public User logIn(String username, String password) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            Cursor cursor = db.rawQuery(
+                    "SELECT u.id, u.username, u.password, r.id, r.nombre " +
+                    "FROM Users u " +
+                    "INNER JOIN Rol r ON u.rol_id = r.id " +
+                    "WHERE u.username = ? AND u.password = ? " +
+                    "LIMIT 1",
+                    new String[]{username, password});
+
+            if (cursor.moveToFirst()) {
+
+                User user = new User();
+                user.setId(cursor.getInt(0));
+                user.setUsername(cursor.getString(1));
+                user.setPassword(cursor.getString(2));
+
+                Rol rol = new Rol();
+                rol.setId(cursor.getInt(3));
+                rol.setNombre(cursor.getString(4));
+
+                user.setRol(rol);
+
+                return user;
+            }
+            return null;
+    }
+
     public void insertarUsuario(User user){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -58,4 +87,5 @@ public class UserDAO {
         cursor.close();
 
     }
+
 }
