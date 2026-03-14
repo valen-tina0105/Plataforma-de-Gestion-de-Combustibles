@@ -47,6 +47,10 @@ public class CreateUsersActivity extends AppCompatActivity {
             Toast.makeText(this,"Complete todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (userDAO.verificarUsername(textoUsuario.getText().toString())){
+            Toast.makeText(this,"Username ya existente", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         User user = new User();
         user.setUsername(textoUsuario.getText().toString());

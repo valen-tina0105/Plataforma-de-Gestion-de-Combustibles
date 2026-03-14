@@ -15,19 +15,21 @@ import co.edu.unipiloto.pgc.dao.RuleDAO;
 import co.edu.unipiloto.pgc.model.Register;
 import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Transaction;
+import co.edu.unipiloto.pgc.model.User;
 
 public class PriceRulesActivity extends AppCompatActivity {
 
     private ArrayList<Rule> rules;
-    private ArrayList<Transaction> transactions;
-    private ArrayList<Register> registers;
+    private User user;
+    private RuleDAO ruleDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_rules);
         Intent intent = getIntent();
-        RuleDAO ruleDAO = new RuleDAO(this);
+        user = (User) intent.getSerializableExtra("user");
+        ruleDAO = new RuleDAO(this);
         rules = ruleDAO.getAllRules();
         TextView textoReglas = findViewById(R.id.textoReglas);
         String textoCompleto="";
@@ -59,7 +61,9 @@ public class PriceRulesActivity extends AppCompatActivity {
             Rule rule = new Rule();
             rule.setTipoVehiculo(tipo);
             rule.setPrecio(textoPrecio);
+            rule.setAdmin(user);
             rules.add(rule);
+            ruleDAO.insertarRegla(rule);
         }
         String textoCompleto="";
         for(int i=0; i<rules.size(); i++) {

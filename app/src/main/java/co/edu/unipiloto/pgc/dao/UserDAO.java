@@ -47,33 +47,49 @@ public class UserDAO {
         return users;
     }
 
-    public User logIn(String username, String password) {
+    public boolean verificarUsername(String username) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
             Cursor cursor = db.rawQuery(
-                    "SELECT u.id, u.username, u.password, r.id, r.nombre " +
-                    "FROM Users u " +
-                    "INNER JOIN Rol r ON u.rol_id = r.id " +
-                    "WHERE u.username = ? AND u.password = ? " +
+                    "SELECT username " +
+                    "FROM Users " +
+                    "WHERE username = ? " +
                     "LIMIT 1",
-                    new String[]{username, password});
+                    new String[]{username});
 
             if (cursor.moveToFirst()) {
-
-                User user = new User();
-                user.setId(cursor.getInt(0));
-                user.setUsername(cursor.getString(1));
-                user.setPassword(cursor.getString(2));
-
-                Rol rol = new Rol();
-                rol.setId(cursor.getInt(3));
-                rol.setNombre(cursor.getString(4));
-
-                user.setRol(rol);
-
-                return user;
+                return true;
             }
-            return null;
+            return false;
+    }
+
+    public User logIn(String username, String password) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT u.id, u.username, u.password, r.id, r.nombre " +
+                        "FROM Users u " +
+                        "INNER JOIN Rol r ON u.rol_id = r.id " +
+                        "WHERE u.username = ? AND u.password = ? " +
+                        "LIMIT 1",
+                new String[]{username, password});
+
+        if (cursor.moveToFirst()) {
+
+            User user = new User();
+            user.setId(cursor.getInt(0));
+            user.setUsername(cursor.getString(1));
+            user.setPassword(cursor.getString(2));
+
+            Rol rol = new Rol();
+            rol.setId(cursor.getInt(3));
+            rol.setNombre(cursor.getString(4));
+
+            user.setRol(rol);
+
+            return user;
+        }
+        return null;
     }
 
     public void insertarUsuario(User user){
