@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.R;
+import co.edu.unipiloto.pgc.dao.RegisterDAO;
+import co.edu.unipiloto.pgc.dao.RuleDAO;
 import co.edu.unipiloto.pgc.model.Register;
 import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Transaction;
@@ -19,27 +21,26 @@ import co.edu.unipiloto.pgc.model.User;
 
 public class FuelOutletActivity extends AppCompatActivity {
 
-    private ArrayList<Rule> rules;
-    private ArrayList<Transaction> transactions;
-    private ArrayList<User> users;
     private ArrayList<Register> registers;
+    private RegisterDAO registerDAO;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fuel_outlet);
         Intent intent = getIntent();
-        rules=(ArrayList<Rule>) intent.getSerializableExtra("rules");
-        transactions=(ArrayList<Transaction>) intent.getSerializableExtra("transactions");
-        registers=(ArrayList<Register>) intent.getSerializableExtra("registers");
-        if (registers == null)
-            registers = new ArrayList<>();
+        user = (User) intent.getSerializableExtra("user");
+        registerDAO = new RegisterDAO(this);
+        registers = registerDAO.getAllRegisters();
         TextView textoRegistros = findViewById(R.id.textoRegistros);
         String textoCompleto="";
         for(int i=0; i<registers.size(); i++) {
             textoCompleto += "Entrada " + (i + 1) + ": Fecha: " + registers.get(i).getFechaFormateada()
                     + " Tipo: " + registers.get(i).getTipoCombustible()
-                    + " Cantidad: " +registers.get(i).getCantidad() + "$\n";
+                    + " Cantidad: " +registers.get(i).getCantidad()
+                    + " Registrado por: " + registers.get(i).getEstacion().getUsername()
+                + "$\n";
         }
         textoRegistros.setText(textoCompleto);
     }
@@ -52,12 +53,19 @@ public class FuelOutletActivity extends AppCompatActivity {
         }
 
         TextView textoRegistros = findViewById(R.id.textoRegistros);
-        registers.add(new Register(tipoCombustible.getSelectedItem().toString(), Integer.parseInt(textoCantidad.getText().toString())));
+        Register register = new Register();
+        register.setTipoCombustible(tipoCombustible.getSelectedItem().toString());
+        register.setCantidad(Integer.parseInt(textoCantidad.getText().toString()));
+        register.setEstacion(user);
+        registers.add(register);
+        registerDAO.insertarRegistro(register);
         String textoCompleto="";
-        for(int i=0; i<registers.size(); i++) {
+        for(int i=0; i < registers.size(); i++) {
             textoCompleto += "Entrada " + (i + 1) + ": Fecha: " + registers.get(i).getFechaFormateada()
                     + " Tipo: " + registers.get(i).getTipoCombustible()
-                    + " Cantidad: " +registers.get(i).getCantidad() + "gal\n";
+                    + " Cantidad: " +registers.get(i).getCantidad()
+                    + " Registrado por: " + registers.get(i).getEstacion().getUsername()
+                    + "$\n";
         }
         textoRegistros.setText(textoCompleto);
         textoCantidad.setText("");
@@ -69,6 +77,7 @@ public class FuelOutletActivity extends AppCompatActivity {
         switch (actividades.getSelectedItem().toString()){
             case "Calcular Precio":
                 intent = new Intent(this, PriceCalculatorActivity.class);
+                intent.putExtra("user", user);
                 startActivity(intent);
                 break;
             case "Registar Entrada":

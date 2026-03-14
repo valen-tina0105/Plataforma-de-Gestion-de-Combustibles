@@ -44,6 +44,7 @@ public class LogInActivity extends AppCompatActivity {
         switch (user.getRol().getNombre()) {
             case "Estacion de servicio":
                 intent = new Intent(this, FuelOutletActivity.class);
+                intent.putExtra("user", user);
                 startActivity(intent);
                 break;
             case "Distribuidor mayorista":
@@ -52,10 +53,12 @@ public class LogInActivity extends AppCompatActivity {
                 break;
             case "Administrador de usuarios":
                 intent = new Intent(this, CreateUsersActivity.class);
+                intent.putExtra("user", user);
                 startActivity(intent);
                 break;
             case "Administrador de reglas":
                 intent = new Intent(this, PriceRulesActivity.class);
+                intent.putExtra("user", user);
                 startActivity(intent);
                 break;
         }
