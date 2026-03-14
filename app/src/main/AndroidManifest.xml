@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlataformaDeGestionDeCombustibles">
         <activity
-            android:name=".FuelOutletActivity"
+            android:name=".ui.FuelOutletActivity"
             android:exported="false" />
         <activity
-            android:name=".LogInActivity"
+            android:name=".ui.LogInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,13 +24,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateUsersActivity"
+            android:name=".ui.CreateUsersActivity"
             android:exported="false" />
         <activity
-            android:name=".PriceCalculatorActivity"
+            android:name=".ui.PriceCalculatorActivity"
             android:exported="false" />
         <activity
-            android:name=".PriceRulesActivity"
+            android:name=".ui.PriceRulesActivity"
             android:exported="false"/>
     </application>
 

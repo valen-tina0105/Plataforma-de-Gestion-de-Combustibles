@@ -1,33 +1,48 @@
-package co.edu.unipiloto.pgc;
+package co.edu.unipiloto.pgc.model;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class Transaction implements Serializable {
-    private String tipo;
+public class Transaction{
+    private int id;
+    private User estacion;
+    private String tipoVehiculo;
     private int total;
-    private int volumen;
+    private int cantidad;
     private Date fecha;
 
     private String fechaFormateada;
 
-    public Transaction(String tipo, int total, int volumen){
-        this.tipo = tipo;
-        this.total = total;
-        this.volumen = volumen;
+    public Transaction() {
         fecha = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         fechaFormateada = formatter.format(fecha);
     }
 
-    public String getTipo() {
-        return tipo;
+    public int getId() {
+        return id;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User getEstacion() {
+        return estacion;
+    }
+
+    public void setEstacion(User estacion) {
+        this.estacion = estacion;
+    }
+
+    public String getTipoVehiculo() {
+        return tipoVehiculo;
+    }
+
+    public void setTipoVehiculo(String tipoVehiculo) {
+        this.tipoVehiculo = tipoVehiculo;
     }
 
     public int getTotal() {
@@ -38,12 +53,12 @@ public class Transaction implements Serializable {
         this.total = total;
     }
 
-    public int getVolumen() {
-        return volumen;
+    public int getCantidad() {
+        return cantidad;
     }
 
-    public void setVolumen(int volumen) {
-        this.volumen = volumen;
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
     }
 
     public Date getFecha() {
@@ -51,7 +66,7 @@ public class Transaction implements Serializable {
     }
 
     public void setFecha(Date fecha) {
-        this.fecha = fecha;
+        this.fecha=fecha;
     }
 
     public String getFechaFormateada() {

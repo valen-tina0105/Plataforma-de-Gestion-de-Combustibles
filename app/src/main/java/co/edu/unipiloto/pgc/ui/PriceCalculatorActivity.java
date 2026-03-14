@@ -1,4 +1,4 @@
-package co.edu.unipiloto.pgc;
+package co.edu.unipiloto.pgc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+
+import co.edu.unipiloto.pgc.R;
+import co.edu.unipiloto.pgc.model.Register;
+import co.edu.unipiloto.pgc.model.Rule;
+import co.edu.unipiloto.pgc.model.Transaction;
 
 public class PriceCalculatorActivity extends AppCompatActivity {
 

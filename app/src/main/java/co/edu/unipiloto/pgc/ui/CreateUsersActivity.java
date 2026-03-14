@@ -1,54 +1,43 @@
-package co.edu.unipiloto.pgc;
+package co.edu.unipiloto.pgc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
+import co.edu.unipiloto.pgc.R;
+import co.edu.unipiloto.pgc.dao.RolDAO;
+import co.edu.unipiloto.pgc.dao.UserDAO;
+import co.edu.unipiloto.pgc.model.Register;
+import co.edu.unipiloto.pgc.model.Rol;
+import co.edu.unipiloto.pgc.model.Rule;
+import co.edu.unipiloto.pgc.model.Transaction;
+import co.edu.unipiloto.pgc.model.User;
+
 public class CreateUsersActivity extends AppCompatActivity {
 
-    private ArrayList<Rule> rules;
-    private ArrayList<Transaction> transactions;
     private ArrayList<User> users;
-    private ArrayList<Register> registers;
+    private ArrayList<Rol> roles;
+    private UserDAO userDAO = new UserDAO(this);
+    private RolDAO rolDAO = new RolDAO(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_users);
         Intent intent = getIntent();
-        rules=(ArrayList<Rule>) intent.getSerializableExtra("rules");
-        transactions=(ArrayList<Transaction>) intent.getSerializableExtra("transactions");
-        registers=(ArrayList<Register>) intent.getSerializableExtra("registers");
-
-        if(registers==null)
-            registers = new ArrayList<>();
-
-        if (users == null){
-            users = new ArrayList<>();
-        }
-
-        if (rules == null)
-            rules = new ArrayList<>();
-
-        if(transactions==null)
-            transactions = new ArrayList<>();
-
-
     }
 
     public void onCreateUser(View view) {
+        users = userDAO.getAllUsers();
+        roles = rolDAO.getAllRoles();
         EditText textoUsuario = findViewById(R.id.textoUsuario),
                 textoContrasenia = findViewById(R.id.textoContrasenia);
         Spinner roles = findViewById(R.id.roles);
@@ -58,9 +47,16 @@ public class CreateUsersActivity extends AppCompatActivity {
             return;
         }
 
-        users.add(new User(textoUsuario.getText().toString(),
-                roles.getSelectedItem().toString(),
-                textoContrasenia.getText().toString()));
+        User user = new User();
+        user.setUsername(textoUsuario.getText().toString());
+        user.setPassword(textoContrasenia.getText().toString());
+        for(int i=0; i<this.roles.size(); i++){
+            if(this.roles.get(i).getNombre().equals(roles.getSelectedItem().toString())){
+                user.setRol(this.roles.get(i));
+            }
+        }
+
+        userDAO.insertarUsuario(user);
         Toast.makeText(this, "Usuario Creado Correctamente", Toast.LENGTH_SHORT).show();
         textoUsuario.setText("");
         textoContrasenia.setText("");

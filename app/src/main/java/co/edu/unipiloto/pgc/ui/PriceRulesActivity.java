@@ -1,4 +1,4 @@
-package co.edu.unipiloto.pgc;
+package co.edu.unipiloto.pgc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+
+import co.edu.unipiloto.pgc.R;
+import co.edu.unipiloto.pgc.dao.RuleDAO;
+import co.edu.unipiloto.pgc.model.Register;
+import co.edu.unipiloto.pgc.model.Rule;
+import co.edu.unipiloto.pgc.model.Transaction;
 
 public class PriceRulesActivity extends AppCompatActivity {
 
@@ -21,16 +27,14 @@ public class PriceRulesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_rules);
         Intent intent = getIntent();
-        rules=(ArrayList<Rule>) intent.getSerializableExtra("rules");
-        transactions=(ArrayList<Transaction>) intent.getSerializableExtra("transactions");
-        registers=(ArrayList<Register>) intent.getSerializableExtra("registers");
-        if(rules==null)
-            rules = new ArrayList<>();
+        RuleDAO ruleDAO = new RuleDAO(this);
+        rules = ruleDAO.getAllRules();
         TextView textoReglas = findViewById(R.id.textoReglas);
         String textoCompleto="";
         for(int i=0; i<rules.size(); i++) {
-            textoCompleto += "Regla " + (i + 1) + ": Tipo: " + rules.get(i).getTipo()
-                    + " Precio: " + rules.get(i).getPrecio() + "$\n";
+            textoCompleto += "Regla " + rules.get(i).getId() + ": Tipo: " + rules.get(i).getTipoVehiculo()
+                    + " Precio: " + rules.get(i).getPrecio() + "Creado por: " + rules.get(i).getAdmin().getUsername()
+                    + "Fecha: " + rules.get(i).getFechaFormateada() + "$\n";
         }
         textoReglas.setText(textoCompleto);
     }
@@ -46,18 +50,22 @@ public class PriceRulesActivity extends AppCompatActivity {
         int textoPrecio = Integer.parseInt(precio.getText().toString());
         boolean tipoExiste = false;
         for (int i = 0; i < rules.size(); i++) {
-            if (rules.get(i).getTipo().equals(tipo)) {
+            if (rules.get(i).getTipoVehiculo().equals(tipo)) {
                 tipoExiste = true;
                 rules.get(i).setPrecio(textoPrecio);
             }
         }
         if (!tipoExiste) {
-            rules.add(new Rule(tipo, textoPrecio));
+            Rule rule = new Rule();
+            rule.setTipoVehiculo(tipo);
+            rule.setPrecio(textoPrecio);
+            rules.add(rule);
         }
         String textoCompleto="";
         for(int i=0; i<rules.size(); i++) {
-            textoCompleto += "Regla " + (i + 1) + ": Tipo: " + rules.get(i).getTipo()
-                    + " Precio: " + rules.get(i).getPrecio() + "$\n";
+            textoCompleto += "Regla " + rules.get(i).getId() + ": Tipo: " + rules.get(i).getTipoVehiculo()
+                    + " Precio: " + rules.get(i).getPrecio() + "Creado por: " + rules.get(i).getAdmin().getUsername()
+                    + "Fecha: " + rules.get(i).getFechaFormateada() + "$\n";
         }
         textoReglas.setText(textoCompleto);
         precio.setText("");

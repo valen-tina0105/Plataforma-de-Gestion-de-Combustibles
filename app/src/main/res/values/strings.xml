@@ -35,6 +35,7 @@
         <item>Estación de servicio</item>
         <item>Distribuidor mayorista</item>
         <item>Autoridad reguladora</item>
+        <item>Administrador</item>
     </string-array>
     <string name="contraseña">Contraseña: </string>
     <string name="textoContrasenia">Contraseña</string>

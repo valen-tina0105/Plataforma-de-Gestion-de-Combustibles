@@ -1,30 +1,46 @@
-package co.edu.unipiloto.pgc;
+package co.edu.unipiloto.pgc.model;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Register implements Serializable {
-    private String tipo;
+public class Register{
+    private int id;
+    private User estacion;
+    private String tipoCombustible;
     private int cantidad;
     private Date fecha;
 
     private String fechaFormateada;
 
-    public Register(String tipo, int cantidad) {
-        this.tipo = tipo;
-        this.cantidad = cantidad;
+    public Register() {
         fecha = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         fechaFormateada = formatter.format(fecha);
     }
 
-    public String getTipo() {
-        return tipo;
+    public int getId() {
+        return id;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User getEstacion() {
+        return estacion;
+    }
+
+    public void setEstacion(User estacion) {
+        this.estacion = estacion;
+    }
+
+    public String getTipoCombustible() {
+        return tipoCombustible;
+    }
+
+    public void setTipoCombustible(String tipoCombustible) {
+        this.tipoCombustible = tipoCombustible;
     }
 
     public int getCantidad() {
