@@ -17,6 +17,7 @@ import co.edu.unipiloto.pgc.dao.TransactionDAO;
 import co.edu.unipiloto.pgc.model.Register;
 import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Transaction;
+import co.edu.unipiloto.pgc.model.User;
 
 public class PriceCalculatorActivity extends AppCompatActivity {
 
@@ -25,11 +26,14 @@ public class PriceCalculatorActivity extends AppCompatActivity {
     private TransactionDAO transactionDAO;
     private ArrayList<Rule> rules;
     private RuleDAO ruleDAO;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_calculator);
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("user");
         transactionDAO = new TransactionDAO(this);
         transactions = transactionDAO.getAllTransactions();
         ruleDAO = new RuleDAO(this);
@@ -80,7 +84,9 @@ public class PriceCalculatorActivity extends AppCompatActivity {
         transaction.setTipoVehiculo(tipo);
         transaction.setCantidad(volumen);
         transaction.setTotal(totalReal);
+        transaction.setEstacion(user);
         transactions.add(transaction);
+        transactionDAO.insertarTransaccion(transaction);
         String textoCompleto = "";
         for (int i = 0; i < transactions.size(); i++) {
             textoCompleto += "Transaccion " + (i + 1) + ": Fecha: " + transactions.get(i).getFechaFormateada()
