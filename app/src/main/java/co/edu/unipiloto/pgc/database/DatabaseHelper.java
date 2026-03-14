@@ -15,7 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
     public DatabaseHelper(Context context){
         super(context,DB_NAME,null,1);
-        context = this.context;
+        this.context = context;
     }
 
     @Override
@@ -44,6 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             for (String sentencia : sentencias) {
                 if (!sentencia.trim().isEmpty()) {
                     db.execSQL(sentencia);
+                    System.out.println(sentencia);
                 }
             }
 

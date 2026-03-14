@@ -76,31 +76,4 @@
         android:text=""
         />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/actividad"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        />
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/actividades"
-        android:entries="@array/actividades"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnCambiar"
-        android:text="@string/btnCambiar"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:onClick="onChangeActivity"
-        />
-
 </LinearLayout>

@@ -2,7 +2,7 @@ package co.edu.unipiloto.pgc.model;
 
 import java.io.Serializable;
 
-public class Rol{
+public class Rol implements Serializable{
 
     private int id;
     private String nombre;

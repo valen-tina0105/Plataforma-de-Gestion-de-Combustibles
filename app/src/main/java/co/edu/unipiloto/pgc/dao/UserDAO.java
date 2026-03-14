@@ -24,7 +24,7 @@ public class UserDAO {
         Cursor cursor = db.rawQuery(
                 "SELECT u.id, u.username, u.password, r.id, r.nombre " +
                         "FROM Users u " +
-                        "INNER JOIN Rol r ON u.id_rol = r.id",
+                        "INNER JOIN Roles r ON u.rol_id = r.id",
                 null
         );
 
@@ -69,7 +69,7 @@ public class UserDAO {
         Cursor cursor = db.rawQuery(
                 "SELECT u.id, u.username, u.password, r.id, r.nombre " +
                         "FROM Users u " +
-                        "INNER JOIN Rol r ON u.rol_id = r.id " +
+                        "INNER JOIN Roles r ON u.rol_id = r.id " +
                         "WHERE u.username = ? AND u.password = ? " +
                         "LIMIT 1",
                 new String[]{username, password});
@@ -95,12 +95,11 @@ public class UserDAO {
     public void insertarUsuario(User user){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery(
+        db.execSQL(
                 "INSERT INTO Users (username, password, rol_id) VALUES (?,?,?)",
-                new String[]{user.getUsername(), user.getPassword(), String.valueOf(user.getRol().getId())}
+                new Object[]{user.getUsername(), user.getPassword(), user.getRol().getId()}
         );
 
-        cursor.close();
 
     }
 
