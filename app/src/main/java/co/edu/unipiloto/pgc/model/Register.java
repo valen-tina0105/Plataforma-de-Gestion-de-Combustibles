@@ -15,7 +15,7 @@ public class Register{
 
     public Register() {
         fecha = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         fechaFormateada = formatter.format(fecha);
     }
 

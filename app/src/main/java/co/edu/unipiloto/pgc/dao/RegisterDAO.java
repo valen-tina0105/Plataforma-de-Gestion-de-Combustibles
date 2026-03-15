@@ -57,13 +57,16 @@ public class RegisterDAO {
     }
 
     public void insertarRegistro(Register register){
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.execSQL(
-                "INSERT INTO Registros (tipo_combusible, cantidad, fecha, estacion_id) VALUES (?,?,?,?)",
-                new Object[]{register.getTipoCombustible(), register.getCantidad(),
-                        register.getFechaFormateada(), register.getEstacion().getId()}
+                "INSERT INTO Registros (tipo_combustible, cantidad, fecha, estacion_id) VALUES (?,?,?,?)",
+                new Object[]{
+                        register.getTipoCombustible(),
+                        register.getCantidad(),
+                        register.getFechaFormateada(),
+                        register.getEstacion().getId()
+                }
         );
-
     }
 }

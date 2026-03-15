@@ -99,7 +99,7 @@ public class UserDAO {
     }
 
     public void insertarUsuario(User user) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.execSQL(
                 "INSERT INTO Users (username, password, rol_id) VALUES (?,?,?)",

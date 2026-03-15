@@ -57,7 +57,7 @@ public class RuleDAO {
     }
 
     public void insertarRegla(Rule rule){
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.execSQL(
                 "INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES (?,?,?,?)",

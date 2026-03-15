@@ -11,69 +11,69 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tituloConfigurar"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        />
+        android:layout_marginTop="20dp"
+        android:text="@string/tituloConfigurar" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/vehiculo"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        />
+        android:text="@string/vehiculo" />
 
     <Spinner
+        android:id="@+id/tipos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tipos"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:entries="@array/tipos"
-        />
+        android:layout_marginTop="20dp"
+        android:entries="@array/tipos" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/editarPrecio"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        />
+        android:layout_marginTop="20dp"
+        android:text="@string/editarPrecio" />
 
     <EditText
+        android:id="@+id/precio"
         android:layout_width="225dp"
         android:layout_height="wrap_content"
-        android:id="@+id/precio"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:inputType="number"
+        android:layout_marginTop="20dp"
         android:hint="@string/precio"
-        />
+        android:inputType="number" />
 
     <Button
+        android:id="@+id/btnGuardar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnGuardar"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
         android:onClick="onSendRule"
+        android:text="@string/btnGuardar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/reglas" />
+
+    <TextView
+        android:id="@+id/textoReglas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="" />
+
+    <Button
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:text="@string/btnGuardar"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reglas"
-        android:layout_marginStart="16dp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textoReglas"
-        android:layout_marginStart="16dp"
-        android:text=""
-        />
-
+        android:onClick="onLogOut"
+        android:text="@string/btnCerrarSesion" />
 </LinearLayout>

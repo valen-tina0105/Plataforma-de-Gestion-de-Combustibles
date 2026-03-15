@@ -57,7 +57,7 @@ public class TransactionDAO {
     }
 
     public void insertarTransaccion(Transaction transaction){
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.execSQL(
                 "INSERT INTO Transacciones (estacion_id, tipo_vehiculo, cantidad, total, fecha) VALUES (?,?,?,?,?)",

@@ -2,6 +2,7 @@ package co.edu.unipiloto.pgc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -37,12 +38,18 @@ public class LogInActivity extends BaseActivity {
         roles = rolDAO.getAllRoles();
     }
 
-    public void onLogIn(View view){
+    public void onLogIn(View view) {
         EditText textoUsuario = findViewById(R.id.textoUsuario),
                 textoContrasenia = findViewById(R.id.textoContrasenia);
-        User user = userDAO.logIn(textoUsuario.getText().toString(),textoContrasenia.getText().toString());
-        if (user==null){
-            Toast.makeText(this,"Usuario o Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+        User user = userDAO.logIn(
+                textoUsuario.getText().toString().trim(),
+                textoContrasenia.getText().toString().trim()
+        );
+        for(User u : users){
+            Log.d("LOGIN_DEBUG", u.getUsername() + " " + u.getPassword());
+        }
+        if (user == null) {
+            Toast.makeText(this, "Usuario o Contraseña incorrecta", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent;

@@ -41,6 +41,8 @@ CREATE TABLE IF NOT EXISTS Registros (
     FOREIGN KEY (estacion_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
+CREATE VIEW Movimientos AS SELECT id, tipo_vehiculo AS tipo, cantidad, total, fecha, estacion_id, 'SALIDA' AS tipo_movimiento FROM Transacciones UNION ALL SELECT id, tipo_combustible AS tipo, cantidad, NULL AS total, fecha, estacion_id, 'ENTRADA' AS tipo_movimiento FROM Registros;
+
 INSERT OR IGNORE INTO roles (id, nombre) VALUES
 (1, 'Estacion de servicio'),
 (2, 'Distribuidor mayorista'),
@@ -50,3 +52,39 @@ INSERT OR IGNORE INTO roles (id, nombre) VALUES
 
 INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
 ('admin_users', 'admin123', 4);
+
+INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
+('admin_reglas', 'admin123', 5);
+
+INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES
+('Servicio particular', 10000, '2026-03-01', 2);
+
+INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
+VALUES ('Oficiales', 8000, '2026-03-01', 2);
+
+INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
+VALUES ('Diplomáticos', 1000, '2026-03-01', 2);
+
+INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
+VALUES ('Camperos y Cuatrimotos', 12000, '2026-03-01', 2);
+
+INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
+('estacion_1', 'estacion123', 1);
+
+INSERT INTO Transacciones (tipo_vehiculo, cantidad, total, fecha, estacion_id) VALUES
+('Camperos y Cuatrimotos', 30, 36000, '2026-03-14', 3);
+
+INSERT INTO Transacciones (tipo_vehiculo, cantidad, total, fecha, estacion_id)
+VALUES ('Servicio particular', 20, 20000, '2026-03-10', 3);
+
+INSERT INTO Transacciones (tipo_vehiculo, cantidad, total, fecha, estacion_id)
+VALUES ('Oficiales', 15, 12000, '2026-03-12', 3);
+
+INSERT INTO Registros (tipo_combustible, cantidad, fecha, estacion_id) VALUES
+('Gasolina', 150, '2026-03-13', 3);
+
+INSERT INTO Registros (tipo_combustible, cantidad, fecha, estacion_id)
+VALUES ('Gasolina', 200, '2026-03-09', 3);
+
+INSERT INTO Registros (tipo_combustible, cantidad, fecha, estacion_id)
+VALUES ('Diesel', 300, '2026-03-11', 3);

@@ -41,7 +41,7 @@ public class PriceCalculatorActivity extends BaseActivity {
         TextView textoTransacciones = findViewById(R.id.textoTransacciones);
         String textoCompleto = "";
         for (int i = 0; i < transactions.size(); i++) {
-            textoCompleto += "Transaccion " + (i + 1) + ": Fecha: " + transactions.get(i).getFechaFormateada()
+            textoCompleto += "Transaccion " + transactions.get(i).getId() + ": Fecha: " + transactions.get(i).getFechaFormateada()
                     + " Tipo: " + transactions.get(i).getTipoVehiculo()
                     + " Volumen: " + transactions.get(i).getCantidad() + " Total: "
                     + transactions.get(i).getTotal() + "$\n";
@@ -59,16 +59,19 @@ public class PriceCalculatorActivity extends BaseActivity {
         TextView total = findViewById(R.id.total);
         int volumen = Integer.parseInt(combustible.getText().toString());
         int totalReal = 0;
-        if (rules.size() == 0) {
+        if (rules.isEmpty()) {
             total.setText("No hay ninguna regla establecida");
             return;
         }
+        boolean encontrada = false;
         for (Rule rule : rules) {
-            if (!rule.getTipoVehiculo().equals(tipo)) {
-                total.setText("No hay ninguna regla establecida para " + tipo);
-                return;
+            if (rule.getTipoVehiculo().equals(tipo)) {
+                encontrada = true;
+                break;
             }
-
+        }
+        if (!encontrada) {
+            total.setText("No hay ninguna regla establecida para " + tipo);
         }
         for (int i = 0; i < rules.size(); i++) {
             if (rules.get(i).getTipoVehiculo().equalsIgnoreCase(tipo)) {
@@ -106,6 +109,12 @@ public class PriceCalculatorActivity extends BaseActivity {
                 break;
             case "Registrar Entrada":
                 intent = new Intent(this, FuelOutletActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                break;
+            case "Consultar Historial":
+                intent = new Intent(this, FuelHistoryActivity.class);
+                intent.putExtra("user", user);
                 startActivity(intent);
                 break;
         }

@@ -36,7 +36,7 @@ public class FuelOutletActivity extends BaseActivity {
         TextView textoRegistros = findViewById(R.id.textoRegistros);
         String textoCompleto="";
         for(int i=0; i<registers.size(); i++) {
-            textoCompleto += "Entrada " + (i + 1) + ": Fecha: " + registers.get(i).getFechaFormateada()
+            textoCompleto += "Entrada " + registers.get(i).getId() + ": Fecha: " + registers.get(i).getFechaFormateada()
                     + " Tipo: " + registers.get(i).getTipoCombustible()
                     + " Cantidad: " +registers.get(i).getCantidad()
                     + " Registrado por: " + registers.get(i).getEstacion().getUsername()
@@ -81,6 +81,11 @@ public class FuelOutletActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case "Registar Entrada":
+                break;
+            case "Consultar Historial":
+                intent = new Intent(this, FuelHistoryActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
                 break;
         }
     }

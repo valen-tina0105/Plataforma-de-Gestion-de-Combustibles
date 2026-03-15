@@ -16,6 +16,7 @@
     <string-array name="actividades">
         <item>Calcular Precio</item>
         <item>Registrar Entrada</item>
+        <item>Consultar Historial</item>
     </string-array>
     <string name="btnCambiar">Cambiar de Actividad</string>
     <string name="tituloCalcular">Calcular Automáticamente Precio del Combustible Según Normativa</string>
@@ -52,4 +53,12 @@
     <string name="btnRegistrar">Registrar</string>
     <string name="registros">Registros: </string>
     <string name="btnCerrarSesion">Cerrar Sesión</string>
+    <string name="historialCombustible">Consultar historial de movimientos de combustible</string>
+    <string name="filtrar">Tipo de filtro: </string>
+    <string-array name="filtro">
+        <item>Sin filtro</item>
+        <item>Tipo de combustible</item>
+        <item>Fecha de transacción</item>
+    </string-array>
+    <string name="btnFiltrar">Filtrar</string>
 </resources>
