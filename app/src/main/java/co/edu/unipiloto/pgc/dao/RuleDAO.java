@@ -59,13 +59,11 @@ public class RuleDAO {
     public void insertarRegla(Rule rule){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery(
+        db.execSQL(
                 "INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES (?,?,?,?)",
-                new String[]{rule.getTipoVehiculo(), String.valueOf(rule.getPrecio()), rule.getFechaFormateada(),
-                String.valueOf(rule.getAdmin().getId())}
+                new Object[]{rule.getTipoVehiculo(), rule.getPrecio(), rule.getFechaFormateada(),
+                rule.getAdmin().getId()}
         );
-
-        cursor.close();
 
     }
 }

@@ -20,7 +20,7 @@ import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
 
-public class CreateUsersActivity extends AppCompatActivity {
+public class CreateUsersActivity extends BaseActivity {
 
     private ArrayList<User> users;
     private ArrayList<Rol> roles;
@@ -51,7 +51,14 @@ public class CreateUsersActivity extends AppCompatActivity {
             Toast.makeText(this,"Username ya existente", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        if (textoContrasenia.getText().toString().length() > 20){
+            Toast.makeText(this,"Contraseña muy larga", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (textoUsuario.getText().toString().length() > 20){
+            Toast.makeText(this,"Usuario muy largo", Toast.LENGTH_SHORT).show();
+            return;
+        }
         User user = new User();
         user.setUsername(textoUsuario.getText().toString());
         user.setPassword(textoContrasenia.getText().toString());

@@ -19,7 +19,7 @@ import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
 
-public class PriceCalculatorActivity extends AppCompatActivity {
+public class PriceCalculatorActivity extends BaseActivity {
 
     private ArrayList<Transaction> transactions;
 

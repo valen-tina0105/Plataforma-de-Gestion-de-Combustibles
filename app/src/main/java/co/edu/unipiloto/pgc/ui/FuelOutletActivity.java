@@ -19,7 +19,7 @@ import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
 
-public class FuelOutletActivity extends AppCompatActivity {
+public class FuelOutletActivity extends BaseActivity {
 
     private ArrayList<Register> registers;
     private RegisterDAO registerDAO;

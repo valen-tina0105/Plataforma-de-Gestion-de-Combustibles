@@ -59,14 +59,12 @@ public class TransactionDAO {
     public void insertarTransaccion(Transaction transaction){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery(
+        db.execSQL(
                 "INSERT INTO Transacciones (estacion_id, tipo_vehiculo, cantidad, total, fecha) VALUES (?,?,?,?,?)",
-                new String[]{String.valueOf(transaction.getEstacion().getId()), transaction.getTipoVehiculo(),
-                        String.valueOf(transaction.getCantidad()), String.valueOf(transaction.getTotal()),
+                new Object[]{transaction.getEstacion().getId(), transaction.getTipoVehiculo(),
+                        transaction.getCantidad(), transaction.getTotal(),
                         transaction.getFechaFormateada()}
         );
-
-        cursor.close();
 
     }
 }

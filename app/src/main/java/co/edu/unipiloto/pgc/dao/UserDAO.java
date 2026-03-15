@@ -17,7 +17,7 @@ public class UserDAO {
         dbHelper = new DatabaseHelper(context);
     }
 
-    public ArrayList<User> getAllUsers(){
+    public ArrayList<User> getAllUsers() {
         ArrayList<User> users = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -28,7 +28,7 @@ public class UserDAO {
                 null
         );
 
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             User user = new User();
             user.setId(cursor.getInt(0));
             user.setUsername(cursor.getString(1));
@@ -50,17 +50,20 @@ public class UserDAO {
     public boolean verificarUsername(String username) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-            Cursor cursor = db.rawQuery(
-                    "SELECT username " +
-                    "FROM Users " +
-                    "WHERE username = ? " +
-                    "LIMIT 1",
-                    new String[]{username});
-
+        Cursor cursor = db.rawQuery(
+                "SELECT username " +
+                        "FROM Users " +
+                        "WHERE username = ? " +
+                        "LIMIT 1",
+                new String[]{username});
+        try {
             if (cursor.moveToFirst()) {
                 return true;
             }
-            return false;
+        } finally {
+            cursor.close();
+        }
+        return false;
     }
 
     public User logIn(String username, String password) {
@@ -73,26 +76,29 @@ public class UserDAO {
                         "WHERE u.username = ? AND u.password = ? " +
                         "LIMIT 1",
                 new String[]{username, password});
+        try {
+            if (cursor.moveToFirst()) {
 
-        if (cursor.moveToFirst()) {
+                User user = new User();
+                user.setId(cursor.getInt(0));
+                user.setUsername(cursor.getString(1));
+                user.setPassword(cursor.getString(2));
 
-            User user = new User();
-            user.setId(cursor.getInt(0));
-            user.setUsername(cursor.getString(1));
-            user.setPassword(cursor.getString(2));
+                Rol rol = new Rol();
+                rol.setId(cursor.getInt(3));
+                rol.setNombre(cursor.getString(4));
 
-            Rol rol = new Rol();
-            rol.setId(cursor.getInt(3));
-            rol.setNombre(cursor.getString(4));
+                user.setRol(rol);
 
-            user.setRol(rol);
-
-            return user;
+                return user;
+            }
+        } finally {
+            cursor.close();
         }
         return null;
     }
 
-    public void insertarUsuario(User user){
+    public void insertarUsuario(User user) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         db.execSQL(

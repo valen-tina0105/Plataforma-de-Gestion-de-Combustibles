@@ -17,7 +17,7 @@ import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
 
-public class PriceRulesActivity extends AppCompatActivity {
+public class PriceRulesActivity extends BaseActivity {
 
     private ArrayList<Rule> rules;
     private User user;

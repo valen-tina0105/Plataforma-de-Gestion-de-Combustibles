@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,7 +20,7 @@ import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
 
-public class LogInActivity extends AppCompatActivity {
+public class LogInActivity extends BaseActivity {
     private ArrayList<User> users;
     private ArrayList<Rol> roles;
     private UserDAO userDAO;
@@ -40,11 +41,16 @@ public class LogInActivity extends AppCompatActivity {
         EditText textoUsuario = findViewById(R.id.textoUsuario),
                 textoContrasenia = findViewById(R.id.textoContrasenia);
         User user = userDAO.logIn(textoUsuario.getText().toString(),textoContrasenia.getText().toString());
+        if (user==null){
+            Toast.makeText(this,"Usuario o Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent;
         switch (user.getRol().getNombre()) {
             case "Estacion de servicio":
                 intent = new Intent(this, FuelOutletActivity.class);
                 intent.putExtra("user", user);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 break;
             case "Distribuidor mayorista":
@@ -54,11 +60,13 @@ public class LogInActivity extends AppCompatActivity {
             case "Administrador de usuarios":
                 intent = new Intent(this, CreateUsersActivity.class);
                 intent.putExtra("user", user);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 break;
             case "Administrador de reglas":
                 intent = new Intent(this, PriceRulesActivity.class);
                 intent.putExtra("user", user);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 break;
         }
