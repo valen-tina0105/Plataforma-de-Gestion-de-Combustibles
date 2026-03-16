@@ -36,14 +36,14 @@ public class FuelHistoryActivity extends BaseActivity {
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
         movementDAO = new MovementDAO(this);
-        movements = movementDAO.getAllMovements();
+        movements = movementDAO.getAllMovements(user);
         TextView historial = findViewById(R.id.historial);
         String textoCompleto = "";
         for (int i = 0; i < movements.size(); i++) {
             textoCompleto += "id: " + movements.get(i).getId() + " Tipo: " + movements.get(i).getTipo()
                     + " Cantidad: " + movements.get(i).getCantidad() + " Total: "
                     + movements.get(i).getTotal() + " Fecha: " + movements.get(i).getFecha()
-                    + " Estacion: " + movements.get(i).getEstacionId()
+                    + " Estacion: " + movements.get(i).getEstacion().getId()
                     + " Tipo de movimiento: " + movements.get(i).getTipoMovimiento()
                     + "\n";
         }
@@ -55,25 +55,25 @@ public class FuelHistoryActivity extends BaseActivity {
         String filtro = filter.getSelectedItem().toString();
         TextView historial = findViewById(R.id.historial);
         if (filtro.equals("Tipo de combustible")) {
-            movements = movementDAO.getMovementsOrderByType();
+            movements = movementDAO.getMovementsOrderByType(user);
             String textoCompleto = "";
             for (int i = 0; i < movements.size(); i++) {
                 textoCompleto += "id: " + movements.get(i).getId() + " Tipo: " + movements.get(i).getTipo()
                         + " Cantidad: " + movements.get(i).getCantidad() + " Total: "
                         + movements.get(i).getTotal() + " Fecha: " + movements.get(i).getFecha()
-                        + " Estacion: " + movements.get(i).getEstacionId()
+                        + " Estacion: " + movements.get(i).getEstacion().getId()
                         + " Tipo de movimiento: " + movements.get(i).getTipoMovimiento()
                         + "\n";
             }
             historial.setText(textoCompleto);
         } else if (filtro.equals("Fecha de transacción")) {
-            movements = movementDAO.getMovementsByDate();
+            movements = movementDAO.getMovementsByDate(user);
             String textoCompleto = "";
             for (int i = 0; i < movements.size(); i++) {
                 textoCompleto += "id: " + movements.get(i).getId() + " Tipo: " + movements.get(i).getTipo()
                         + " Cantidad: " + movements.get(i).getCantidad() + " Total: "
                         + movements.get(i).getTotal() + " Fecha: " + movements.get(i).getFecha()
-                        + " Estacion: " + movements.get(i).getEstacionId()
+                        + " Estacion: " + movements.get(i).getEstacion().getId()
                         + " Tipo de movimiento: " + movements.get(i).getTipoMovimiento()
                         + "\n";
             }

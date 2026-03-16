@@ -7,20 +7,10 @@ public class Movement {
     private int cantidad;
     private Integer total;
     private String fecha;
-    private int estacionId;
+    private User estacion;
     private String tipoMovimiento;
 
     public Movement() {
-    }
-
-    public Movement(int id, String tipo, int cantidad, Integer total, String fecha, int estacionId, String tipoMovimiento) {
-        this.id = id;
-        this.tipo = tipo;
-        this.cantidad = cantidad;
-        this.total = total;
-        this.fecha = fecha;
-        this.estacionId = estacionId;
-        this.tipoMovimiento = tipoMovimiento;
     }
 
     public int getId() {
@@ -63,12 +53,12 @@ public class Movement {
         this.fecha = fecha;
     }
 
-    public int getEstacionId() {
-        return estacionId;
+    public User getEstacion() {
+        return estacion;
     }
 
-    public void setEstacionId(int estacionId) {
-        this.estacionId = estacionId;
+    public void setEstacion(User estacion) {
+        this.estacion = estacion;
     }
 
     public String getTipoMovimiento() {

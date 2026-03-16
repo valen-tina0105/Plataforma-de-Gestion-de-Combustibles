@@ -32,7 +32,7 @@ public class FuelOutletActivity extends BaseActivity {
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
         registerDAO = new RegisterDAO(this);
-        registers = registerDAO.getAllRegisters();
+        registers = registerDAO.getAllRegisters(user);
         TextView textoRegistros = findViewById(R.id.textoRegistros);
         String textoCompleto="";
         for(int i=0; i<registers.size(); i++) {
@@ -40,7 +40,7 @@ public class FuelOutletActivity extends BaseActivity {
                     + " Tipo: " + registers.get(i).getTipoCombustible()
                     + " Cantidad: " +registers.get(i).getCantidad()
                     + " Registrado por: " + registers.get(i).getEstacion().getUsername()
-                + "$\n";
+                + "\n";
         }
         textoRegistros.setText(textoCompleto);
     }
@@ -65,7 +65,7 @@ public class FuelOutletActivity extends BaseActivity {
                     + " Tipo: " + registers.get(i).getTipoCombustible()
                     + " Cantidad: " +registers.get(i).getCantidad()
                     + " Registrado por: " + registers.get(i).getEstacion().getUsername()
-                    + "$\n";
+                    + "\n";
         }
         textoRegistros.setText(textoCompleto);
         textoCantidad.setText("");

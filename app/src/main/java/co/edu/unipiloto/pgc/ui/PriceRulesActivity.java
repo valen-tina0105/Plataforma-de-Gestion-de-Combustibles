@@ -35,7 +35,7 @@ public class PriceRulesActivity extends BaseActivity {
         String textoCompleto="";
         for(int i=0; i<rules.size(); i++) {
             textoCompleto += "Regla " + rules.get(i).getId() + ": Tipo: " + rules.get(i).getTipoVehiculo()
-                    + " Precio: " + rules.get(i).getPrecio() + "Creado por: " + rules.get(i).getAdmin().getUsername()
+                    + " Precio: " + rules.get(i).getPrecio() + "$ Creado por: " + rules.get(i).getAdmin().getUsername()
                     + "Fecha: " + rules.get(i).getFechaFormateada() + "$\n";
         }
         textoReglas.setText(textoCompleto);
@@ -68,8 +68,8 @@ public class PriceRulesActivity extends BaseActivity {
         String textoCompleto="";
         for(int i=0; i<rules.size(); i++) {
             textoCompleto += "Regla " + rules.get(i).getId() + ": Tipo: " + rules.get(i).getTipoVehiculo()
-                    + " Precio: " + rules.get(i).getPrecio() + "Creado por: " + rules.get(i).getAdmin().getUsername()
-                    + "Fecha: " + rules.get(i).getFechaFormateada() + "$\n";
+                    + " Precio: " + rules.get(i).getPrecio() + "$ Creado por: " + rules.get(i).getAdmin().getUsername()
+                    + "Fecha: " + rules.get(i).getFechaFormateada() + "\n";
         }
         textoReglas.setText(textoCompleto);
         precio.setText("");

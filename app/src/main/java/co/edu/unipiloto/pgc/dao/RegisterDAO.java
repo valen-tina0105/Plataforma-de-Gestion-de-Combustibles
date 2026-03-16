@@ -19,7 +19,7 @@ public class RegisterDAO {
         dbHelper = new DatabaseHelper(context);
     }
 
-    public ArrayList<Register> getAllRegisters(){
+    public ArrayList<Register> getAllRegisters(User userId){
         ArrayList<Register> registers = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -27,8 +27,9 @@ public class RegisterDAO {
                 "SELECT re.id, re.tipo_combustible, re.cantidad, re.fecha, u.id, u.username, u.password, r.id, r.nombre " +
                         "FROM Registros re " +
                         "INNER JOIN Users u ON re.estacion_id = u.id " +
-                        "INNER JOIN Roles r ON u.rol_id = r.id",
-                null
+                        "INNER JOIN Roles r ON u.rol_id = r.id " +
+                        "WHERE u.id = ?",
+                        new String[]{String.valueOf(userId.getId())}
         );
 
         while(cursor.moveToNext()){

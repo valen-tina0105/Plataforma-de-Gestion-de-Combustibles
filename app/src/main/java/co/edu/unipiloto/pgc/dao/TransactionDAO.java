@@ -18,7 +18,7 @@ public class TransactionDAO {
         dbHelper = new DatabaseHelper(context);
     }
 
-    public ArrayList<Transaction> getAllTransactions(){
+    public ArrayList<Transaction> getAllTransactions(User userId){
         ArrayList<Transaction> transactions = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -26,8 +26,9 @@ public class TransactionDAO {
                 "SELECT t.id, t.tipo_vehiculo, t.cantidad, t.total, t.fecha, u.id, u.username, u.password, r.id, r.nombre " +
                         "FROM Transacciones t " +
                         "INNER JOIN Users u ON t.estacion_id = u.id " +
-                        "INNER JOIN Roles r ON u.rol_id = r.id",
-                null
+                        "INNER JOIN Roles r ON u.rol_id = r.id " +
+                        "WHERE u.id = ?",
+                new String[]{String.valueOf(userId.getId())}
         );
 
         while(cursor.moveToNext()){

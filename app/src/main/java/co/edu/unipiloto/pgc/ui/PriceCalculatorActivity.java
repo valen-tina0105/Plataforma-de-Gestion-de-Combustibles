@@ -35,7 +35,7 @@ public class PriceCalculatorActivity extends BaseActivity {
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
         transactionDAO = new TransactionDAO(this);
-        transactions = transactionDAO.getAllTransactions();
+        transactions = transactionDAO.getAllTransactions(user);
         ruleDAO = new RuleDAO(this);
         rules = ruleDAO.getAllRules();
         TextView textoTransacciones = findViewById(R.id.textoTransacciones);
@@ -44,7 +44,8 @@ public class PriceCalculatorActivity extends BaseActivity {
             textoCompleto += "Transaccion " + transactions.get(i).getId() + ": Fecha: " + transactions.get(i).getFechaFormateada()
                     + " Tipo: " + transactions.get(i).getTipoVehiculo()
                     + " Volumen: " + transactions.get(i).getCantidad() + " Total: "
-                    + transactions.get(i).getTotal() + "$\n";
+                    + transactions.get(i).getTotal()
+                    + "$ Cobrado por: " + transactions.get(i).getEstacion().getUsername() + "\n";
         }
         textoTransacciones.setText(textoCompleto);
     }
@@ -95,7 +96,7 @@ public class PriceCalculatorActivity extends BaseActivity {
             textoCompleto += "Transaccion " + (i + 1) + ": Fecha: " + transactions.get(i).getFechaFormateada()
                     + " Tipo: " + transactions.get(i).getTipoVehiculo()
                     + " Volumen: " + transactions.get(i).getCantidad() + " Total: "
-                    + transactions.get(i).getTotal() + "$\n";
+                    + "$ Cobrado por: " + transactions.get(i).getEstacion().getUsername() + transactions.get(i).getTotal() + "\n";
         }
         textoTransacciones.setText(textoCompleto);
         combustible.setText("");
