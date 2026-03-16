@@ -57,6 +57,53 @@ public class TransactionDAO {
         return transactions;
     }
 
+    public ArrayList<Transaction> getValidatedTransactions(){
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT t.id, t.tipo_vehiculo, t.cantidad, t.total, t.fecha, " +
+                        "r.precio, (r.precio * t.cantidad), " +
+                        "u.id, u.username, u.password, ro.id, ro.nombre, " +
+                        "CASE WHEN t.total = (r.precio * t.cantidad) THEN 'CUMPLE' ELSE 'NO CUMPLE' END " +
+                        "FROM Transacciones t " +
+                        "INNER JOIN Reglas r ON t.tipo_vehiculo = r.tipo_vehiculo " +
+                        "INNER JOIN Users u ON t.estacion_id = u.id " +
+                        "INNER JOIN Roles ro ON u.rol_id = ro.id",
+                null
+        );
+
+        while(cursor.moveToNext()){
+            Transaction transaction = new Transaction();
+
+            transaction.setId(cursor.getInt(0));
+            transaction.setTipoVehiculo(cursor.getString(1));
+            transaction.setCantidad(cursor.getInt(2));
+            transaction.setTotal(cursor.getInt(3));
+            transaction.setFechaFormateada(cursor.getString(4));
+
+            String estado = cursor.getString(12);
+
+            transaction.setEstado(estado);
+
+            User user = new User();
+            user.setId(cursor.getInt(7));
+            user.setUsername(cursor.getString(8));
+            user.setPassword(cursor.getString(9));
+
+            Rol rol = new Rol();
+            rol.setId(cursor.getInt(10));
+            rol.setNombre(cursor.getString(11));
+
+            user.setRol(rol);
+            transaction.setEstacion(user);
+
+            transactions.add(transaction);
+        }
+
+        cursor.close();
+        return transactions;
+    }
     public void insertarTransaccion(Transaction transaction){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 

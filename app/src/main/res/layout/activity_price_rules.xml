@@ -23,12 +23,12 @@
         android:text="@string/vehiculo" />
 
     <Spinner
-        android:id="@+id/tipos"
+        android:id="@+id/tipoVehiculo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:entries="@array/tipos" />
+        android:entries="@array/tipoVehiculo" />
 
     <TextView
         android:layout_width="wrap_content"

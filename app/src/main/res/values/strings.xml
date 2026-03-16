@@ -5,7 +5,7 @@
     <string name="editarPrecio">Digite el precio a asignar</string>
     <string name="precio">Precio</string>
     <string name="btnGuardar">Guardar</string>
-    <string-array name="tipos">
+    <string-array name="tipoVehiculo">
         <item>Servicio particular</item>
         <item>Oficiales</item>
         <item>Diplomáticos</item>
@@ -20,8 +20,6 @@
     </string-array>
     <string name="btnCambiar">Cambiar de Actividad</string>
     <string name="tituloCalcular">Calcular Automáticamente Precio del Combustible Según Normativa</string>
-    <string name="editarCombustible">Digite el volumen del combustible</string>
-    <string name="combustible">Volumen</string>
     <string name="btnCalcular">Calcular</string>
     <string name="total">Total: 0$</string>
     <string name="transacciones">Transacciones:</string>
@@ -49,7 +47,7 @@
         <item>Gas Natural Vehicular</item>
     </string-array>
     <string name="cantidad">Cantidad(Galones): </string>
-    <string name="textoCantidad">Cantidad</string>
+    <string name="textoCantidad">Ingrese la cantidad</string>
     <string name="btnRegistrar">Registrar</string>
     <string name="registros">Registros: </string>
     <string name="btnCerrarSesion">Cerrar Sesión</string>
@@ -57,8 +55,14 @@
     <string name="filtrar">Tipo de filtro: </string>
     <string-array name="filtro">
         <item>Sin filtro</item>
-        <item>Tipo de combustible</item>
+        <item>Tipo de movimiento</item>
         <item>Fecha de transacción</item>
     </string-array>
     <string name="btnFiltrar">Filtrar</string>
+    <string name="tituloPriceValidation">Validar cumplimiento de precios segun decreto 1428</string>
+    <string name="tituloFuelDelivery">Registro de entrega por distribuidor mayorista</string>
+    <string name="placa">Placa: </string>
+    <string name="textoPlaca">Ingrese la placa</string>
+    <string name="estacion">Estación: </string>
+    <string name="entregas">Entregas: </string>
 </resources>

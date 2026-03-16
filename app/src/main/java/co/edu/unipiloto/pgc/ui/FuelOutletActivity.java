@@ -37,7 +37,7 @@ public class FuelOutletActivity extends BaseActivity {
         String textoCompleto="";
         for(int i=0; i<registers.size(); i++) {
             textoCompleto += "Entrada " + registers.get(i).getId() + ": Fecha: " + registers.get(i).getFechaFormateada()
-                    + " Tipo: " + registers.get(i).getTipoCombustible()
+                    + " Tipo Combustible: " + registers.get(i).getTipoCombustible()
                     + " Cantidad: " +registers.get(i).getCantidad()
                     + " Registrado por: " + registers.get(i).getEstacion().getUsername()
                 + "\n";
@@ -62,7 +62,7 @@ public class FuelOutletActivity extends BaseActivity {
         String textoCompleto="";
         for(int i=0; i < registers.size(); i++) {
             textoCompleto += "Entrada " + (i + 1) + ": Fecha: " + registers.get(i).getFechaFormateada()
-                    + " Tipo: " + registers.get(i).getTipoCombustible()
+                    + " Tipo Combustible: " + registers.get(i).getTipoCombustible()
                     + " Cantidad: " +registers.get(i).getCantidad()
                     + " Registrado por: " + registers.get(i).getEstacion().getUsername()
                     + "\n";

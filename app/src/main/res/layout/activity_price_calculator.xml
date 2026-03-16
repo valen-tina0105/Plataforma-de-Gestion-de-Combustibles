@@ -26,16 +26,16 @@
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tipos"
+        android:id="@+id/tipoVehiculo"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:entries="@array/tipos"
+        android:entries="@array/tipoVehiculo"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/editarCombustible"
+        android:text="@string/cantidad"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
         />
@@ -43,11 +43,11 @@
     <EditText
         android:layout_width="225dp"
         android:layout_height="wrap_content"
-        android:id="@+id/combustible"
+        android:id="@+id/textoCantidad"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:inputType="number"
-        android:hint="@string/combustible"
+        android:hint="@string/textoCantidad"
         />
 
     <Button
@@ -77,12 +77,11 @@
         />
 
     <TextView
+        android:id="@+id/textoTransacciones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textoTransacciones"
-        android:text=""
         android:layout_marginStart="16dp"
-        />
+        android:text="" />
 
     <TextView
         android:layout_width="wrap_content"

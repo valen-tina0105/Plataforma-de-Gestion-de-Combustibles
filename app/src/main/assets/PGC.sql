@@ -41,6 +41,19 @@ CREATE TABLE IF NOT EXISTS Registros (
     FOREIGN KEY (estacion_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS Entregas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    placa TEXT NOT NULL,
+    tipo_combustible TEXT NOT NULL,
+    cantidad INTEGER NOT NULL CHECK(cantidad > 0),
+    fecha TEXT,
+    estacion_destino_id INTEGER NOT NULL,
+    distribuidor_id INTEGER,
+
+    FOREIGN KEY (estacion_destino_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (distribuidor_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+
 CREATE VIEW Movimientos AS SELECT id, tipo_vehiculo AS tipo, cantidad, total, fecha, estacion_id, 'SALIDA' AS tipo_movimiento FROM Transacciones UNION ALL SELECT id, tipo_combustible AS tipo, cantidad, NULL AS total, fecha, estacion_id, 'ENTRADA' AS tipo_movimiento FROM Registros;
 
 INSERT OR IGNORE INTO roles (id, nombre) VALUES
@@ -71,6 +84,21 @@ VALUES ('Camperos y Cuatrimotos', 12000, '2026-03-01', 2);
 INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
 ('estacion_1', 'estacion123', 1);
 
+INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
+('estacion_2', 'estacion123', 1);
+
+INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
+('autoridad', 'autoridad123', 3);
+
+INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
+('distribuidor_1', 'distribuidor123', 2);
+
+INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
+('distribuidor_2', 'distribuidor123', 2);
+
+INSERT INTO Entregas (placa, tipo_combustible, cantidad, fecha, estacion_destino_id, distribuidor_id) VALUES
+('ABC123', 'Gasolina Corriente', 1200, '16-03-2026', 3, 6);
+
 INSERT INTO Transacciones (tipo_vehiculo, cantidad, total, fecha, estacion_id) VALUES
 ('Camperos y Cuatrimotos', 30, 36000, '2026-03-14', 3);
 
@@ -78,13 +106,13 @@ INSERT INTO Transacciones (tipo_vehiculo, cantidad, total, fecha, estacion_id)
 VALUES ('Servicio particular', 20, 20000, '2026-03-10', 3);
 
 INSERT INTO Transacciones (tipo_vehiculo, cantidad, total, fecha, estacion_id)
-VALUES ('Oficiales', 15, 12000, '2026-03-12', 3);
+VALUES ('Oficiales', 15, 12000, '2026-03-12', 4);
 
 INSERT INTO Registros (tipo_combustible, cantidad, fecha, estacion_id) VALUES
-('Gasolina', 150, '2026-03-13', 3);
+('Gasolina Corriente', 150, '2026-03-13', 3);
 
 INSERT INTO Registros (tipo_combustible, cantidad, fecha, estacion_id)
-VALUES ('Gasolina', 200, '2026-03-09', 3);
+VALUES ('Gasolina Extra', 200, '2026-03-09', 4);
 
 INSERT INTO Registros (tipo_combustible, cantidad, fecha, estacion_id)
-VALUES ('Diesel', 300, '2026-03-11', 3);
+VALUES ('ACPM(Diésel)', 300, '2026-03-11', 3);

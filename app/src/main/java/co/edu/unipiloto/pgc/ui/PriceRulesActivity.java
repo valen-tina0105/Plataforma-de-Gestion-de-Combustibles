@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -42,10 +44,11 @@ public class PriceRulesActivity extends BaseActivity {
     }
 
     public void onSendRule(View view) {
-        Spinner tipos = findViewById(R.id.tipos);
-        String tipo = tipos.getSelectedItem().toString();
+        Spinner tipoVehiculo = findViewById(R.id.tipoVehiculo);
+        String tipo = tipoVehiculo.getSelectedItem().toString();
         EditText precio = findViewById(R.id.precio);
         if(precio.getText().toString().isEmpty()){
+            Toast.makeText(this, "El precio no puede estar vacio", Toast.LENGTH_SHORT).show();
             return;
         }
         TextView textoReglas = findViewById(R.id.textoReglas);

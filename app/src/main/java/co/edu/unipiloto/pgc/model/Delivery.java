@@ -1,18 +1,19 @@
 package co.edu.unipiloto.pgc.model;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Register{
+public class Delivery {
     private int id;
-    private User estacion;
+    private String placa;
     private String tipoCombustible;
     private int cantidad;
     private Date fecha;
     private String fechaFormateada;
+    private User estacion;
+    private User distribuidor;
 
-    public Register() {
+    public Delivery() {
         fecha = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         fechaFormateada = formatter.format(fecha);
@@ -26,12 +27,12 @@ public class Register{
         this.id = id;
     }
 
-    public User getEstacion() {
-        return estacion;
+    public String getPlaca() {
+        return placa;
     }
 
-    public void setEstacion(User estacion) {
-        this.estacion = estacion;
+    public void setPlaca(String placa) {
+        this.placa = placa;
     }
 
     public String getTipoCombustible() {
@@ -64,5 +65,21 @@ public class Register{
 
     public void setFechaFormateada(String fechaFormateada) {
         this.fechaFormateada = fechaFormateada;
+    }
+
+    public User getEstacion() {
+        return estacion;
+    }
+
+    public void setEstacion(User estacion) {
+        this.estacion = estacion;
+    }
+
+    public User getDistribuidor() {
+        return distribuidor;
+    }
+
+    public void setDistribuidor(User distribuidor) {
+        this.distribuidor = distribuidor;
     }
 }

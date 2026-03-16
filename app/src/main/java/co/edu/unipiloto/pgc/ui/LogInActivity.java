@@ -61,8 +61,16 @@ public class LogInActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case "Distribuidor mayorista":
+                intent = new Intent(this, FuelDeliveryActivity.class);
+                intent.putExtra("user", user);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 break;
             case "Autoridad reguladora":
+                intent = new Intent(this, PriceValidationActivity.class);
+                intent.putExtra("user", user);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 break;
             case "Administrador de usuarios":
                 intent = new Intent(this, CreateUsersActivity.class);

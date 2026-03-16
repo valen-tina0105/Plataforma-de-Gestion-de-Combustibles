@@ -106,7 +106,37 @@ public class UserDAO {
                 new Object[]{user.getUsername(), user.getPassword(), user.getRol().getId()}
         );
 
+    }
 
+    public ArrayList<User> getAllStations() {
+        ArrayList<User> users = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT u.id, u.username, u.password, r.id, r.nombre " +
+                        "FROM Users u " +
+                        "INNER JOIN Roles r ON u.rol_id = r.id " +
+                        "WHERE r.id = 1",
+                null
+        );
+
+        while (cursor.moveToNext()) {
+            User user = new User();
+            user.setId(cursor.getInt(0));
+            user.setUsername(cursor.getString(1));
+            user.setPassword(cursor.getString(2));
+
+            Rol rol = new Rol();
+            rol.setId(cursor.getInt(3));
+            rol.setNombre(cursor.getString(4));
+
+            user.setRol(rol);
+
+            users.add(user);
+        }
+
+        cursor.close();
+        return users;
     }
 
 }

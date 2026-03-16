@@ -14,6 +14,7 @@ public class Transaction{
     private Date fecha;
 
     private String fechaFormateada;
+    private String estado;
 
     public Transaction() {
         fecha = new Date();
@@ -75,5 +76,13 @@ public class Transaction{
 
     public void setFechaFormateada(String fechaFormateada) {
         this.fechaFormateada = fechaFormateada;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

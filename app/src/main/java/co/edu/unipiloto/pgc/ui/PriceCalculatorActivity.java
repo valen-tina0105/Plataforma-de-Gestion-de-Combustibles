@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -51,17 +52,18 @@ public class PriceCalculatorActivity extends BaseActivity {
     }
 
     public void onSendCalculate(View view) {
-        Spinner tipos = findViewById(R.id.tipos);
-        String tipo = tipos.getSelectedItem().toString();
-        EditText combustible = findViewById(R.id.combustible);
-        if (combustible.getText().toString().isEmpty()) {
+        Spinner tipoVehiculo = findViewById(R.id.tipoVehiculo);
+        String tipo = tipoVehiculo.getSelectedItem().toString();
+        EditText textoCantidad = findViewById(R.id.textoCantidad);
+        if (textoCantidad.getText().toString().isEmpty()) {
+            Toast.makeText(this, "La cantidad no puede estar vacia", Toast.LENGTH_SHORT).show();
             return;
         }
         TextView total = findViewById(R.id.total);
-        int volumen = Integer.parseInt(combustible.getText().toString());
+        int volumen = Integer.parseInt(textoCantidad.getText().toString());
         int totalReal = 0;
         if (rules.isEmpty()) {
-            total.setText("No hay ninguna regla establecida");
+            Toast.makeText(this, "No hay ninguna regla establecida", Toast.LENGTH_SHORT).show();
             return;
         }
         boolean encontrada = false;
@@ -72,7 +74,7 @@ public class PriceCalculatorActivity extends BaseActivity {
             }
         }
         if (!encontrada) {
-            total.setText("No hay ninguna regla establecida para " + tipo);
+            Toast.makeText(this, "No hay ninguna regla establecida para " + tipo, Toast.LENGTH_SHORT).show();
         }
         for (int i = 0; i < rules.size(); i++) {
             if (rules.get(i).getTipoVehiculo().equalsIgnoreCase(tipo)) {
@@ -99,7 +101,7 @@ public class PriceCalculatorActivity extends BaseActivity {
                     + "$ Cobrado por: " + transactions.get(i).getEstacion().getUsername() + transactions.get(i).getTotal() + "\n";
         }
         textoTransacciones.setText(textoCompleto);
-        combustible.setText("");
+        textoCantidad.setText("");
     }
 
     public void onChangeActivity(View view) {
