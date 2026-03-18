@@ -61,25 +61,14 @@ INSERT OR IGNORE INTO roles (id, nombre) VALUES
 (2, 'Distribuidor mayorista'),
 (3, 'Autoridad reguladora'),
 (4, 'Administrador de usuarios'),
-(5, 'Administrador de reglas');
+(5, 'Administrador de reglas'),
+(6, 'Usuario vehiculo particular')
 
 INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
 ('admin_users', 'admin123', 4);
 
 INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
 ('admin_reglas', 'admin123', 5);
-
-INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES
-('Servicio particular', 10000, '2026-03-01', 2);
-
-INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
-VALUES ('Oficiales', 8000, '2026-03-01', 2);
-
-INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
-VALUES ('Diplomáticos', 1000, '2026-03-01', 2);
-
-INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
-VALUES ('Camperos y Cuatrimotos', 12000, '2026-03-01', 2);
 
 INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
 ('estacion_1', 'estacion123', 1);
@@ -95,6 +84,18 @@ INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
 
 INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
 ('distribuidor_2', 'distribuidor123', 2);
+
+INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES
+('Servicio particular', 10000, '2026-03-01', 2);
+
+INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
+VALUES ('Oficiales', 8000, '2026-03-01', 2);
+
+INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
+VALUES ('Diplomáticos', 1000, '2026-03-01', 2);
+
+INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
+VALUES ('Camperos y Cuatrimotos', 12000, '2026-03-01', 2);
 
 INSERT INTO Entregas (placa, tipo_combustible, cantidad, fecha, estacion_destino_id, distribuidor_id) VALUES
 ('ABC123', 'Gasolina Corriente', 1200, '16-03-2026', 3, 6);

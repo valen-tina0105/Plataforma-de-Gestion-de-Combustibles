@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlataformaDeGestionDeCombustibles">
         <activity
+            android:name=".ui.SignUpActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.FuelDeliveryActivity"
             android:exported="false" />
         <activity

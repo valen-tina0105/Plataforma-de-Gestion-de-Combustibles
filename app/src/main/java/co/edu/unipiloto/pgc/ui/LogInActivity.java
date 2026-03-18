@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,11 +32,16 @@ public class LogInActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-        Intent intent = getIntent();
         userDAO = new UserDAO(this);
         users = userDAO.getAllUsers();
         rolDAO = new RolDAO(this);
         roles = rolDAO.getAllRoles();
+        TextView signUp = findViewById(R.id.txtSignUp);
+
+        signUp.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SignUpActivity.class);
+            startActivity(intent);
+        });
     }
 
     public void onLogIn(View view) {
@@ -45,9 +51,6 @@ public class LogInActivity extends BaseActivity {
                 textoUsuario.getText().toString().trim(),
                 textoContrasenia.getText().toString().trim()
         );
-        for(User u : users){
-            Log.d("LOGIN_DEBUG", u.getUsername() + " " + u.getPassword());
-        }
         if (user == null) {
             Toast.makeText(this, "Usuario o Contraseña incorrecta", Toast.LENGTH_SHORT).show();
             return;
@@ -83,6 +86,8 @@ public class LogInActivity extends BaseActivity {
                 intent.putExtra("user", user);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                break;
+            case "Usuario vehiculo particular":
                 break;
         }
     }

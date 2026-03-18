@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.CreateUsersActivity">
-
+    tools:context=".ui.SignUpActivity">
 
     <TextView
-        android:id="@+id/tituloCreate"
+        android:id="@+id/registrarse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="150dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/tituloCreate"
+        android:text="@string/registrarse"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,11 +23,11 @@
         android:id="@+id/usuario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="36dp"
         android:text="@string/usuario"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tituloCreate" />
+        app:layout_constraintTop_toBottomOf="@+id/registrarse" />
 
     <EditText
         android:id="@+id/textoUsuario"
@@ -37,44 +35,23 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="30dp"
         android:ems="10"
         android:hint="@string/textoUsuario"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/usuario"
-        app:layout_constraintTop_toBottomOf="@+id/tituloCreate" />
-
-    <TextView
-        android:id="@+id/rol"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="35dp"
-        android:text="@string/rol"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usuario" />
-
-    <Spinner
-        android:id="@+id/roles"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/rol"
-        app:layout_constraintTop_toBottomOf="@+id/textoUsuario" />
+        app:layout_constraintTop_toBottomOf="@+id/registrarse" />
 
     <TextView
         android:id="@+id/contraseña"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="48dp"
         android:text="@string/contraseña"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rol" />
+        app:layout_constraintTop_toBottomOf="@+id/usuario" />
 
     <EditText
         android:id="@+id/textoContrasenia"
@@ -88,31 +65,18 @@
         android:hint="@string/textoContrasenia"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/contraseña"
-        app:layout_constraintTop_toBottomOf="@+id/roles" />
+        app:layout_constraintTop_toBottomOf="@+id/textoUsuario" />
 
     <Button
-        android:id="@+id/btnCrear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/btnCrear"
-        android:onClick="onCreateUser"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textoContrasenia" />
-
-    <Button
-        android:id="@+id/btnCerrarSesion"
+        android:id="@+id/btnRegistrarse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/btnCerrarSesion"
-        android:onClick="onLogOut"
+        android:text="@string/registrarse"
+        android:onClick="onSignUp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCrear" />
+        app:layout_constraintTop_toBottomOf="@+id/textoContrasenia" />
 </androidx.constraintlayout.widget.ConstraintLayout>

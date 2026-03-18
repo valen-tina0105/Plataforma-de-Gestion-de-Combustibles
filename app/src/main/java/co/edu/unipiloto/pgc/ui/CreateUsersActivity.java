@@ -3,6 +3,7 @@ package co.edu.unipiloto.pgc.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -26,6 +27,8 @@ public class CreateUsersActivity extends BaseActivity {
     private ArrayList<Rol> roles;
     private UserDAO userDAO;
     private RolDAO rolDAO;
+    
+    private Spinner spinnerRoles;
 
 
     @Override
@@ -36,6 +39,22 @@ public class CreateUsersActivity extends BaseActivity {
         users = userDAO.getAllUsers();
         rolDAO = new RolDAO(this);
         roles = rolDAO.getAllRoles();
+        spinnerRoles = findViewById(R.id.roles);
+
+        ArrayList<String> rolesTexto = new ArrayList<>();
+
+        for(Rol rol : roles){
+            rolesTexto.add(rol.getNombre());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                rolesTexto
+        );
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRoles.setAdapter(adapter);
     }
 
     public void onCreateUser(View view) {

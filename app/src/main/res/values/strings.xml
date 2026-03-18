@@ -27,12 +27,6 @@
     <string name="usuario">Nombre de Usuario: </string>
     <string name="textoUsuario">Usuario</string>
     <string name="rol">Seleccione el rol: </string>
-    <string-array name="roles">
-        <item>Estacion de servicio</item>
-        <item>Distribuidor mayorista</item>
-        <item>Autoridad reguladora</item>
-        <item>Administrador de reglas</item>
-    </string-array>
     <string name="contraseña">Contraseña: </string>
     <string name="textoContrasenia">Contraseña</string>
     <string name="btnCrear">Crear Usuario</string>
@@ -65,4 +59,5 @@
     <string name="textoPlaca">Ingrese la placa</string>
     <string name="estacion">Estación: </string>
     <string name="entregas">Entregas: </string>
+    <string name="registrarse">Registrarse</string>
 </resources>
