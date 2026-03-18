@@ -62,7 +62,7 @@ INSERT OR IGNORE INTO roles (id, nombre) VALUES
 (3, 'Autoridad reguladora'),
 (4, 'Administrador de usuarios'),
 (5, 'Administrador de reglas'),
-(6, 'Usuario vehiculo particular')
+(6, 'Usuario vehiculo particular');
 
 INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
 ('admin_users', 'admin123', 4);
