@@ -36,7 +36,7 @@ public class LogInActivity extends BaseActivity {
         users = userDAO.getAllUsers();
         rolDAO = new RolDAO(this);
         roles = rolDAO.getAllRoles();
-        TextView signUp = findViewById(R.id.txtSignUp);
+        TextView signUp = findViewById(R.id.signUp);
 
         signUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, SignUpActivity.class);

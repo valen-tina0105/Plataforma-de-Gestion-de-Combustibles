@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/log_in"
     tools:context=".ui.LogInActivity">
 
     <TextView
@@ -12,9 +13,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/montserrat_bold"
         android:text="@string/bienvenido"
+        android:textColor="@color/white"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,6 +30,8 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="36dp"
         android:text="@string/usuario"
+        android:textColor="@color/white"
+        android:fontFamily="@font/montserrat_regular"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bienvenido" />
 
@@ -39,6 +45,10 @@
         android:ems="10"
         android:hint="@string/textoUsuario"
         android:inputType="text"
+        android:fontFamily="@font/montserrat_regular"
+        android:backgroundTint="@android:color/white"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/usuario"
         app:layout_constraintTop_toBottomOf="@+id/bienvenido" />
@@ -50,6 +60,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="48dp"
         android:text="@string/contraseña"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usuario" />
 
@@ -63,6 +74,10 @@
         android:ems="10"
         android:inputType="textPassword"
         android:hint="@string/textoContrasenia"
+        android:backgroundTint="@android:color/white"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:fontFamily="@font/montserrat_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/contraseña"
         app:layout_constraintTop_toBottomOf="@+id/textoUsuario" />
@@ -72,10 +87,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/btnLogIn"
+        android:fontFamily="@font/montserrat_regular"
         android:onClick="onLogIn"
+        android:text="@string/btnLogIn"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textoContrasenia" />
@@ -84,22 +101,23 @@
         android:id="@+id/sinCuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="-74dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/montserrat_bold"
         android:text="@string/sinCuenta"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/signUp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/signUp" />
 
     <TextView
         android:id="@+id/signUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/montserrat_bold"
         android:text="@string/signUp"
         android:textColor="@color/purple_500"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.74"
+        app:layout_constraintHorizontal_bias="0.77"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLogIn" />
 
