@@ -60,4 +60,6 @@
     <string name="estacion">Estación: </string>
     <string name="entregas">Entregas: </string>
     <string name="registrarse">Registrarse</string>
+    <string name="sinCuenta">¿No tienes cuenta aún?</string>
+    <string name="signUp">Regístrate</string>
 </resources>
