@@ -8,6 +8,16 @@
     android:orientation="vertical"
     tools:context=".ui.PriceRulesActivity">
 
+    <ImageButton
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Cerrar sesión"
+        android:src="@drawable/baseline_logout_24"
+        android:layout_gravity="right"
+        android:onClick="onLogOut"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,12 +78,4 @@
         android:layout_marginStart="16dp"
         android:text="" />
 
-    <Button
-        android:id="@+id/btnCerrarSesion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:onClick="onLogOut"
-        android:text="@string/btnCerrarSesion" />
 </LinearLayout>

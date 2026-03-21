@@ -2,12 +2,14 @@ package co.edu.unipiloto.pgc.ui;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -31,10 +33,13 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.light_blue));
         userDAO = new UserDAO(this);
         users = userDAO.getAllUsers();
         rolDAO = new RolDAO(this);
         roles = rolDAO.getAllRoles();
+
     }
 
     public void onSignUp(View view) {

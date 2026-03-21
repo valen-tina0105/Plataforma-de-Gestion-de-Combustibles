@@ -6,6 +6,21 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="gray">#111111</color>
     <color name="blue">#0055CC</color>
+    <color name="light_blue">#407ADF</color>
+    <color name="dark_blue">#09021E</color>
+    <color name="green">#0F2F33</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="pink">#FFD500F9</color>
+    <color name="blue_primary">#1E3A8A</color>
+    <color name="blue_secondary">#2563EB</color>
+    <color name="blue_light">#60A5FA</color>
+    <color name="blue_gradient_start">#1E3A8A</color>
+    <color name="blue_gradient_end">#0F172A</color>
+    <color name="card_background">#0B1F3A</color>
+    <color name="input_background">#E3F2FD</color>
+    <color name="input_text">#0F172A</color>
+    <color name="button_blue">#2563EB</color>
+    <color name="button_blue_dark">#1E40AF</color>
 </resources>
