@@ -61,8 +61,8 @@ public class PriceCalculatorActivity extends BaseActivity {
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             Intent sendIntent;
-            if (id == R.id.nav_calcular) {
-                sendIntent = new Intent(this, PriceCalculatorActivity.class);
+            if (id == R.id.nav_historial) {
+                sendIntent = new Intent(this, FuelHistoryActivity.class);
                 sendIntent.putExtra("user", user);
                 startActivity(sendIntent);
                 finish();
@@ -73,7 +73,7 @@ public class PriceCalculatorActivity extends BaseActivity {
                 startActivity(sendIntent);
                 finish();
                 return true;
-            } else return id == R.id.nav_historial;
+            } else return id == R.id.nav_calcular;
         });
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);

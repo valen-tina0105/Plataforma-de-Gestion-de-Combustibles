@@ -34,6 +34,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacion().getUsername());
         holder.viewTipoVehiculo.setText("Tipo de vehiculo: " + transactions.get(position).getTipoVehiculo());
         holder.viewTotal.setText("Total: " + transactions.get(position).getTotal());
+        holder.viewCantidad.setText("Cantidad: " + transactions.get(position).getCantidad());
         holder.viewFecha.setText("Fecha: " + transactions.get(position).getFechaFormateada());
     }
 
@@ -50,13 +51,14 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
 
     public class TransactionViewHolder extends RecyclerView.ViewHolder{
-        TextView viewTransaccion, viewEstacion, viewTipoVehiculo, viewTotal, viewFecha;
+        TextView viewTransaccion, viewEstacion, viewTipoVehiculo, viewTotal,viewCantidad, viewFecha;
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             viewTransaccion = itemView.findViewById(R.id.viewTransaccion);
             viewEstacion = itemView.findViewById(R.id.viewEstacion);
             viewTipoVehiculo = itemView.findViewById(R.id.viewTipoVehiculo);
             viewTotal = itemView.findViewById(R.id.viewTotal);
+            viewCantidad = itemView.findViewById(R.id.viewCantidad);
             viewFecha = itemView.findViewById(R.id.viewFecha);
         }
     }
