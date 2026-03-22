@@ -91,9 +91,8 @@ public class FuelDeliveryActivity extends BaseActivity {
         delivery.setEstacion(stations.get(estacionDestino.getSelectedItemPosition()));
         delivery.setDistribuidor(user);
 
-        deliveries.add(delivery);
-
         deliveryDAO.insertDelivery(delivery);
+        deliveries = deliveryDAO.getAllDeliveries(user);
 
         adapterEntregas.notifyDataSetChanged();
 

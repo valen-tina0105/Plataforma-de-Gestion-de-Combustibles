@@ -3,6 +3,7 @@ package co.edu.unipiloto.pgc.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -10,6 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
@@ -20,6 +25,7 @@ import co.edu.unipiloto.pgc.model.Register;
 import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
+import co.edu.unipiloto.pgc.ui.adapters.TransactionAdapter;
 
 public class PriceCalculatorActivity extends BaseActivity {
 
@@ -29,6 +35,7 @@ public class PriceCalculatorActivity extends BaseActivity {
     private ArrayList<Rule> rules;
     private RuleDAO ruleDAO;
     private User user;
+    private TransactionAdapter adapterTransacciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +47,35 @@ public class PriceCalculatorActivity extends BaseActivity {
         transactions = transactionDAO.getAllTransactions(user);
         ruleDAO = new RuleDAO(this);
         rules = ruleDAO.getAllRules();
-        TextView textoTransacciones = findViewById(R.id.textoTransacciones);
-        String textoCompleto = "";
-        for (int i = 0; i < transactions.size(); i++) {
-            textoCompleto += "Transaccion " + transactions.get(i).getId() + ": Fecha: " + transactions.get(i).getFechaFormateada()
-                    + " Tipo: " + transactions.get(i).getTipoVehiculo()
-                    + " Volumen: " + transactions.get(i).getCantidad() + " Total: "
-                    + transactions.get(i).getTotal()
-                    + "$ Cobrado por: " + transactions.get(i).getEstacion().getUsername() + "\n";
-        }
-        textoTransacciones.setText(textoCompleto);
+
+        RecyclerView listaTransacciones = findViewById(R.id.listaTransacciones);
+        listaTransacciones.setLayoutManager(new LinearLayoutManager(this));
+
+        adapterTransacciones = new TransactionAdapter(transactions);
+        listaTransacciones.setAdapter(adapterTransacciones);
+
+        Button btnCalcular = findViewById(R.id.btnCalcular);
+        btnCalcular.setOnClickListener(this::onSendCalculate);
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            Intent sendIntent;
+            if (id == R.id.nav_calcular) {
+                sendIntent = new Intent(this, PriceCalculatorActivity.class);
+                sendIntent.putExtra("user", user);
+                startActivity(sendIntent);
+                finish();
+                return true;
+            } else if (id == R.id.nav_registrar) {
+                sendIntent = new Intent(this, FuelOutletActivity.class);
+                sendIntent.putExtra("user", user);
+                startActivity(sendIntent);
+                finish();
+                return true;
+            } else return id == R.id.nav_historial;
+        });
+
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
@@ -88,41 +114,16 @@ public class PriceCalculatorActivity extends BaseActivity {
                 total.setText("Regla no establecida");
             }
         }
-        TextView textoTransacciones = findViewById(R.id.textoTransacciones);
         Transaction transaction = new Transaction();
         transaction.setTipoVehiculo(tipo);
         transaction.setCantidad(volumen);
         transaction.setTotal(totalReal);
         transaction.setEstacion(user);
-        transactions.add(transaction);
         transactionDAO.insertarTransaccion(transaction);
-        String textoCompleto = "";
-        for (int i = 0; i < transactions.size(); i++) {
-            textoCompleto += "Transaccion " + (i + 1) + ": Fecha: " + transactions.get(i).getFechaFormateada()
-                    + " Tipo: " + transactions.get(i).getTipoVehiculo()
-                    + " Volumen: " + transactions.get(i).getCantidad() + " Total: "
-                    + "$ Cobrado por: " + transactions.get(i).getEstacion().getUsername() + transactions.get(i).getTotal() + "\n";
-        }
-        textoTransacciones.setText(textoCompleto);
+        transactions = transactionDAO.getAllTransactions(user);
+        adapterTransacciones.updateList(transactions);
         textoCantidad.setText("");
+        tipoVehiculo.setSelection(0);
     }
 
-    public void onChangeActivity(View view) {
-        Spinner actividades = findViewById(R.id.actividades);
-        Intent intent;
-        switch (actividades.getSelectedItem().toString()) {
-            case "Calcular Precio":
-                break;
-            case "Registrar Entrada":
-                intent = new Intent(this, FuelOutletActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                break;
-            case "Consultar Historial":
-                intent = new Intent(this, FuelHistoryActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                break;
-        }
-    }
 }

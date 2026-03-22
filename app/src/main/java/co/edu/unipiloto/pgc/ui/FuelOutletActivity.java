@@ -85,9 +85,11 @@ public class FuelOutletActivity extends BaseActivity {
         register.setTipoCombustible(tipoCombustible.getSelectedItem().toString());
         register.setCantidad(Integer.parseInt(textoCantidad.getText().toString()));
         register.setEstacion(user);
-        registers.add(register);
         registerDAO.insertarRegistro(register);
-
+        registers = registerDAO.getAllRegisters(user);
+        adapterRegistros.updateList(registers);
+        textoCantidad.setText("");
+        tipoCombustible.setSelection(0);
     }
 
 }

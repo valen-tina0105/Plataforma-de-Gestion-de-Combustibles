@@ -49,7 +49,6 @@ public class FuelHistoryActivity extends BaseActivity {
         btnFiltrar.setOnClickListener(this::onFilter);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             Intent sendIntent;

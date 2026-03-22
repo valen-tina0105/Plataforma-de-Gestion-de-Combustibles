@@ -68,8 +68,8 @@ public class PriceRulesActivity extends BaseActivity {
             rule.setTipoVehiculo(tipo);
             rule.setPrecio(textoPrecio);
             rule.setAdmin(user);
-            rules.add(rule);
             ruleDAO.insertarRegla(rule);
+            rules = ruleDAO.getAllRules();
         }
         String textoCompleto="";
         for(int i=0; i<rules.size(); i++) {

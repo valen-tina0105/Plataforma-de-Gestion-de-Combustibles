@@ -99,6 +99,7 @@ public class CreateUsersActivity extends BaseActivity {
         }
 
         userDAO.insertarUsuario(user);
+        users = userDAO.getAllUsers();
         Toast.makeText(this, "Usuario Creado Correctamente", Toast.LENGTH_SHORT).show();
         textoUsuario.setText("");
         textoContrasenia.setText("");

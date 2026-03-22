@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.R;
-import co.edu.unipiloto.pgc.model.Movement;
 import co.edu.unipiloto.pgc.model.Register;
 
 public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.RegistersViewHolder> {
