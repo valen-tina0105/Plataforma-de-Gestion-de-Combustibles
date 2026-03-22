@@ -3,9 +3,11 @@ package co.edu.unipiloto.pgc.ui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -29,6 +31,8 @@ public class FuelDeliveryActivity extends BaseActivity {
     private UserDAO userDAO;
     private User user;
     private Spinner estacionDestino;
+    private DeliveriesAdapter adapterEntregas;
+
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -61,36 +65,42 @@ public class FuelDeliveryActivity extends BaseActivity {
         RecyclerView listaEntregas = findViewById(R.id.listaEntregas);
         listaEntregas.setLayoutManager(new LinearLayoutManager(this));
 
-        DeliveriesAdapter adapterEntregas = new DeliveriesAdapter(deliveries);
+        adapterEntregas = new DeliveriesAdapter(deliveries);
         listaEntregas.setAdapter(adapterEntregas);
 
+        ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        btnCerrarSesion.setOnClickListener(this::onLogOut);
+
         Button btnRegistrar = findViewById(R.id.btnRegistrar);
-        btnRegistrar.setOnClickListener(v -> {
-            EditText textoPlaca = findViewById(R.id.textoPlaca), textoCantidad = findViewById(R.id.textoCantidad);
-            Spinner tipoCombustible = findViewById(R.id.tipoCombustible);
-            if (textoPlaca.getText().toString().isEmpty() || textoCantidad.getText().toString().isEmpty()) {
-                Toast.makeText(this, "Todos los espacios deben ser rellenados", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Delivery delivery = new Delivery();
-            delivery.setPlaca(textoPlaca.getText().toString());
-            delivery.setTipoCombustible(tipoCombustible.getSelectedItem().toString());
-            delivery.setCantidad(Integer.parseInt(textoCantidad.getText().toString()));
-            delivery.setEstacion(stations.get(estacionDestino.getSelectedItemPosition()));
-            delivery.setDistribuidor(user);
+        btnRegistrar.setOnClickListener(this::registerDelivery);
 
-            deliveries.add(delivery);
+    }
 
-            deliveryDAO.insertDelivery(delivery);
+    @SuppressLint("NotifyDataSetChanged")
+    public void registerDelivery(View view) {
+        EditText textoPlaca = findViewById(R.id.textoPlaca), textoCantidad = findViewById(R.id.textoCantidad);
+        Spinner tipoCombustible = findViewById(R.id.tipoCombustible);
+        if (textoPlaca.getText().toString().isEmpty() || textoCantidad.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Todos los espacios deben ser rellenados", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Delivery delivery = new Delivery();
+        delivery.setPlaca(textoPlaca.getText().toString());
+        delivery.setTipoCombustible(tipoCombustible.getSelectedItem().toString());
+        delivery.setCantidad(Integer.parseInt(textoCantidad.getText().toString()));
+        delivery.setEstacion(stations.get(estacionDestino.getSelectedItemPosition()));
+        delivery.setDistribuidor(user);
 
-            adapterEntregas.notifyDataSetChanged();
+        deliveries.add(delivery);
 
-            textoPlaca.setText("");
-            textoCantidad.setText("");
-            tipoCombustible.setSelection(0);
-            estacionDestino.setSelection(0);
-        });
+        deliveryDAO.insertDelivery(delivery);
 
+        adapterEntregas.notifyDataSetChanged();
+
+        textoPlaca.setText("");
+        textoCantidad.setText("");
+        tipoCombustible.setSelection(0);
+        estacionDestino.setSelection(0);
     }
 
 }

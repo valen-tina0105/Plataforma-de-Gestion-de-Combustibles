@@ -3,6 +3,7 @@ package co.edu.unipiloto.pgc.ui;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -39,7 +40,8 @@ public class SignUpActivity extends AppCompatActivity {
         users = userDAO.getAllUsers();
         rolDAO = new RolDAO(this);
         roles = rolDAO.getAllRoles();
-
+        Button btnRegistrarse = findViewById(R.id.btnRegistrarse);
+        btnRegistrarse.setOnClickListener(this::onSignUp);
     }
 
     public void onSignUp(View view) {

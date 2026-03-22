@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -46,6 +47,9 @@ public class LogInActivity extends BaseActivity {
             Intent intent = new Intent(this, SignUpActivity.class);
             startActivity(intent);
         });
+
+        Button btnLogIn = findViewById(R.id.btnLogIn);
+        btnLogIn.setOnClickListener(this::onLogIn);
     }
 
     public void onLogIn(View view) {

@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -59,6 +61,11 @@ public class CreateUsersActivity extends BaseActivity {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerRoles.setAdapter(adapter);
+
+        Button btnCrear = findViewById(R.id.btnCrear);
+        btnCrear.setOnClickListener(this::onCreateUser);
+        ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
 
     public void onCreateUser(View view) {

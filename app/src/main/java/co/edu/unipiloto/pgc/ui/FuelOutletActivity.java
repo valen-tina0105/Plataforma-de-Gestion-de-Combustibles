@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -43,6 +44,8 @@ public class FuelOutletActivity extends BaseActivity {
                 + "\n";
         }
         textoRegistros.setText(textoCompleto);
+        ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
 
     public void onEntryRegister(View view){

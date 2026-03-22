@@ -3,6 +3,7 @@ package co.edu.unipiloto.pgc.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ public class FuelHistoryActivity extends BaseActivity {
         user = (User) intent.getSerializableExtra("user");
         movementDAO = new MovementDAO(this);
         movements = movementDAO.getAllMovements(user);
+
         TextView historial = findViewById(R.id.historial);
         String textoCompleto = "";
         for (int i = 0; i < movements.size(); i++) {
@@ -48,6 +50,9 @@ public class FuelHistoryActivity extends BaseActivity {
                     + "\n";
         }
         historial.setText(textoCompleto);
+
+        ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
 
     public void onFilter(View view) {

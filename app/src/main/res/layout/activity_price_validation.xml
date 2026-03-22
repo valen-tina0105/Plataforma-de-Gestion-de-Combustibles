@@ -36,9 +36,8 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Cerrar sesión"
+        android:contentDescription="@string/btnCerrarSesion"
         android:src="@drawable/baseline_logout_24"
-        android:onClick="onLogOut"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

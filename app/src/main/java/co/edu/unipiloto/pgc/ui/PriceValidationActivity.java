@@ -1,6 +1,7 @@
 package co.edu.unipiloto.pgc.ui;
 
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -37,5 +38,7 @@ public class PriceValidationActivity extends BaseActivity {
                     + "\n";
         }
         historial.setText(textoCompleto);
+        ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
 }

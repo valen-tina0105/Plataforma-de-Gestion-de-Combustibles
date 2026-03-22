@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,8 @@ public class PriceRulesActivity extends BaseActivity {
                     + "Fecha: " + rules.get(i).getFechaFormateada() + "$\n";
         }
         textoReglas.setText(textoCompleto);
+        ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
 
     public void onSendRule(View view) {

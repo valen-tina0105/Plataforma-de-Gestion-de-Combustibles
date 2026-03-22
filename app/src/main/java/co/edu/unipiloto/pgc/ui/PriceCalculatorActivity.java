@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,8 @@ public class PriceCalculatorActivity extends BaseActivity {
                     + "$ Cobrado por: " + transactions.get(i).getEstacion().getUsername() + "\n";
         }
         textoTransacciones.setText(textoCompleto);
+        ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
 
     public void onSendCalculate(View view) {
