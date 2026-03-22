@@ -30,7 +30,7 @@ public class MovementDAO {
                         "INNER JOIN Users u ON m.estacion_id = u.id " +
                         "INNER JOIN Roles r ON u.rol_id = r.id " +
                         "WHERE m.estacion_id = ? " +
-                        "ORDER BY m.fecha DESC",
+                        "ORDER BY m.fecha ASC",
                 new String[]{String.valueOf(userId.getId())}
         );
 

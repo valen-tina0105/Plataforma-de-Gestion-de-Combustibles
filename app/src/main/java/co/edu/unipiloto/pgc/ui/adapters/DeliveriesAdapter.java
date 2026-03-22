@@ -16,7 +16,7 @@ import co.edu.unipiloto.pgc.model.Delivery;
 
 public class DeliveriesAdapter extends RecyclerView.Adapter<DeliveriesAdapter.DeliveriesViewHolder> {
 
-    ArrayList<Delivery> deliveries;
+    private ArrayList<Delivery> deliveries;
 
     public DeliveriesAdapter(ArrayList<Delivery> deliveries) {
         this.deliveries = deliveries;

@@ -48,7 +48,7 @@
     <string name="historialCombustible">Consultar historial de movimientos de combustible</string>
     <string name="filtrar">Tipo de filtro: </string>
     <string-array name="filtro">
-        <item>Sin filtro</item>
+        <item>Todos</item>
         <item>Tipo de movimiento</item>
         <item>Fecha de transacción</item>
     </string-array>

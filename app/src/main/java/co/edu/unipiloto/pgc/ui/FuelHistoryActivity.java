@@ -1,34 +1,34 @@
 package co.edu.unipiloto.pgc.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.dao.MovementDAO;
-import co.edu.unipiloto.pgc.dao.RegisterDAO;
-import co.edu.unipiloto.pgc.dao.TransactionDAO;
 import co.edu.unipiloto.pgc.model.Movement;
-import co.edu.unipiloto.pgc.model.Register;
-import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
+import co.edu.unipiloto.pgc.ui.adapters.DeliveriesAdapter;
+import co.edu.unipiloto.pgc.ui.adapters.MovementsAdapter;
 
 public class FuelHistoryActivity extends BaseActivity {
 
     private MovementDAO movementDAO;
     private User user;
     private ArrayList<Movement> movements;
+    private MovementsAdapter adapterMovimientos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,70 +39,52 @@ public class FuelHistoryActivity extends BaseActivity {
         movementDAO = new MovementDAO(this);
         movements = movementDAO.getAllMovements(user);
 
-        TextView historial = findViewById(R.id.historial);
-        String textoCompleto = "";
-        for (int i = 0; i < movements.size(); i++) {
-            textoCompleto += "id: " + movements.get(i).getId() + " Tipo: " + movements.get(i).getTipo()
-                    + " Cantidad: " + movements.get(i).getCantidad() + " Total: "
-                    + movements.get(i).getTotal() + " Fecha: " + movements.get(i).getFecha()
-                    + " Estacion: " + movements.get(i).getEstacion().getId()
-                    + " Tipo de movimiento: " + movements.get(i).getTipoMovimiento()
-                    + "\n";
-        }
-        historial.setText(textoCompleto);
+        RecyclerView listaMovimientos = findViewById(R.id.listaMovimientos);
+        listaMovimientos.setLayoutManager(new LinearLayoutManager(this));
+
+        adapterMovimientos = new MovementsAdapter(movements);
+        listaMovimientos.setAdapter(adapterMovimientos);
+
+        Button btnFiltrar = findViewById(R.id.btnFiltrar);
+        btnFiltrar.setOnClickListener(this::onFilter);
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            Intent sendIntent;
+            if (id == R.id.nav_calcular) {
+                sendIntent = new Intent(this, PriceCalculatorActivity.class);
+                sendIntent.putExtra("user", user);
+                startActivity(sendIntent);
+                finish();
+                return true;
+            } else if (id == R.id.nav_registrar) {
+                sendIntent = new Intent(this, FuelOutletActivity.class);
+                sendIntent.putExtra("user", user);
+                startActivity(sendIntent);
+                finish();
+                return true;
+            } else return id == R.id.nav_historial;
+        });
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
-
+    @SuppressLint("NotifyDataSetChanged")
     public void onFilter(View view) {
         Spinner filter = findViewById(R.id.filtro);
-        String filtro = filter.getSelectedItem().toString();
-        TextView historial = findViewById(R.id.historial);
-        if (filtro.equals("Tipo de combustible")) {
-            movements = movementDAO.getMovementsOrderByType(user);
-            String textoCompleto = "";
-            for (int i = 0; i < movements.size(); i++) {
-                textoCompleto += "id: " + movements.get(i).getId() + " Tipo: " + movements.get(i).getTipo()
-                        + " Cantidad: " + movements.get(i).getCantidad() + " Total: "
-                        + movements.get(i).getTotal() + " Fecha: " + movements.get(i).getFecha()
-                        + " Estacion: " + movements.get(i).getEstacion().getId()
-                        + " Tipo de movimiento: " + movements.get(i).getTipoMovimiento()
-                        + "\n";
-            }
-            historial.setText(textoCompleto);
-        } else if (filtro.equals("Fecha de transacción")) {
-            movements = movementDAO.getMovementsByDate(user);
-            String textoCompleto = "";
-            for (int i = 0; i < movements.size(); i++) {
-                textoCompleto += "id: " + movements.get(i).getId() + " Tipo: " + movements.get(i).getTipo()
-                        + " Cantidad: " + movements.get(i).getCantidad() + " Total: "
-                        + movements.get(i).getTotal() + " Fecha: " + movements.get(i).getFecha()
-                        + " Estacion: " + movements.get(i).getEstacion().getId()
-                        + " Tipo de movimiento: " + movements.get(i).getTipoMovimiento()
-                        + "\n";
-            }
-            historial.setText(textoCompleto);
-        }
-    }
+        int posicion = filter.getSelectedItemPosition();
 
-    public void onChangeActivity(View view){
-        Spinner actividades = findViewById(R.id.actividades);
-        Intent intent;
-        switch (actividades.getSelectedItem().toString()){
-            case "Calcular Precio":
-                intent = new Intent(this, PriceCalculatorActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                break;
-            case "Registrar Entrada":
-                intent = new Intent(this, FuelOutletActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                break;
-            case "Consultar Historial":
-                break;
+        if (posicion == 0) {
+            movements = movementDAO.getAllMovements(user);
+        } else if (posicion == 1) {
+            movements = movementDAO.getMovementsOrderByType(user);
+        } else if (posicion == 2) {
+            movements = movementDAO.getMovementsByDate(user);
         }
+
+        adapterMovimientos.updateList(movements);
     }
 
 }
