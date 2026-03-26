@@ -14,28 +14,29 @@ import java.util.ArrayList;
 import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.model.Transaction;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TransactionViewHolder> {
     private ArrayList<Transaction> transactions;
-    public TransactionAdapter(ArrayList<Transaction> transactions) {
+    public HistoryAdapter(ArrayList<Transaction> transactions) {
         this.transactions = transactions;
     }
 
     @NonNull
     @Override
-    public TransactionAdapter.TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HistoryAdapter.TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_item, parent, false);
         return new TransactionViewHolder(view);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull TransactionAdapter.TransactionViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull HistoryAdapter.TransactionViewHolder holder, int position) {
         holder.viewTransaccion.setText("Transaccion " + transactions.get(position).getId());
-        holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacion().getUsername());
         holder.viewTipoVehiculo.setText("Tipo de vehiculo: " + transactions.get(position).getTipoVehiculo());
-        holder.viewTotal.setText("Total: " + transactions.get(position).getTotal());
         holder.viewCantidad.setText("Cantidad: " + transactions.get(position).getCantidad());
+        holder.viewTotal.setText("Total: " + transactions.get(position).getTotal());
         holder.viewFecha.setText("Fecha: " + transactions.get(position).getFechaFormateada());
+        holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacion().getUsername());
+        holder.viewEstado.setText("Estado: " + transactions.get(position).getEstado());
     }
 
     @Override
@@ -51,15 +52,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
 
     public class TransactionViewHolder extends RecyclerView.ViewHolder{
-        TextView viewTransaccion, viewEstacion, viewTipoVehiculo, viewTotal, viewFecha, viewCantidad;
+        TextView viewTransaccion, viewTipoVehiculo, viewCantidad, viewTotal, viewFecha, viewEstacion, viewEstado;
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             viewTransaccion = itemView.findViewById(R.id.viewTransaccion);
-            viewEstacion = itemView.findViewById(R.id.viewEstacion);
             viewTipoVehiculo = itemView.findViewById(R.id.viewTipoVehiculo);
-            viewTotal = itemView.findViewById(R.id.viewTotal);
             viewCantidad = itemView.findViewById(R.id.viewCantidad);
+            viewTotal = itemView.findViewById(R.id.viewTotal);
             viewFecha = itemView.findViewById(R.id.viewFecha);
+            viewEstacion = itemView.findViewById(R.id.viewEstacion);
+            viewEstado = itemView.findViewById(R.id.viewEstado);
         }
     }
 }
