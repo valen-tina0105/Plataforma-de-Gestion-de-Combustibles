@@ -23,14 +23,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Transact
     @NonNull
     @Override
     public HistoryAdapter.TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.history_item, parent, false);
         return new TransactionViewHolder(view);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull HistoryAdapter.TransactionViewHolder holder, int position) {
-        holder.viewTransaccion.setText("Transaccion " + transactions.get(position).getId());
+        holder.viewHistorial.setText("Transaccion " + transactions.get(position).getId());
         holder.viewTipoVehiculo.setText("Tipo de vehiculo: " + transactions.get(position).getTipoVehiculo());
         holder.viewCantidad.setText("Cantidad: " + transactions.get(position).getCantidad());
         holder.viewTotal.setText("Total: " + transactions.get(position).getTotal());
@@ -52,10 +52,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Transact
 
 
     public class TransactionViewHolder extends RecyclerView.ViewHolder{
-        TextView viewTransaccion, viewTipoVehiculo, viewCantidad, viewTotal, viewFecha, viewEstacion, viewEstado;
+        TextView viewHistorial, viewTipoVehiculo, viewCantidad, viewTotal, viewFecha, viewEstacion, viewEstado;
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
-            viewTransaccion = itemView.findViewById(R.id.viewTransaccion);
+            viewHistorial = itemView.findViewById(R.id.viewHistorial);
             viewTipoVehiculo = itemView.findViewById(R.id.viewTipoVehiculo);
             viewCantidad = itemView.findViewById(R.id.viewCantidad);
             viewTotal = itemView.findViewById(R.id.viewTotal);
