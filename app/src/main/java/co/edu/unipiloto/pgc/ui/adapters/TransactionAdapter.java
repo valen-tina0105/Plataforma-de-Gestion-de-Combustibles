@@ -51,7 +51,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
 
     public class TransactionViewHolder extends RecyclerView.ViewHolder{
-        TextView viewTransaccion, viewEstacion, viewTipoVehiculo, viewTotal, viewFecha, viewCantidad;
+        TextView viewTransaccion, viewEstacion, viewTipoVehiculo, viewTotal,viewCantidad, viewFecha;
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             viewTransaccion = itemView.findViewById(R.id.viewTransaccion);
