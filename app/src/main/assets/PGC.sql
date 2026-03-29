@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS Users (
 
 CREATE TABLE IF NOT EXISTS Reglas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tipo_vehiculo TEXT NOT NULL,
+    tipo_vehiculo TEXT UNIQUE NOT NULL,
     precio INTEGER NOT NULL CHECK(precio > 0),
     fecha TEXT,
     admin_id INTEGER,

@@ -94,7 +94,7 @@ public class FuelDeliveryActivity extends BaseActivity {
         deliveryDAO.insertDelivery(delivery);
         deliveries = deliveryDAO.getAllDeliveries(user);
 
-        adapterEntregas.notifyDataSetChanged();
+        adapterEntregas.updateList(deliveries);
 
         textoPlaca.setText("");
         textoCantidad.setText("");

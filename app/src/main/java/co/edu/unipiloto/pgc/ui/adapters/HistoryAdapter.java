@@ -44,13 +44,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Transact
         return transactions.size();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void updateList(ArrayList<Transaction> newList) {
-        this.transactions = newList;
-        notifyDataSetChanged();
-    }
-
-
     public class TransactionViewHolder extends RecyclerView.ViewHolder{
         TextView viewHistorial, viewTipoVehiculo, viewCantidad, viewTotal, viewFecha, viewEstacion, viewEstado;
         public TransactionViewHolder(@NonNull View itemView) {

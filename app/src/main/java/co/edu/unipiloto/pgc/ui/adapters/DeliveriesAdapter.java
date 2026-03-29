@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.model.Delivery;
+import co.edu.unipiloto.pgc.model.Register;
 
 public class DeliveriesAdapter extends RecyclerView.Adapter<DeliveriesAdapter.DeliveriesViewHolder> {
 
@@ -44,6 +45,12 @@ public class DeliveriesAdapter extends RecyclerView.Adapter<DeliveriesAdapter.De
     @Override
     public int getItemCount() {
         return deliveries.size();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateList(ArrayList<Delivery> newList) {
+        this.deliveries = newList;
+        notifyDataSetChanged();
     }
 
     public static class DeliveriesViewHolder extends RecyclerView.ViewHolder {

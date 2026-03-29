@@ -56,14 +56,37 @@ public class RuleDAO {
         return rules;
     }
 
-    public void insertarRegla(Rule rule){
+    public void guardarRegla(Rule rule){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        db.execSQL(
-                "INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES (?,?,?,?)",
-                new Object[]{rule.getTipoVehiculo(), rule.getPrecio(), rule.getFechaFormateada(),
-                rule.getAdmin().getId()}
+        Cursor cursor = db.rawQuery(
+                "SELECT id FROM Reglas WHERE tipo_vehiculo = ?",
+                new String[]{rule.getTipoVehiculo()}
         );
 
+        if(cursor.moveToFirst()){
+            db.execSQL(
+                    "UPDATE Reglas SET precio = ?, fecha = ?, admin_id = ? WHERE tipo_vehiculo = ?",
+                    new Object[]{
+                            rule.getPrecio(),
+                            rule.getFechaFormateada(),
+                            rule.getAdmin().getId(),
+                            rule.getTipoVehiculo()
+                    }
+            );
+        } else {
+            db.execSQL(
+                    "INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES (?,?,?,?)",
+                    new Object[]{
+                            rule.getTipoVehiculo(),
+                            rule.getPrecio(),
+                            rule.getFechaFormateada(),
+                            rule.getAdmin().getId()
+                    }
+            );
+        }
+
+        cursor.close();
     }
+
 }
