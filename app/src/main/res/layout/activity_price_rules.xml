@@ -34,7 +34,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardPriceRules"
-        android:layout_width="380dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:cardBackgroundColor="@color/card_background"

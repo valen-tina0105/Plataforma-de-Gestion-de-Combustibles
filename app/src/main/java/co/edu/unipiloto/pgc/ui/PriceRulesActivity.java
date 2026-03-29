@@ -78,6 +78,8 @@ public class PriceRulesActivity extends BaseActivity {
 
             rules = ruleDAO.getAllRules();
             adapterReglas.updateList(rules);
+
+            precio.setText("");
     }
 
 }
