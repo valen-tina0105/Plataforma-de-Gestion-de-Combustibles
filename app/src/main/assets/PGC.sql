@@ -7,9 +7,11 @@ CREATE TABLE IF NOT EXISTS Roles (
 
 CREATE TABLE IF NOT EXISTS Users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre_completo TEXT,
     username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    rol_id INTEGER NOT NULL,
+    email TEXT, rol_id INTEGER NOT NULL,
+    direccion TEXT, fecha_nacimiento TEXT,
+    genero TEXT, password TEXT NOT NULL,
     FOREIGN KEY (rol_id) REFERENCES roles(id)
 );
 
@@ -63,27 +65,40 @@ INSERT OR IGNORE INTO roles (id, nombre) VALUES
 (4, 'Administrador de usuarios'),
 (5, 'Administrador de reglas'),
 (6, 'Usuario vehiculo particular');
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
+VALUES
+('Admin Usuarios', 'admin_users', 'admin_users@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 4);
 
-INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
-('admin_users', 'admin123', 4);
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
+VALUES
+('Admin Reglas', 'admin_reglas', 'admin_reglas@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 5);
 
-INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
-('admin_reglas', 'admin123', 5);
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
+VALUES
+('Estación Norte', 'estacion_1', 'estacion1@mail.com', 'estacion123', 'N/A', 'Bogotá Norte', '2000-01-01', 1);
 
-INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
-('estacion_1', 'estacion123', 1);
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
+VALUES
+('Estación Sur', 'estacion_2', 'estacion2@mail.com', 'estacion123', 'N/A', 'Bogotá Sur', '2000-01-01', 1);
 
-INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
-('estacion_2', 'estacion123', 1);
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
+VALUES
+('Autoridad Central', 'autoridad', 'autoridad@mail.com', 'autoridad123', 'N/A', 'Bogotá', '1985-01-01', 3);
 
-INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
-('autoridad', 'autoridad123', 3);
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
+VALUES
+('Distribuidor Uno', 'distribuidor_1', 'dist1@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 2);
 
-INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
-('distribuidor_1', 'distribuidor123', 2);
-
-INSERT OR IGNORE INTO Users (username, password, rol_id) VALUES
-('distribuidor_2', 'distribuidor123', 2);
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
+VALUES
+('Distribuidor Dos', 'distribuidor_2', 'dist2@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 2);
 
 INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES
 ('Servicio particular', 10000, '2026-03-01', 2);
@@ -117,3 +132,4 @@ VALUES ('Gasolina Extra', 200, '2026-03-09', 4);
 
 INSERT INTO Registros (tipo_combustible, cantidad, fecha, estacion_id)
 VALUES ('ACPM(Diésel)', 300, '2026-03-11', 3);
+

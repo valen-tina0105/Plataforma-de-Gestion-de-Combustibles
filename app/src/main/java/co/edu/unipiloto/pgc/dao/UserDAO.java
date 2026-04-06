@@ -22,7 +22,8 @@ public class UserDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT u.id, u.username, u.password, r.id, r.nombre " +
+                "SELECT u.id, u.nombre_completo, u.username, u.email, u.password, " +
+                        "u.genero, u.direccion, u.fecha_nacimiento, r.id, r.nombre " +
                         "FROM Users u " +
                         "INNER JOIN Roles r ON u.rol_id = r.id",
                 null
@@ -30,13 +31,19 @@ public class UserDAO {
 
         while (cursor.moveToNext()) {
             User user = new User();
+
             user.setId(cursor.getInt(0));
-            user.setUsername(cursor.getString(1));
-            user.setPassword(cursor.getString(2));
+            user.setNombreCompleto(cursor.getString(1));
+            user.setUsername(cursor.getString(2));
+            user.setEmail(cursor.getString(3));
+            user.setPassword(cursor.getString(4));
+            user.setGenero(cursor.getString(5));
+            user.setDireccion(cursor.getString(6));
+            user.setFechaNacimiento(cursor.getString(7));
 
             Rol rol = new Rol();
-            rol.setId(cursor.getInt(3));
-            rol.setNombre(cursor.getString(4));
+            rol.setId(cursor.getInt(8));
+            rol.setNombre(cursor.getString(9));
 
             user.setRol(rol);
 
@@ -70,23 +77,31 @@ public class UserDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT u.id, u.username, u.password, r.id, r.nombre " +
+                "SELECT u.id, u.nombre_completo, u.username, u.email, u.password, " +
+                        "u.genero, u.direccion, u.fecha_nacimiento, r.id, r.nombre " +
                         "FROM Users u " +
                         "INNER JOIN Roles r ON u.rol_id = r.id " +
                         "WHERE u.username = ? AND u.password = ? " +
                         "LIMIT 1",
-                new String[]{username, password});
+                new String[]{username, password}
+        );
         try {
             if (cursor.moveToFirst()) {
 
                 User user = new User();
+
                 user.setId(cursor.getInt(0));
-                user.setUsername(cursor.getString(1));
-                user.setPassword(cursor.getString(2));
+                user.setNombreCompleto(cursor.getString(1));
+                user.setUsername(cursor.getString(2));
+                user.setEmail(cursor.getString(3));
+                user.setPassword(cursor.getString(4));
+                user.setGenero(cursor.getString(5));
+                user.setDireccion(cursor.getString(6));
+                user.setFechaNacimiento(cursor.getString(7));
 
                 Rol rol = new Rol();
-                rol.setId(cursor.getInt(3));
-                rol.setNombre(cursor.getString(4));
+                rol.setId(cursor.getInt(8));
+                rol.setNombre(cursor.getString(9));
 
                 user.setRol(rol);
 
@@ -102,8 +117,18 @@ public class UserDAO {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.execSQL(
-                "INSERT INTO Users (username, password, rol_id) VALUES (?,?,?)",
-                new Object[]{user.getUsername(), user.getPassword(), user.getRol().getId()}
+                "INSERT INTO Users (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id) " +
+                        "VALUES (?,?,?,?,?,?,?,?)",
+                new Object[]{
+                        user.getNombreCompleto(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getPassword(),
+                        user.getGenero(),
+                        user.getDireccion(),
+                        user.getFechaNacimiento(),
+                        user.getRol().getId()
+                }
         );
 
     }
@@ -113,7 +138,8 @@ public class UserDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT u.id, u.username, u.password, r.id, r.nombre " +
+                "SELECT u.id, u.nombre_completo, u.username, u.email, u.password, " +
+                        "u.genero, u.direccion, u.fecha_nacimiento, r.id, r.nombre " +
                         "FROM Users u " +
                         "INNER JOIN Roles r ON u.rol_id = r.id " +
                         "WHERE r.id = 1",
@@ -122,13 +148,19 @@ public class UserDAO {
 
         while (cursor.moveToNext()) {
             User user = new User();
+
             user.setId(cursor.getInt(0));
-            user.setUsername(cursor.getString(1));
-            user.setPassword(cursor.getString(2));
+            user.setNombreCompleto(cursor.getString(1));
+            user.setUsername(cursor.getString(2));
+            user.setEmail(cursor.getString(3));
+            user.setPassword(cursor.getString(4));
+            user.setGenero(cursor.getString(5));
+            user.setDireccion(cursor.getString(6));
+            user.setFechaNacimiento(cursor.getString(7));
 
             Rol rol = new Rol();
-            rol.setId(cursor.getInt(3));
-            rol.setNombre(cursor.getString(4));
+            rol.setId(cursor.getInt(8));
+            rol.setNombre(cursor.getString(9));
 
             user.setRol(rol);
 

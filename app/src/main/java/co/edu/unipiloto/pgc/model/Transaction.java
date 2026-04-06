@@ -18,7 +18,7 @@ public class Transaction{
 
     public Transaction() {
         fecha = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         fechaFormateada = formatter.format(fecha);
     }
 
