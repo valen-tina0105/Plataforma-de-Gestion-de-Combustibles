@@ -198,8 +198,13 @@ public class SignUpActivity extends AppCompatActivity {
 
         RadioButton selectedRadio = findViewById(selectedId);
         String genero = selectedRadio.getText().toString();
+        Rol rolSeleccionado;
+        if (spinnerRoles.getSelectedItemPosition() == 3) {
+            rolSeleccionado = roles.get(5);
+        } else {
+            rolSeleccionado = roles.get(spinnerRoles.getSelectedItemPosition());
+        }
 
-        Rol rolSeleccionado = roles.get(spinnerRoles.getSelectedItemPosition());
 
         User user = new User();
         user.setNombreCompleto(nombre.getText().toString());

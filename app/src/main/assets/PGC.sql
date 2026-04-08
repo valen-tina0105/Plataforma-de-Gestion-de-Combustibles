@@ -100,6 +100,11 @@ INSERT OR IGNORE INTO Users
 VALUES
 ('Distribuidor Dos', 'distribuidor_2', 'dist2@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 2);
 
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
+VALUES
+('Usuario Vehiculo', 'user_vehicle', 'user_vehicle@mail.com', 'user123', 'Masculino', 'Bogotá', '2000-05-15', 6);
+
 INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES
 ('Servicio particular', 10000, '2026-03-01', 2);
 

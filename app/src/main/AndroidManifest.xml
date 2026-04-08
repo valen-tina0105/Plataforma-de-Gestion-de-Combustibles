@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        tools:ignore="ManifestOrder" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,6 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PlataformaDeGestionDeCombustibles">
+        <activity
+            android:name=".ui.PriceConsultationActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.SignUpActivity"
             android:exported="false" />
@@ -45,6 +52,5 @@
             android:name=".ui.PriceRulesActivity"
             android:exported="false" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
-        tools:ignore="ManifestOrder" />
+
 </manifest>

@@ -96,6 +96,10 @@ public class LogInActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case "Usuario vehiculo particular":
+                intent = new Intent(this, PriceConsultationActivity.class);
+                intent.putExtra("user", user);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 break;
         }
     }
