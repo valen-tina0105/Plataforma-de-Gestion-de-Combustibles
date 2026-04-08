@@ -18,21 +18,27 @@ public class TransactionDAO {
         dbHelper = new DatabaseHelper(context);
     }
 
+    // 🔹 TRAER TRANSACCIONES (ESTACION O USUARIO)
     public ArrayList<Transaction> getAllTransactions(User userId){
         ArrayList<Transaction> transactions = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT t.id, t.tipo_vehiculo, t.cantidad, t.total, t.fecha, u.id, u.username, u.password, r.id, r.nombre " +
+                "SELECT t.id, t.tipo_vehiculo, t.cantidad, t.total, t.fecha, " +
+                        "u.id, u.username, u.password, r.id, r.nombre " +
                         "FROM Transacciones t " +
                         "INNER JOIN Users u ON t.estacion_id = u.id " +
                         "INNER JOIN Roles r ON u.rol_id = r.id " +
-                        "WHERE u.id = ?",
-                new String[]{String.valueOf(userId.getId())}
+                        "WHERE t.estacion_id = ? OR t.user_id = ?",
+                new String[]{
+                        String.valueOf(userId.getId()),
+                        String.valueOf(userId.getId())
+                }
         );
 
         while(cursor.moveToNext()){
             Transaction transaction = new Transaction();
+
             transaction.setId(cursor.getInt(0));
             transaction.setTipoVehiculo(cursor.getString(1));
             transaction.setCantidad(cursor.getInt(2));
@@ -50,6 +56,7 @@ public class TransactionDAO {
 
             user.setRol(rol);
             transaction.setEstacion(user);
+
             transactions.add(transaction);
         }
 
@@ -57,6 +64,7 @@ public class TransactionDAO {
         return transactions;
     }
 
+    // 🔹 VALIDAR TRANSACCIONES
     public ArrayList<Transaction> getValidatedTransactions(){
         ArrayList<Transaction> transactions = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -83,7 +91,6 @@ public class TransactionDAO {
             transaction.setFechaFormateada(cursor.getString(4));
 
             String estado = cursor.getString(12);
-
             transaction.setEstado(estado);
 
             User user = new User();
@@ -104,15 +111,21 @@ public class TransactionDAO {
         cursor.close();
         return transactions;
     }
+
+    // 🔥 INSERT CON USER_ID (CLAVE PARA SUBSIDIO)
     public void insertarTransaccion(Transaction transaction){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.execSQL(
-                "INSERT INTO Transacciones (estacion_id, tipo_vehiculo, cantidad, total, fecha) VALUES (?,?,?,?,?)",
-                new Object[]{transaction.getEstacion().getId(), transaction.getTipoVehiculo(),
-                        transaction.getCantidad(), transaction.getTotal(),
-                        transaction.getFechaFormateada()}
+                "INSERT INTO Transacciones (estacion_id, user_id, tipo_vehiculo, cantidad, total, fecha) VALUES (?,?,?,?,?,?)",
+                new Object[]{
+                        transaction.getEstacion().getId(),
+                        transaction.getUsuario() != null ? transaction.getUsuario().getId() : null,
+                        transaction.getTipoVehiculo(),
+                        transaction.getCantidad(),
+                        transaction.getTotal(),
+                        transaction.getFechaFormateada()
+                }
         );
-
     }
 }

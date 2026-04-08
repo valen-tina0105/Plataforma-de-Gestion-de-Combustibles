@@ -66,6 +66,22 @@
                 android:paddingEnd="12dp"
                 android:popupBackground="@android:color/white" />
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/usernameCliente"
+                app:boxBackgroundMode="filled"
+                app:boxBackgroundColor="@color/input_background"
+                app:boxStrokeColor="@android:color/black">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textoUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
             <!-- CANTIDAD -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -91,6 +107,7 @@
                     android:textColor="@android:color/black"
                     android:textColorHint="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
+
 
             <!-- BOTÓN CALCULAR -->
             <Button

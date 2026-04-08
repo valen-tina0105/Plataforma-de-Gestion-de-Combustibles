@@ -171,4 +171,46 @@ public class UserDAO {
         return users;
     }
 
+    public User getUserByUsername(String username) {
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT u.id, u.nombre_completo, u.username, u.email, u.password, " +
+                        "u.genero, u.direccion, u.fecha_nacimiento, r.id, r.nombre " +
+                        "FROM Users u " +
+                        "INNER JOIN Roles r ON u.rol_id = r.id " +
+                        "WHERE u.username = ? " +
+                        "LIMIT 1",
+                new String[]{username}
+        );
+
+        try {
+            if (cursor.moveToFirst()) {
+
+                User user = new User();
+
+                user.setId(cursor.getInt(0));
+                user.setNombreCompleto(cursor.getString(1));
+                user.setUsername(cursor.getString(2));
+                user.setEmail(cursor.getString(3));
+                user.setPassword(cursor.getString(4));
+                user.setGenero(cursor.getString(5));
+                user.setDireccion(cursor.getString(6));
+                user.setFechaNacimiento(cursor.getString(7));
+
+                Rol rol = new Rol();
+                rol.setId(cursor.getInt(8));
+                rol.setNombre(cursor.getString(9));
+
+                user.setRol(rol);
+
+                return user;
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return null;
+    }
 }

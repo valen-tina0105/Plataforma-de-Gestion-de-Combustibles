@@ -20,9 +20,12 @@ import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.dao.RuleDAO;
+import co.edu.unipiloto.pgc.dao.SubsidioDAO;
 import co.edu.unipiloto.pgc.dao.TransactionDAO;
+import co.edu.unipiloto.pgc.dao.UserDAO;
 import co.edu.unipiloto.pgc.model.Register;
 import co.edu.unipiloto.pgc.model.Rule;
+import co.edu.unipiloto.pgc.model.Subsidio;
 import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
 import co.edu.unipiloto.pgc.ui.adapters.TransactionAdapter;
@@ -81,48 +84,108 @@ public class PriceCalculatorActivity extends BaseActivity {
     }
 
     public void onSendCalculate(View view) {
+
         Spinner tipoVehiculo = findViewById(R.id.tipoVehiculo);
-        String tipo = tipoVehiculo.getSelectedItem().toString();
         EditText textoCantidad = findViewById(R.id.textoCantidad);
+        EditText textoUsername = findViewById(R.id.textoUsername);
+        TextView total = findViewById(R.id.total);
+
+        String tipo = tipoVehiculo.getSelectedItem().toString();
+
+        // 🔹 Validar cantidad
         if (textoCantidad.getText().toString().isEmpty()) {
-            Toast.makeText(this, "La cantidad no puede estar vacia", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "La cantidad no puede estar vacía", Toast.LENGTH_SHORT).show();
             return;
         }
-        TextView total = findViewById(R.id.total);
+
+        // 🔹 Validar username
+        if (textoUsername.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Ingrese username del cliente", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         int volumen = Integer.parseInt(textoCantidad.getText().toString());
-        int totalReal = 0;
+        String username = textoUsername.getText().toString();
+
+        // 🔹 Buscar usuario cliente
+        UserDAO userDAO = new UserDAO(this);
+        User usuarioCliente = userDAO.getUserByUsername(username);
+
+        if (usuarioCliente == null) {
+            Toast.makeText(this, "Usuario no existe", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 🔹 Validar reglas
         if (rules.isEmpty()) {
             Toast.makeText(this, "No hay ninguna regla establecida", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        int totalReal = 0;
         boolean encontrada = false;
+
         for (Rule rule : rules) {
-            if (rule.getTipoVehiculo().equals(tipo)) {
+            if (rule.getTipoVehiculo().equalsIgnoreCase(tipo)) {
+                totalReal = volumen * rule.getPrecio();
                 encontrada = true;
                 break;
             }
         }
+
         if (!encontrada) {
-            Toast.makeText(this, "No hay ninguna regla establecida para " + tipo, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No hay regla para " + tipo, Toast.LENGTH_SHORT).show();
+            total.setText("Regla no establecida");
+            return;
         }
-        for (int i = 0; i < rules.size(); i++) {
-            if (rules.get(i).getTipoVehiculo().equalsIgnoreCase(tipo)) {
-                totalReal = volumen * rules.get(i).getPrecio();
-                total.setText("Total: " + totalReal + "$");
-                break;
+
+        // 🔥 MOSTRAR TOTAL
+        total.setText("Total: " + totalReal + "$");
+
+        // 🔹 MANEJO DE SUBSIDIO
+        SubsidioDAO subsidioDAO = new SubsidioDAO(this);
+        Subsidio subsidio = subsidioDAO.getSubsidioByUser(usuarioCliente);
+
+        if (subsidio != null) {
+
+            int saldoActual = subsidio.getSaldoDisponible();
+
+            if (saldoActual >= totalReal) {
+
+                // ✅ Descuento completo
+                subsidio.setSaldoDisponible(saldoActual - totalReal);
+                subsidioDAO.actualizarSaldo(subsidio);
+
+                Toast.makeText(this, "Compra con subsidio aplicada", Toast.LENGTH_SHORT).show();
+
             } else {
-                total.setText("Regla no establecida");
+                // ❌ No alcanza saldo
+                Toast.makeText(this, "Saldo insuficiente", Toast.LENGTH_SHORT).show();
+                return;
             }
         }
+
+        // 🔹 GUARDAR TRANSACCIÓN
         Transaction transaction = new Transaction();
         transaction.setTipoVehiculo(tipo);
         transaction.setCantidad(volumen);
         transaction.setTotal(totalReal);
+
+        // estación logueada
         transaction.setEstacion(user);
+
+        // cliente real
+        transaction.setUsuario(usuarioCliente);
+
         transactionDAO.insertarTransaccion(transaction);
+
+        // 🔹 ACTUALIZAR LISTA
         transactions = transactionDAO.getAllTransactions(user);
         adapterTransacciones.updateList(transactions);
+
+        // 🔹 LIMPIAR CAMPOS
         textoCantidad.setText("");
+        textoUsername.setText("");
         tipoVehiculo.setSelection(0);
     }
 

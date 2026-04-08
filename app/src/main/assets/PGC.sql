@@ -30,8 +30,12 @@ CREATE TABLE IF NOT EXISTS Transacciones (
     cantidad INTEGER NOT NULL CHECK(cantidad > 0),
     total INTEGER NOT NULL CHECK(total > 0),
     fecha TEXT,
+
     estacion_id INTEGER,
-    FOREIGN KEY (estacion_id) REFERENCES Users(id) ON DELETE CASCADE
+    user_id INTEGER,
+
+    FOREIGN KEY (estacion_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Registros (
@@ -56,24 +60,35 @@ CREATE TABLE IF NOT EXISTS Entregas (
     FOREIGN KEY (distribuidor_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
-CREATE VIEW Movimientos AS SELECT id, tipo_vehiculo AS tipo, cantidad, total, fecha, estacion_id, 'SALIDA' AS tipo_movimiento FROM Transacciones UNION ALL SELECT id, tipo_combustible AS tipo, cantidad, NULL AS total, fecha, estacion_id, 'ENTRADA' AS tipo_movimiento FROM Registros;
+CREATE VIEW Movimientos AS SELECT id, tipo_vehiculo AS tipo, cantidad, total, fecha, estacion_id, user_id, 'SALIDA' AS tipo_movimiento FROM Transacciones UNION ALL SELECT id, tipo_combustible AS tipo, cantidad, NULL AS total, fecha, estacion_id, NULL AS user_id, 'ENTRADA' AS tipo_movimiento FROM Registros;
+
+CREATE TABLE IF NOT EXISTS Subsidios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER UNIQUE NOT NULL,
+    cupo_total INTEGER NOT NULL CHECK(cupo_total > 0),
+    saldo_disponible INTEGER NOT NULL CHECK(saldo_disponible >= 0),
+
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
 
 INSERT OR IGNORE INTO roles (id, nombre) VALUES
 (1, 'Estacion de servicio'),
-(2, 'Distribuidor mayorista'),
+(2, 'Usuario vehiculo particular'),
 (3, 'Autoridad reguladora'),
-(4, 'Administrador de usuarios'),
-(5, 'Administrador de reglas'),
-(6, 'Usuario vehiculo particular');
-INSERT OR IGNORE INTO Users
-(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
-VALUES
-('Admin Usuarios', 'admin_users', 'admin_users@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 4);
+(4, 'Usuario vehiculo con subsidio'),
+(5, 'Distribuidor mayorista'),
+(6, 'Administrador de reglas'),
+(7, 'Administrador de usuarios');
 
 INSERT OR IGNORE INTO Users
 (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
 VALUES
-('Admin Reglas', 'admin_reglas', 'admin_reglas@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 5);
+('Admin Usuarios', 'admin_users', 'admin_users@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 7);
+
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
+VALUES
+('Admin Reglas', 'admin_reglas', 'admin_reglas@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 6);
 
 INSERT OR IGNORE INTO Users
 (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
@@ -93,17 +108,25 @@ VALUES
 INSERT OR IGNORE INTO Users
 (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
 VALUES
-('Distribuidor Uno', 'distribuidor_1', 'dist1@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 2);
+('Distribuidor Uno', 'distribuidor_1', 'dist1@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 5);
 
 INSERT OR IGNORE INTO Users
 (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
 VALUES
-('Distribuidor Dos', 'distribuidor_2', 'dist2@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 2);
+('Distribuidor Dos', 'distribuidor_2', 'dist2@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 5);
 
 INSERT OR IGNORE INTO Users
 (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
 VALUES
-('Usuario Vehiculo', 'user_vehicle', 'user_vehicle@mail.com', 'user123', 'Masculino', 'Bogotá', '2000-05-15', 6);
+('Usuario Vehiculo', 'user_vehicle', 'user_vehicle@mail.com', 'user123', 'Masculino', 'Bogotá', '2000-05-15', 2);
+
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
+VALUES
+('Juan Subsidio', 'juan_sub', 'juan_sub@mail.com', '123456', 'Masculino', 'Bogotá', '1999-08-20', 4);
+
+INSERT INTO Subsidios (user_id, cupo_total, saldo_disponible)
+SELECT id, 100000, 100000 FROM Users WHERE username = 'juan_sub';
 
 INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES
 ('Servicio particular', 10000, '2026-03-01', 2);
@@ -116,6 +139,9 @@ VALUES ('Diplomáticos', 1000, '2026-03-01', 2);
 
 INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
 VALUES ('Camperos y Cuatrimotos', 12000, '2026-03-01', 2);
+
+INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
+VALUES ('Subsidiado', 5000, '2026-03-01', 2);
 
 INSERT INTO Entregas (placa, tipo_combustible, cantidad, fecha, estacion_destino_id, distribuidor_id) VALUES
 ('ABC123', 'Gasolina Corriente', 1200, '16-03-2026', 3, 6);

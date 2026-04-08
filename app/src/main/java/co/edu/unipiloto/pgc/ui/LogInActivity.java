@@ -101,6 +101,12 @@ public class LogInActivity extends BaseActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 break;
+            case "Usuario vehiculo con subsidio":
+                intent = new Intent(this, SubsidyActivity.class);
+                intent.putExtra("user", user);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                break;
         }
     }
 

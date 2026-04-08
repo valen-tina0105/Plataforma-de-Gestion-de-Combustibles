@@ -5,14 +5,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class Transaction{
+public class Transaction {
     private int id;
     private User estacion;
     private String tipoVehiculo;
     private int total;
     private int cantidad;
     private Date fecha;
-
+    private User usuario;
     private String fechaFormateada;
     private String estado;
 
@@ -67,7 +67,7 @@ public class Transaction{
     }
 
     public void setFecha(Date fecha) {
-        this.fecha=fecha;
+        this.fecha = fecha;
     }
 
     public String getFechaFormateada() {
@@ -84,5 +84,13 @@ public class Transaction{
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public User getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(User usuario) {
+        this.usuario = usuario;
     }
 }

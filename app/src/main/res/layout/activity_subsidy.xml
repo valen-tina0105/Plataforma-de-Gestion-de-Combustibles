@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient"
+    tools:context=".ui.SubsidyActivity">
+
+    <!-- BOTÓN LOGOUT -->
+    <ImageButton
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/btnCerrarSesion"
+        android:src="@drawable/baseline_logout_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- TÍTULO -->
+    <TextView
+        android:id="@+id/tituloSubsidio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/consultarSaldoDisponible"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:fontFamily="@font/montserrat_bold"
+        android:letterSpacing="0.2"
+        app:layout_constraintTop_toBottomOf="@id/btnCerrarSesion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- CARD -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardSubsidio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        app:cardBackgroundColor="@color/card_background"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tituloSubsidio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- USERNAME -->
+            <TextView
+                android:id="@+id/viewUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Usuario: ---"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:fontFamily="@font/montserrat_regular" />
+
+            <!-- CUPO TOTAL -->
+            <TextView
+                android:id="@+id/viewCupoTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Cupo total: ---"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:fontFamily="@font/montserrat_bold" />
+
+            <!-- SALDO DISPONIBLE -->
+            <TextView
+                android:id="@+id/viewSaldoDisponible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Saldo disponible: ---"
+                android:textSize="16sp"
+                android:textColor="@color/button_blue"
+                android:fontFamily="@font/montserrat_bold" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

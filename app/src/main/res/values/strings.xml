@@ -75,4 +75,6 @@
     <string name="masculino">Masculino</string>
     <string name="femenino">Femenino</string>
     <string name="consultaPrecios">Consulta de precios para usuarios particulares</string>
+    <string name="usernameCliente">Username cliente</string>
+    <string name="consultarSaldoDisponible">Consultar saldo disponible de subsidio de combustible</string>
 </resources>

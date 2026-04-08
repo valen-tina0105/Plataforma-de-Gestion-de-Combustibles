@@ -11,11 +11,11 @@ import java.io.InputStreamReader;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "PGC";
+    private static final String DB_NAME = "PGC_v4";
     private Context context;
 
     public DatabaseHelper(Context context) {
-        super(context, DB_NAME, null, 2);
+        super(context, DB_NAME, null, 1);
         this.context = context;
     }
 
@@ -27,13 +27,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        if (oldVersion < 2) {
-            db.execSQL("ALTER TABLE Users ADD COLUMN nombre_completo TEXT");
-            db.execSQL("ALTER TABLE Users ADD COLUMN email TEXT");
-            db.execSQL("ALTER TABLE Users ADD COLUMN direccion TEXT");
-            db.execSQL("ALTER TABLE Users ADD COLUMN fecha_nacimiento TEXT");
-            db.execSQL("ALTER TABLE Users ADD COLUMN genero TEXT");
-        }
     }
 
     private void ejecutarSQLDesdeArchivo(SQLiteDatabase db, String archivo) {
