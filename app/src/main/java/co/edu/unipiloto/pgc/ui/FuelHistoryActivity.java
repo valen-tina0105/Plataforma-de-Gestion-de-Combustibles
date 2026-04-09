@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -22,13 +23,14 @@ import co.edu.unipiloto.pgc.model.Movement;
 import co.edu.unipiloto.pgc.model.User;
 import co.edu.unipiloto.pgc.ui.adapters.DeliveriesAdapter;
 import co.edu.unipiloto.pgc.ui.adapters.MovementsAdapter;
+import co.edu.unipiloto.pgc.ui.adapters.MovementsListAdapter;
 
 public class FuelHistoryActivity extends BaseActivity {
 
     private MovementDAO movementDAO;
     private User user;
     private ArrayList<Movement> movements;
-    private MovementsAdapter adapterMovimientos;
+    private MovementsListAdapter adapterMovimientos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +41,9 @@ public class FuelHistoryActivity extends BaseActivity {
         movementDAO = new MovementDAO(this);
         movements = movementDAO.getAllMovements(user);
 
-        RecyclerView listaMovimientos = findViewById(R.id.listaMovimientos);
-        listaMovimientos.setLayoutManager(new LinearLayoutManager(this));
+        ListView listaMovimientos = findViewById(R.id.listaMovimientos);
 
-        adapterMovimientos = new MovementsAdapter(movements);
+        adapterMovimientos = new MovementsListAdapter(this, movements);
         listaMovimientos.setAdapter(adapterMovimientos);
 
         Button btnFiltrar = findViewById(R.id.btnFiltrar);
