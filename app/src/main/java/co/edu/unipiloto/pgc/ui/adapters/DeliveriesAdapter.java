@@ -36,7 +36,7 @@ public class DeliveriesAdapter extends RecyclerView.Adapter<DeliveriesAdapter.De
         holder.viewEntrega.setText("Entrega " + deliveries.get(position).getId());
         holder.viewPlaca.setText("Placa: " + deliveries.get(position).getPlaca());
         holder.viewFecha.setText("Fecha: " + deliveries.get(position).getFechaFormateada());
-        holder.viewTipoCombustible.setText("Fecha: " + deliveries.get(position).getTipoCombustible());
+        holder.viewCombustible.setText("Combustible: " + deliveries.get(position).getCombustible().getNombre());
         holder.viewCantidad.setText("Cantidad: " + deliveries.get(position).getCantidad());
         holder.viewEstacionDestino.setText("Estacion Destino: " + deliveries.get(position).getEstacion().getUsername());
         holder.viewDistribuidor.setText("Distribuido por: " + deliveries.get(position).getDistribuidor().getUsername());
@@ -55,14 +55,14 @@ public class DeliveriesAdapter extends RecyclerView.Adapter<DeliveriesAdapter.De
 
     public static class DeliveriesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView viewEntrega, viewPlaca, viewFecha, viewTipoCombustible, viewCantidad, viewEstacionDestino, viewDistribuidor;
+        TextView viewEntrega, viewPlaca, viewFecha, viewCombustible, viewCantidad, viewEstacionDestino, viewDistribuidor;
 
         public DeliveriesViewHolder(@NonNull View itemView) {
             super(itemView);
             viewEntrega = itemView.findViewById(R.id.viewEntrega);
             viewPlaca = itemView.findViewById(R.id.viewPlaca);
             viewFecha = itemView.findViewById(R.id.viewFecha);
-            viewTipoCombustible = itemView.findViewById(R.id.viewTipoCombustible);
+            viewCombustible = itemView.findViewById(R.id.viewCombustible);
             viewCantidad = itemView.findViewById(R.id.viewCantidad);
             viewEstacionDestino = itemView.findViewById(R.id.viewEstacionDestino);
             viewDistribuidor = itemView.findViewById(R.id.viewDistribuidor);

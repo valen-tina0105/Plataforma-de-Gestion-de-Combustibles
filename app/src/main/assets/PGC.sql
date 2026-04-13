@@ -9,16 +9,45 @@ CREATE TABLE IF NOT EXISTS Users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre_completo TEXT,
     username TEXT UNIQUE NOT NULL,
-    email TEXT, rol_id INTEGER NOT NULL,
-    direccion TEXT, fecha_nacimiento TEXT,
-    genero TEXT, password TEXT NOT NULL,
+    email TEXT,
+    rol_id INTEGER NOT NULL,
+    direccion TEXT,
+    fecha_nacimiento TEXT,
+    genero TEXT,
+    password TEXT NOT NULL,
     FOREIGN KEY (rol_id) REFERENCES roles(id)
 );
+
+CREATE TABLE IF NOT EXISTS Combustibles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Precios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    precio REAL NOT NULL,
+    id_estacion INTEGER NOT NULL,
+    id_combustible INTEGER NOT NULL,
+    FOREIGN KEY (id_combustible) REFERENCES Combustibles(id),
+    FOREIGN KEY (id_estacion) REFERENCES Users(id)
+);
+
+CREATE TABLE IF NOT EXISTS Inventarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_estacion INTEGER NOT NULL,
+    id_combustible INTEGER NOT NULL,
+    cantidad_combustible REAL NOT NULL,
+    capacidad_maxima REAL NOT NULL,
+    nivel_minimo REAL NOT NULL,
+    FOREIGN KEY (id_combustible) REFERENCES Combustibles(id),
+    FOREIGN KEY (id_estacion) REFERENCES Users(id)
+);
+
 
 CREATE TABLE IF NOT EXISTS Reglas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tipo_vehiculo TEXT UNIQUE NOT NULL,
-    precio INTEGER NOT NULL CHECK(precio > 0),
+    precio REAL NOT NULL CHECK(precio > 0),
     fecha TEXT,
     admin_id INTEGER,
     FOREIGN KEY (admin_id) REFERENCES Users(id)
@@ -27,49 +56,41 @@ CREATE TABLE IF NOT EXISTS Reglas (
 CREATE TABLE IF NOT EXISTS Transacciones (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tipo_vehiculo TEXT NOT NULL,
-    cantidad INTEGER NOT NULL CHECK(cantidad > 0),
-    total INTEGER NOT NULL CHECK(total > 0),
+    id_combustible INTEGER NOT NULL,
+    cantidad REAL NOT NULL CHECK(cantidad > 0),
+    total REAL NOT NULL CHECK(total > 0),
     fecha TEXT,
-
     estacion_id INTEGER,
     user_id INTEGER,
-
+    FOREIGN KEY (id_combustible) REFERENCES Combustibles(id),
     FOREIGN KEY (estacion_id) REFERENCES Users(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Registros (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tipo_combustible TEXT NOT NULL,
-    cantidad INTEGER NOT NULL CHECK(cantidad > 0),
+    id_combustible INTEGER NOT NULL,
+    cantidad REAL NOT NULL CHECK(cantidad > 0),
     fecha TEXT,
     estacion_id INTEGER,
+    FOREIGN KEY (id_combustible) REFERENCES Combustibles(id),
     FOREIGN KEY (estacion_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Entregas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     placa TEXT NOT NULL,
-    tipo_combustible TEXT NOT NULL,
-    cantidad INTEGER NOT NULL CHECK(cantidad > 0),
+    id_combustible INTEGER NOT NULL,
+    cantidad REAL NOT NULL CHECK(cantidad > 0),
     fecha TEXT,
     estacion_destino_id INTEGER NOT NULL,
     distribuidor_id INTEGER,
-
+    FOREIGN KEY (id_combustible) REFERENCES Combustibles(id),
     FOREIGN KEY (estacion_destino_id) REFERENCES Users(id) ON DELETE CASCADE,
     FOREIGN KEY (distribuidor_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
-CREATE VIEW Movimientos AS SELECT id, tipo_vehiculo AS tipo, cantidad, total, fecha, estacion_id, user_id, 'SALIDA' AS tipo_movimiento FROM Transacciones UNION ALL SELECT id, tipo_combustible AS tipo, cantidad, NULL AS total, fecha, estacion_id, NULL AS user_id, 'ENTRADA' AS tipo_movimiento FROM Registros;
-
-CREATE TABLE IF NOT EXISTS Subsidios (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER UNIQUE NOT NULL,
-    cupo_total INTEGER NOT NULL CHECK(cupo_total > 0),
-    saldo_disponible INTEGER NOT NULL CHECK(saldo_disponible >= 0),
-
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
-);
+CREATE VIEW Movimientos AS SELECT t.id, t.tipo_vehiculo AS tipo, t.id_combustible, t.cantidad, t.total, t.fecha, t.estacion_id, t.user_id, 'SALIDA' AS tipo_movimiento FROM Transacciones t UNION ALL SELECT r.id, NULL AS tipo, r.id_combustible, r.cantidad, NULL AS total, r.fecha, r.estacion_id, NULL AS user_id, 'ENTRADA' AS tipo_movimiento FROM Registros r;
 
 INSERT OR IGNORE INTO roles (id, nombre) VALUES
 (1, 'Estacion de servicio'),
@@ -79,6 +100,12 @@ INSERT OR IGNORE INTO roles (id, nombre) VALUES
 (5, 'Distribuidor mayorista'),
 (6, 'Administrador de reglas'),
 (7, 'Administrador de usuarios');
+
+INSERT OR IGNORE INTO Combustibles (id, nombre) VALUES
+(1, 'Gasolina Corriente'),
+(2, 'Gasolina Extra'),
+(3, 'ACPM(Diésel)'),
+(4, 'Gas Natural Vehicular');
 
 INSERT OR IGNORE INTO Users
 (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
@@ -103,7 +130,7 @@ VALUES
 INSERT OR IGNORE INTO Users
 (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
 VALUES
-('Autoridad Central', 'autoridad', 'autoridad@mail.com', 'autoridad123', 'N/A', 'Bogotá', '1985-01-01', 3);
+('Autoridad Reguladora', 'autoridad', 'autoridad@mail.com', 'autoridad123', 'N/A', 'Bogotá', '1985-01-01', 3);
 
 INSERT OR IGNORE INTO Users
 (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
@@ -120,47 +147,54 @@ INSERT OR IGNORE INTO Users
 VALUES
 ('Usuario Vehiculo', 'user_vehicle', 'user_vehicle@mail.com', 'user123', 'Masculino', 'Bogotá', '2000-05-15', 2);
 
-INSERT OR IGNORE INTO Users
-(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
-VALUES
-('Juan Subsidio', 'juan_sub', 'juan_sub@mail.com', '123456', 'Masculino', 'Bogotá', '1999-08-20', 4);
-
-INSERT INTO Subsidios (user_id, cupo_total, saldo_disponible)
-SELECT id, 100000, 100000 FROM Users WHERE username = 'juan_sub';
-
-INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES
+INSERT OR IGNORE INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES
 ('Servicio particular', 10000, '2026-03-01', 2);
 
-INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
+INSERT OR IGNORE INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
 VALUES ('Oficiales', 8000, '2026-03-01', 2);
 
-INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
+INSERT OR IGNORE INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
 VALUES ('Diplomáticos', 1000, '2026-03-01', 2);
 
-INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
+INSERT OR IGNORE INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
 VALUES ('Camperos y Cuatrimotos', 12000, '2026-03-01', 2);
 
-INSERT INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
+INSERT OR IGNORE INTO Reglas (tipo_vehiculo, precio, fecha, admin_id)
 VALUES ('Subsidiado', 5000, '2026-03-01', 2);
 
-INSERT INTO Entregas (placa, tipo_combustible, cantidad, fecha, estacion_destino_id, distribuidor_id) VALUES
-('ABC123', 'Gasolina Corriente', 1200, '16-03-2026', 3, 6);
+INSERT OR IGNORE INTO Entregas (placa, id_combustible, cantidad, fecha, estacion_destino_id, distribuidor_id) VALUES
+('ABC123', 1, 1200, '2026-03-16', 3, 6);
 
-INSERT INTO Transacciones (tipo_vehiculo, cantidad, total, fecha, estacion_id) VALUES
-('Camperos y Cuatrimotos', 30, 36000, '2026-03-14', 3);
+INSERT INTO Transacciones (tipo_vehiculo, id_combustible, cantidad, total, fecha, estacion_id, user_id) VALUES
+('Camperos y Cuatrimotos', 1, 30, 36000, '2026-03-14', 3, 8),
+('Servicio particular', 2, 20, 20000, '2026-03-10', 3, 8),
+('Oficiales', 1, 15, 12000, '2026-03-12', 4, 8);
 
-INSERT INTO Transacciones (tipo_vehiculo, cantidad, total, fecha, estacion_id)
-VALUES ('Servicio particular', 20, 20000, '2026-03-10', 3);
+INSERT OR IGNORE INTO Registros (id_combustible, cantidad, fecha, estacion_id) VALUES
+(1, 150, '2026-03-13', 3),
+(2, 200, '2026-03-09', 4),
+(3, 300, '2026-03-11', 3);
 
-INSERT INTO Transacciones (tipo_vehiculo, cantidad, total, fecha, estacion_id)
-VALUES ('Oficiales', 15, 12000, '2026-03-12', 4);
+INSERT OR IGNORE INTO Inventarios (id_estacion, id_combustible, cantidad_combustible, capacidad_maxima, nivel_minimo) VALUES
+(3, 1, 9000, 10000, 1000),
+(3, 2, 3000, 8000, 800),
+(3, 3, 7000, 12000, 1500),
+(3, 4, 2000, 5000, 500);
 
-INSERT INTO Registros (tipo_combustible, cantidad, fecha, estacion_id) VALUES
-('Gasolina Corriente', 150, '2026-03-13', 3);
+INSERT OR IGNORE INTO Inventarios (id_estacion, id_combustible, cantidad_combustible, capacidad_maxima, nivel_minimo) VALUES
+(4, 1, 1000, 15000, 5000),
+(4, 2, 6000, 7000, 100),
+(4, 3, 12000, 13000, 500),
+(4, 4, 7000, 9000, 200);
 
-INSERT INTO Registros (tipo_combustible, cantidad, fecha, estacion_id)
-VALUES ('Gasolina Extra', 200, '2026-03-09', 4);
+INSERT OR IGNORE INTO Precios (precio, id_estacion, id_combustible) VALUES
+(15000, 3, 1),
+(20000, 3, 2),
+(10000, 3, 3),
+(2000, 3, 4);
 
-INSERT INTO Registros (tipo_combustible, cantidad, fecha, estacion_id)
-VALUES ('ACPM(Diésel)', 300, '2026-03-11', 3);
-
+INSERT OR IGNORE INTO Precios (precio, id_estacion, id_combustible) VALUES
+(16000, 4, 1),
+(22000, 4, 2),
+(11000, 4, 3),
+(3000, 4, 4);

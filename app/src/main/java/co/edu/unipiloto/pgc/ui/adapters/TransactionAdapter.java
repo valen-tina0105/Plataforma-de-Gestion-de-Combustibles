@@ -33,8 +33,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.viewTransaccion.setText("Transaccion " + transactions.get(position).getId());
         holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacion().getUsername());
         holder.viewTipoVehiculo.setText("Tipo de vehiculo: " + transactions.get(position).getTipoVehiculo());
-        holder.viewTotal.setText("Total: " + transactions.get(position).getTotal());
+        holder.viewCombustible.setText("Tipo de combustible: " + transactions.get(position).getCombustible());
         holder.viewCantidad.setText("Cantidad: " + transactions.get(position).getCantidad());
+        holder.viewUsuario.setText("Usuario: " + transactions.get(position).getUsuario().getUsername());
+        holder.viewTotal.setText("Total: " + transactions.get(position).getTotal());
         holder.viewFecha.setText("Fecha: " + transactions.get(position).getFechaFormateada());
     }
 
@@ -49,17 +51,18 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         notifyDataSetChanged();
     }
 
-
     public class TransactionViewHolder extends RecyclerView.ViewHolder{
-        TextView viewTransaccion, viewEstacion, viewTipoVehiculo, viewTotal,viewCantidad, viewFecha;
+        TextView viewTransaccion, viewEstacion, viewTipoVehiculo, viewCantidad, viewTotal, viewFecha, viewCombustible, viewUsuario;
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             viewTransaccion = itemView.findViewById(R.id.viewTransaccion);
             viewEstacion = itemView.findViewById(R.id.viewEstacion);
             viewTipoVehiculo = itemView.findViewById(R.id.viewTipoVehiculo);
-            viewTotal = itemView.findViewById(R.id.viewTotal);
+            viewCombustible = itemView.findViewById(R.id.viewCombustible);
             viewCantidad = itemView.findViewById(R.id.viewCantidad);
+            viewTotal = itemView.findViewById(R.id.viewTotal);
             viewFecha = itemView.findViewById(R.id.viewFecha);
+            viewUsuario = itemView.findViewById(R.id.viewUsuario);
         }
     }
 }

@@ -6,8 +6,8 @@ import java.util.Date;
 public class Delivery {
     private int id;
     private String placa;
-    private String tipoCombustible;
-    private int cantidad;
+    private Fuel combustible;
+    private double cantidad;
     private Date fecha;
     private String fechaFormateada;
     private User estacion;
@@ -35,19 +35,19 @@ public class Delivery {
         this.placa = placa;
     }
 
-    public String getTipoCombustible() {
-        return tipoCombustible;
+    public Fuel getCombustible() {
+        return combustible;
     }
 
-    public void setTipoCombustible(String tipoCombustible) {
-        this.tipoCombustible = tipoCombustible;
+    public void setCombustible(Fuel combustible) {
+        this.combustible = combustible;
     }
 
-    public int getCantidad() {
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
 

@@ -2,8 +2,10 @@ package co.edu.unipiloto.pgc.ui;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.ImageButton;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +29,8 @@ public class PriceValidationActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_validation);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue_gradient_end));
         transactionDAO = new TransactionDAO(this);
         transactions = transactionDAO.getValidatedTransactions();
         RecyclerView listaHistorial = findViewById(R.id.listaHistorial);

@@ -40,7 +40,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.Regist
     public void onBindViewHolder(@NonNull RegistersViewHolder holder, int position) {
         holder.viewRegistro.setText("Registro " + registers.get(position).getId());
         holder.viewEstacion.setText("Estacion: " + registers.get(position).getEstacion().getUsername());
-        holder.viewTipoCombustible.setText("Tipo de combustible: " + registers.get(position).getTipoCombustible());
+        holder.viewCombustible.setText("Tipo de combustible: " + registers.get(position).getCombustible().getNombre());
         holder.viewCantidad.setText("Cantidad: " + registers.get(position).getCantidad());
         holder.viewFecha.setText("Fecha: " + registers.get(position).getFechaFormateada());
     }
@@ -52,13 +52,13 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.Regist
 
     public class RegistersViewHolder extends RecyclerView.ViewHolder {
 
-        TextView viewRegistro, viewEstacion, viewTipoCombustible, viewCantidad, viewFecha;
+        TextView viewRegistro, viewEstacion, viewCombustible, viewCantidad, viewFecha;
 
         public RegistersViewHolder(@NonNull View itemView) {
             super(itemView);
             viewRegistro = itemView.findViewById(R.id.viewRegistro);
             viewEstacion = itemView.findViewById(R.id.viewEstacion);
-            viewTipoCombustible = itemView.findViewById(R.id.viewTipoCombustible);
+            viewCombustible = itemView.findViewById(R.id.viewCombustible);
             viewCantidad = itemView.findViewById(R.id.viewCantidad);
             viewFecha = itemView.findViewById(R.id.viewFecha);
         }

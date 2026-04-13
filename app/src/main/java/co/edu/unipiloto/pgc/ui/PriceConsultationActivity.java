@@ -2,8 +2,11 @@ package co.edu.unipiloto.pgc.ui;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
@@ -19,7 +22,8 @@ public class PriceConsultationActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_consultation);
-
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue_gradient_end));
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
 

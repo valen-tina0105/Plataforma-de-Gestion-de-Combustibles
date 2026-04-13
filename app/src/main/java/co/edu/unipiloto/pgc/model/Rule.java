@@ -7,7 +7,7 @@ import java.util.Date;
 public class Rule{
     private int id;
     private String tipoVehiculo;
-    private int precio;
+    private double precio;
     private User admin;
     private Date fecha;
 
@@ -35,11 +35,11 @@ public class Rule{
         this.tipoVehiculo = tipoVehiculo;
     }
 
-    public int getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(int precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 

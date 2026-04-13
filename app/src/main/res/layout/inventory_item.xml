@@ -17,7 +17,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/viewMovimiento"
+            android:id="@+id/viewInventario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
@@ -33,7 +33,7 @@
             android:background="@android:color/darker_gray" />
 
         <TextView
-            android:id="@+id/viewTipo"
+            android:id="@+id/viewEstacion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_regular"
@@ -49,7 +49,7 @@
             android:textSize="13sp" />
 
         <TextView
-            android:id="@+id/viewCantidad"
+            android:id="@+id/viewCantidadCombustible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_regular"
@@ -57,7 +57,7 @@
             android:textSize="13sp" />
 
         <TextView
-            android:id="@+id/viewTotal"
+            android:id="@+id/viewCapacidadMaxima"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_regular"
@@ -65,36 +65,12 @@
             android:textSize="13sp" />
 
         <TextView
-            android:id="@+id/viewFecha"
+            android:id="@+id/viewNivelMinimo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_regular"
             android:textColor="@android:color/white"
-            android:textSize="13sp" />
-
-        <TextView
-        android:id="@+id/viewEstacion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/montserrat_regular"
-        android:textColor="@android:color/white"
-        android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/viewUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_regular"
-            android:textColor="@android:color/white"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/viewTipoMovimiento"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_regular"
-            android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"/>
 
     </LinearLayout>
 

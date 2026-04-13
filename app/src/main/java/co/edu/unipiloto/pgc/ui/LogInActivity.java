@@ -46,6 +46,7 @@ public class LogInActivity extends BaseActivity {
         signUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, SignUpActivity.class);
             startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });
 
         Button btnLogIn = findViewById(R.id.btnLogIn);
@@ -76,36 +77,35 @@ public class LogInActivity extends BaseActivity {
                 intent.putExtra("user", user);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case "Autoridad reguladora":
                 intent = new Intent(this, PriceValidationActivity.class);
                 intent.putExtra("user", user);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case "Administrador de usuarios":
                 intent = new Intent(this, CreateUsersActivity.class);
                 intent.putExtra("user", user);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case "Administrador de reglas":
                 intent = new Intent(this, PriceRulesActivity.class);
                 intent.putExtra("user", user);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case "Usuario vehiculo particular":
                 intent = new Intent(this, PriceConsultationActivity.class);
                 intent.putExtra("user", user);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-                break;
-            case "Usuario vehiculo con subsidio":
-                intent = new Intent(this, SubsidyActivity.class);
-                intent.putExtra("user", user);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
         }
     }

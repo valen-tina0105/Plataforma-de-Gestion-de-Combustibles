@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.database.DatabaseHelper;
+import co.edu.unipiloto.pgc.model.Fuel;
 import co.edu.unipiloto.pgc.model.Movement;
 import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.User;
@@ -24,41 +25,58 @@ public class MovementDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT m.id, m.tipo, m.cantidad, m.total, m.fecha, m.estacion_id, m.tipo_movimiento, " +
-                        "u.id, u.username, u.password, r.id, r.nombre " +
+                "SELECT m.id, m.tipo, m.cantidad, m.total, m.fecha, m.tipo_movimiento, " +
+                        "e.id, e.nombre_completo, e.username, e.email, e.password, e.genero, e.direccion, e.fecha_nacimiento, " +
+                        "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
+                        "c.id, c.nombre " +
                         "FROM Movimientos m " +
-                        "INNER JOIN Users u ON m.estacion_id = u.id " +
-                        "INNER JOIN Roles r ON u.rol_id = r.id " +
+                        "INNER JOIN Users e ON m.estacion_id = e.id " +
+                        "LEFT JOIN Users u ON m.user_id = u.id " +
+                        "INNER JOIN Combustibles c ON m.id_combustible = c.id " +
                         "WHERE m.estacion_id = ? " +
                         "ORDER BY m.fecha ASC",
                 new String[]{String.valueOf(userId.getId())}
         );
 
         while (cursor.moveToNext()) {
-
             Movement movement = new Movement();
-
             movement.setId(cursor.getInt(0));
-            movement.setTipo(cursor.getString(1));
-            movement.setCantidad(cursor.getInt(2));
-            movement.setTotal(cursor.isNull(3) ? null : cursor.getInt(3));
+            movement.setTipoVehiculo(cursor.isNull(1) ? null : cursor.getString(1));
+
+            movement.setCantidad(cursor.getDouble(2));
+            movement.setTotal(cursor.isNull(3) ? null : cursor.getDouble(3));
             movement.setFecha(cursor.getString(4));
-            movement.setTipoMovimiento(cursor.getString(6));
+            movement.setTipoMovimiento(cursor.getString(5));
 
-            User user = new User();
-            user.setId(cursor.getInt(7));
-            user.setUsername(cursor.getString(8));
-            user.setPassword(cursor.getString(9));
+            User estacion = new User();
+            estacion.setId(cursor.getInt(6));
+            estacion.setNombreCompleto(cursor.getString(7));
+            estacion.setUsername(cursor.getString(8));
+            estacion.setEmail(cursor.getString(9));
+            estacion.setPassword(cursor.getString(10));
+            estacion.setGenero(cursor.getString(11));
+            estacion.setDireccion(cursor.getString(12));
+            estacion.setFechaNacimiento(cursor.getString(13));
 
-            movement.setEstacion(user);
+            if (!cursor.isNull(14)) {
+                User usuario = new User();
+                usuario.setId(cursor.getInt(14));
+                usuario.setNombreCompleto(cursor.getString(15));
+                usuario.setUsername(cursor.getString(16));
+                usuario.setEmail(cursor.getString(17));
+                usuario.setPassword(cursor.getString(18));
+                usuario.setGenero(cursor.getString(19));
+                usuario.setDireccion(cursor.getString(20));
+                usuario.setFechaNacimiento(cursor.getString(21));
+                movement.setUsuario(usuario);
 
+            }
 
-            Rol rol = new Rol();
-            rol.setId(cursor.getInt(10));
-            rol.setNombre(cursor.getString(11));
-
-            user.setRol(rol);
-
+            Fuel fuel = new Fuel();
+            fuel.setId(cursor.getInt(22));
+            fuel.setNombre(cursor.getString(23));
+            movement.setCombustible(fuel);
+            movement.setEstacion(estacion);
             movements.add(movement);
         }
 
@@ -72,11 +90,15 @@ public class MovementDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT m.id, m.tipo, m.cantidad, m.total, m.fecha, m.estacion_id, m.tipo_movimiento, " +
-                        "u.id, u.username, u.password, r.id, r.nombre " +
+                "SELECT " +
+                        "m.id, m.tipo, m.cantidad, m.total, m.fecha, m.tipo_movimiento, " +
+                        "e.id, e.nombre_completo, e.username, e.email, e.password, e.genero, e.direccion, e.fecha_nacimiento, " +
+                        "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
+                        "c.id, c.nombre " +
                         "FROM Movimientos m " +
-                        "INNER JOIN Users u ON m.estacion_id = u.id " +
-                        "INNER JOIN Roles r ON u.rol_id = r.id " +
+                        "INNER JOIN Users e ON m.estacion_id = e.id " +
+                        "LEFT JOIN Users u ON m.user_id = u.id " +
+                        "INNER JOIN Combustibles c ON m.id_combustible = c.id " +
                         "WHERE m.estacion_id = ? " +
                         "ORDER BY CASE " +
                         "WHEN m.tipo_movimiento = 'ENTRADA' THEN 0 " +
@@ -88,44 +110,64 @@ public class MovementDAO {
         while (cursor.moveToNext()) {
 
             Movement movement = new Movement();
-
             movement.setId(cursor.getInt(0));
-            movement.setTipo(cursor.getString(1));
-            movement.setCantidad(cursor.getInt(2));
-            movement.setTotal(cursor.isNull(3) ? null : cursor.getInt(3));
+            movement.setTipoVehiculo(cursor.isNull(1) ? null : cursor.getString(1));
+            movement.setCantidad(cursor.getDouble(2));
+            movement.setTotal(cursor.isNull(3) ? null : cursor.getDouble(3));
             movement.setFecha(cursor.getString(4));
-            movement.setTipoMovimiento(cursor.getString(6));
+            movement.setTipoMovimiento(cursor.getString(5));
 
-            User user = new User();
-            user.setId(cursor.getInt(7));
-            user.setUsername(cursor.getString(8));
-            user.setPassword(cursor.getString(9));
+            User estacion = new User();
+            estacion.setId(cursor.getInt(6));
+            estacion.setNombreCompleto(cursor.getString(7));
+            estacion.setUsername(cursor.getString(8));
+            estacion.setEmail(cursor.getString(9));
+            estacion.setPassword(cursor.getString(10));
+            estacion.setGenero(cursor.getString(11));
+            estacion.setDireccion(cursor.getString(12));
+            estacion.setFechaNacimiento(cursor.getString(13));
 
-            movement.setEstacion(user);
+            if (!cursor.isNull(14)) {
+                User usuario = new User();
+                usuario.setId(cursor.getInt(14));
+                usuario.setNombreCompleto(cursor.getString(15));
+                usuario.setUsername(cursor.getString(16));
+                usuario.setEmail(cursor.getString(17));
+                usuario.setPassword(cursor.getString(18));
+                usuario.setGenero(cursor.getString(19));
+                usuario.setDireccion(cursor.getString(20));
+                usuario.setFechaNacimiento(cursor.getString(21));
 
-            Rol rol = new Rol();
-            rol.setId(cursor.getInt(10));
-            rol.setNombre(cursor.getString(11));
+                movement.setUsuario(usuario);
+            }
 
-            user.setRol(rol);
-
+            Fuel fuel = new Fuel();
+            fuel.setId(cursor.getInt(22));
+            fuel.setNombre(cursor.getString(23));
+            movement.setCombustible(fuel);
+            movement.setEstacion(estacion);
             movements.add(movement);
         }
 
         cursor.close();
         return movements;
     }
+
     public ArrayList<Movement> getMovementsByDate(User userId) {
 
         ArrayList<Movement> movements = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT m.id, m.tipo, m.cantidad, m.total, m.fecha, m.estacion_id, m.tipo_movimiento, " +
-                        "u.id, u.username, u.password, r.id, r.nombre " +
+                "SELECT " +
+                        "m.id, m.tipo, m.cantidad, m.total, m.fecha, m.tipo_movimiento, " +
+                        "e.id, e.nombre_completo, e.username, e.email, e.password, e.genero, e.direccion, e.fecha_nacimiento, " +
+                        "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
+                        "c.id, c.nombre " +
                         "FROM Movimientos m " +
-                        "INNER JOIN Users u ON m.estacion_id = u.id " +
-                        "INNER JOIN Roles r ON u.rol_id = r.id " +
+                        "INNER JOIN Users e ON m.estacion_id = e.id " +
+                        "LEFT JOIN Users u ON m.user_id = u.id " +
+                        "INNER JOIN Combustibles c ON m.id_combustible = c.id " +
                         "WHERE m.estacion_id = ? " +
                         "ORDER BY m.fecha DESC",
                 new String[]{String.valueOf(userId.getId())}
@@ -134,33 +176,48 @@ public class MovementDAO {
         while (cursor.moveToNext()) {
 
             Movement movement = new Movement();
-
             movement.setId(cursor.getInt(0));
-            movement.setTipo(cursor.getString(1));
-            movement.setCantidad(cursor.getInt(2));
-            movement.setTotal(cursor.isNull(3) ? null : cursor.getInt(3));
+            movement.setTipoVehiculo(cursor.isNull(1) ? null : cursor.getString(1));
+            movement.setCantidad(cursor.getDouble(2));
+            movement.setTotal(cursor.isNull(3) ? null : cursor.getDouble(3));
             movement.setFecha(cursor.getString(4));
-            movement.setTipoMovimiento(cursor.getString(6));
+            movement.setTipoMovimiento(cursor.getString(5));
 
-            User user = new User();
-            user.setId(cursor.getInt(7));
-            user.setUsername(cursor.getString(8));
-            user.setPassword(cursor.getString(9));
+            User estacion = new User();
+            estacion.setId(cursor.getInt(6));
+            estacion.setNombreCompleto(cursor.getString(7));
+            estacion.setUsername(cursor.getString(8));
+            estacion.setEmail(cursor.getString(9));
+            estacion.setPassword(cursor.getString(10));
+            estacion.setGenero(cursor.getString(11));
+            estacion.setDireccion(cursor.getString(12));
+            estacion.setFechaNacimiento(cursor.getString(13));
 
-            movement.setEstacion(user);
+            if (!cursor.isNull(14)) {
+                User usuario = new User();
+                usuario.setId(cursor.getInt(14));
+                usuario.setNombreCompleto(cursor.getString(15));
+                usuario.setUsername(cursor.getString(16));
+                usuario.setEmail(cursor.getString(17));
+                usuario.setPassword(cursor.getString(18));
+                usuario.setGenero(cursor.getString(19));
+                usuario.setDireccion(cursor.getString(20));
+                usuario.setFechaNacimiento(cursor.getString(21));
 
-            Rol rol = new Rol();
-            rol.setId(cursor.getInt(10));
-            rol.setNombre(cursor.getString(11));
+                movement.setUsuario(usuario);
+            }
 
-            user.setRol(rol);
 
+            Fuel fuel = new Fuel();
+            fuel.setId(cursor.getInt(22));
+            fuel.setNombre(cursor.getString(23));
+            movement.setCombustible(fuel);
+            movement.setEstacion(estacion);
             movements.add(movement);
         }
 
         cursor.close();
         return movements;
     }
-
 
 }

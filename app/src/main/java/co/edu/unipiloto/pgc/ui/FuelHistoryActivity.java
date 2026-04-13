@@ -4,14 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -21,21 +20,21 @@ import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.dao.MovementDAO;
 import co.edu.unipiloto.pgc.model.Movement;
 import co.edu.unipiloto.pgc.model.User;
-import co.edu.unipiloto.pgc.ui.adapters.DeliveriesAdapter;
-import co.edu.unipiloto.pgc.ui.adapters.MovementsAdapter;
-import co.edu.unipiloto.pgc.ui.adapters.MovementsListAdapter;
+import co.edu.unipiloto.pgc.ui.adapters.MovementAdapter;
 
 public class FuelHistoryActivity extends BaseActivity {
 
     private MovementDAO movementDAO;
     private User user;
     private ArrayList<Movement> movements;
-    private MovementsListAdapter adapterMovimientos;
+    private MovementAdapter adapterMovimientos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fuel_history);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue_gradient_end));
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
         movementDAO = new MovementDAO(this);
@@ -43,7 +42,7 @@ public class FuelHistoryActivity extends BaseActivity {
 
         ListView listaMovimientos = findViewById(R.id.listaMovimientos);
 
-        adapterMovimientos = new MovementsListAdapter(this, movements);
+        adapterMovimientos = new MovementAdapter(this, movements);
         listaMovimientos.setAdapter(adapterMovimientos);
 
         Button btnFiltrar = findViewById(R.id.btnFiltrar);
@@ -58,13 +57,20 @@ public class FuelHistoryActivity extends BaseActivity {
                 sendIntent.putExtra("user", user);
                 startActivity(sendIntent);
                 finish();
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 return true;
             } else if (id == R.id.nav_registrar) {
                 sendIntent = new Intent(this, FuelOutletActivity.class);
                 sendIntent.putExtra("user", user);
                 startActivity(sendIntent);
                 finish();
-                return true;
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);                return true;
+            } else if (id == R.id.nav_inventario) {
+                sendIntent = new Intent(this, InventoryManagementActivity.class);
+                sendIntent.putExtra("user", user);
+                startActivity(sendIntent);
+                finish();
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);                return true;
             } else return id == R.id.nav_historial;
         });
 

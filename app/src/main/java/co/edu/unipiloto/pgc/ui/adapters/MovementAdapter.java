@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.model.Movement;
 
-public class MovementsListAdapter extends BaseAdapter {
+public class MovementAdapter extends BaseAdapter {
 
     private ArrayList<Movement> movements;
     private Context context;
 
-    public MovementsListAdapter(Context context, ArrayList<Movement> movements) {
+    public MovementAdapter(Context context, ArrayList<Movement> movements) {
         this.context = context;
         this.movements = movements;
     }
@@ -47,22 +47,25 @@ public class MovementsListAdapter extends BaseAdapter {
 
         TextView viewMovimiento = convertView.findViewById(R.id.viewMovimiento);
         TextView viewTipo = convertView.findViewById(R.id.viewTipo);
+        TextView viewCombustible = convertView.findViewById(R.id.viewCombustible);
         TextView viewCantidad = convertView.findViewById(R.id.viewCantidad);
         TextView viewTotal = convertView.findViewById(R.id.viewTotal);
         TextView viewFecha = convertView.findViewById(R.id.viewFecha);
         TextView viewEstacion = convertView.findViewById(R.id.viewEstacion);
+        TextView viewUsuario = convertView.findViewById(R.id.viewUsuario);
         TextView viewTipoMovimiento = convertView.findViewById(R.id.viewTipoMovimiento);
 
         Movement m = movements.get(position);
 
         viewMovimiento.setText("Movimiento " + m.getId());
-        viewTipo.setText("Tipo: " + m.getTipo());
+        viewTipo.setText("Tipo: " + (m.getTipoVehiculo() != null ? m.getTipoVehiculo() : "N/A"));
+        viewCombustible.setText("Combustible: " + m.getCombustible().getNombre());
         viewCantidad.setText("Cantidad: " + m.getCantidad());
-        viewTotal.setText("Total: " + m.getTotal());
+        viewTotal.setText("Total: " + (m.getTotal() != null ? m.getTotal() : "N/A"));
         viewFecha.setText("Fecha: " + m.getFecha());
         viewEstacion.setText("Estacion: " + m.getEstacion().getUsername());
+        viewUsuario.setText("Usuario: " + (m.getUsuario() != null ? m.getUsuario().getUsername() : "N/A"));
         viewTipoMovimiento.setText("Tipo de movimiento: " + m.getTipoMovimiento());
-
         return convertView;
     }
 

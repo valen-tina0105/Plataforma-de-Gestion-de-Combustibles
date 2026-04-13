@@ -16,4 +16,9 @@
         android:icon="@drawable/baseline_article_24"
         android:title="Historial" />
 
+    <item
+        android:id="@+id/nav_inventario"
+        android:icon="@drawable/baseline_inventory_24"
+        android:title="Inventario" />
+
 </menu>

@@ -3,11 +3,13 @@ package co.edu.unipiloto.pgc.model;
 public class Movement {
 
     private int id;
-    private String tipo;
-    private int cantidad;
-    private Integer total;
+    private String tipoVehiculo;
+    private Fuel combustible;
+    private double cantidad;
+    private Double total;
     private String fecha;
     private User estacion;
+    private User usuario;
     private String tipoMovimiento;
 
     public Movement() {
@@ -21,27 +23,35 @@ public class Movement {
         this.id = id;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getTipoVehiculo() {
+        return tipoVehiculo;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setTipoVehiculo(String tipoVehiculo) {
+        this.tipoVehiculo = tipoVehiculo;
     }
 
-    public int getCantidad() {
+    public Fuel getCombustible() {
+        return combustible;
+    }
+
+    public void setCombustible(Fuel combustible) {
+        this.combustible = combustible;
+    }
+
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
 
-    public Integer getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(Integer total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 
@@ -59,6 +69,14 @@ public class Movement {
 
     public void setEstacion(User estacion) {
         this.estacion = estacion;
+    }
+
+    public User getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(User usuario) {
+        this.usuario = usuario;
     }
 
     public String getTipoMovimiento() {

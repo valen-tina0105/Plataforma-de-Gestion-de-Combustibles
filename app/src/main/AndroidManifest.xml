@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlataformaDeGestionDeCombustibles">
         <activity
+            android:name=".ui.InventoryManagementActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.SubsidyActivity"
             android:exported="false" />
         <activity

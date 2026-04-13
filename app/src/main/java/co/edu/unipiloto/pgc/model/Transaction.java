@@ -9,12 +9,13 @@ public class Transaction {
     private int id;
     private User estacion;
     private String tipoVehiculo;
-    private int total;
-    private int cantidad;
+    private double total;
+    private double cantidad;
     private Date fecha;
     private User usuario;
     private String fechaFormateada;
     private String estado;
+    private Fuel combustible;
 
     public Transaction() {
         fecha = new Date();
@@ -46,19 +47,19 @@ public class Transaction {
         this.tipoVehiculo = tipoVehiculo;
     }
 
-    public int getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 
-    public int getCantidad() {
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
 
@@ -92,5 +93,13 @@ public class Transaction {
 
     public void setUsuario(User usuario) {
         this.usuario = usuario;
+    }
+
+    public Fuel getCombustible() {
+        return combustible;
+    }
+
+    public void setCombustible(Fuel combustible) {
+        this.combustible = combustible;
     }
 }

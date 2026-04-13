@@ -77,4 +77,5 @@
     <string name="consultaPrecios">Consulta de precios para usuarios particulares</string>
     <string name="usernameCliente">Username cliente</string>
     <string name="consultarSaldoDisponible">Consultar saldo disponible de subsidio de combustible</string>
+    <string name="tituloInventoryManagement">Inventario de estacion</string>
 </resources>

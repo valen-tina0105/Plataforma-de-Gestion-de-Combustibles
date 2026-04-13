@@ -32,6 +32,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Transact
     public void onBindViewHolder(@NonNull HistoryAdapter.TransactionViewHolder holder, int position) {
         holder.viewHistorial.setText("Transaccion " + transactions.get(position).getId());
         holder.viewTipoVehiculo.setText("Tipo de vehiculo: " + transactions.get(position).getTipoVehiculo());
+        holder.viewCombustible.setText("Tipo de combustible: " + transactions.get(position).getCombustible());
         holder.viewCantidad.setText("Cantidad: " + transactions.get(position).getCantidad());
         holder.viewTotal.setText("Total: " + transactions.get(position).getTotal());
         holder.viewFecha.setText("Fecha: " + transactions.get(position).getFechaFormateada());
@@ -45,11 +46,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Transact
     }
 
     public class TransactionViewHolder extends RecyclerView.ViewHolder{
-        TextView viewHistorial, viewTipoVehiculo, viewCantidad, viewTotal, viewFecha, viewEstacion, viewEstado;
+        TextView viewHistorial, viewTipoVehiculo, viewCantidad, viewTotal, viewFecha, viewEstacion, viewEstado, viewCombustible;
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             viewHistorial = itemView.findViewById(R.id.viewHistorial);
             viewTipoVehiculo = itemView.findViewById(R.id.viewTipoVehiculo);
+            viewCombustible = itemView.findViewById(R.id.viewCombustible);
             viewCantidad = itemView.findViewById(R.id.viewCantidad);
             viewTotal = itemView.findViewById(R.id.viewTotal);
             viewFecha = itemView.findViewById(R.id.viewFecha);

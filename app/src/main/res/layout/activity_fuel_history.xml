@@ -104,9 +104,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/card_background"
-        app:menu="@menu/bottom_nav_menu"
         app:itemIconTint="@android:color/white"
         app:itemTextColor="@android:color/white"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

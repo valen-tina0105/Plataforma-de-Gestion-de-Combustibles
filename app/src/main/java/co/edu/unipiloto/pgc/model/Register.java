@@ -7,8 +7,8 @@ import java.util.Date;
 public class Register{
     private int id;
     private User estacion;
-    private String tipoCombustible;
-    private int cantidad;
+    private Fuel Combustible;
+    private double cantidad;
     private Date fecha;
     private String fechaFormateada;
 
@@ -34,19 +34,19 @@ public class Register{
         this.estacion = estacion;
     }
 
-    public String getTipoCombustible() {
-        return tipoCombustible;
+    public Fuel getCombustible() {
+        return Combustible;
     }
 
-    public void setTipoCombustible(String tipoCombustible) {
-        this.tipoCombustible = tipoCombustible;
+    public void setCombustible(Fuel combustible) {
+        Combustible = combustible;
     }
 
-    public int getCantidad() {
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
 

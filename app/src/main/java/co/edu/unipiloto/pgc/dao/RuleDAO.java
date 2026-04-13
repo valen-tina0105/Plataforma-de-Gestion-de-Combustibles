@@ -24,7 +24,9 @@ public class RuleDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT re.id, re.tipo_vehiculo, re.precio, re.fecha, u.id, u.username, u.password, r.id, r.nombre " +
+                "SELECT re.id, re.tipo_vehiculo, re.precio, re.fecha, " +
+                        "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
+                        "r.id, r.nombre " +
                         "FROM Reglas re " +
                         "INNER JOIN Users u ON re.admin_id = u.id " +
                         "INNER JOIN Roles r ON u.rol_id = r.id",
@@ -35,17 +37,22 @@ public class RuleDAO {
             Rule rule = new Rule();
             rule.setId(cursor.getInt(0));
             rule.setTipoVehiculo(cursor.getString(1));
-            rule.setPrecio(cursor.getInt(2));
+            rule.setPrecio(cursor.getDouble(2));
             rule.setFechaFormateada(cursor.getString(3));
 
             User user = new User();
             user.setId(cursor.getInt(4));
-            user.setUsername(cursor.getString(5));
-            user.setPassword(cursor.getString(6));
+            user.setNombreCompleto(cursor.getString(5));
+            user.setUsername(cursor.getString(6));
+            user.setEmail(cursor.getString(7));
+            user.setPassword(cursor.getString(8));
+            user.setGenero(cursor.getString(9));
+            user.setDireccion(cursor.getString(10));
+            user.setFechaNacimiento(cursor.getString(11));
 
             Rol rol = new Rol();
-            rol.setId(cursor.getInt(7));
-            rol.setNombre(cursor.getString(8));
+            rol.setId(cursor.getInt(12));
+            rol.setNombre(cursor.getString(13));
 
             user.setRol(rol);
             rule.setAdmin(user);
