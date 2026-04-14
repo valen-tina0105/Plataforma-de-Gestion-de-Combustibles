@@ -1,0 +1,1 @@
+INSERT OR IGNORE INTO Combustibles (id, nombre) VALUES (1, 'Gasolina Corriente'), (2, 'Gasolina Extra'), (3, 'ACPM(Diésel)'), (4, 'Gas Natural Vehicular');

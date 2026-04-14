@@ -1,0 +1,1 @@
+INSERT INTO Subsidios (subsidio, porcentaje, user_id) VALUES (0, 0, 8), (1, 10, 9), (1, 25, 10);
