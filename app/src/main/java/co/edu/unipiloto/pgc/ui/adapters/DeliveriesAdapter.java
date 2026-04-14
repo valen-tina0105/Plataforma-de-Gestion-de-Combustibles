@@ -33,7 +33,7 @@ public class DeliveriesAdapter extends RecyclerView.Adapter<DeliveriesAdapter.De
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull DeliveriesViewHolder holder, int position) {
-        holder.viewEntrega.setText("Entrega " + deliveries.get(position).getId());
+        holder.viewEntrega.setText("Entrega " + (position + 1));
         holder.viewPlaca.setText("Placa: " + deliveries.get(position).getPlaca());
         holder.viewFecha.setText("Fecha: " + deliveries.get(position).getFechaFormateada());
         holder.viewCombustible.setText("Combustible: " + deliveries.get(position).getCombustible().getNombre());

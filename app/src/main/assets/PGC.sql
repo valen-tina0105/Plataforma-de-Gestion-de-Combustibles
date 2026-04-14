@@ -53,6 +53,14 @@ CREATE TABLE IF NOT EXISTS Reglas (
     FOREIGN KEY (admin_id) REFERENCES Users(id)
 );
 
+CREATE TABLE IF NOT EXISTS Subsidios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subsidio INTEGER NOT NULL CHECK(subsidio IN (0,1)),
+    porcentaje REAL DEFAULT 0,
+    user_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS Transacciones (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tipo_vehiculo TEXT NOT NULL,
@@ -107,45 +115,17 @@ INSERT OR IGNORE INTO Combustibles (id, nombre) VALUES
 (3, 'ACPM(Diésel)'),
 (4, 'Gas Natural Vehicular');
 
-INSERT OR IGNORE INTO Users
-(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
-VALUES
-('Admin Usuarios', 'admin_users', 'admin_users@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 7);
-
-INSERT OR IGNORE INTO Users
-(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
-VALUES
-('Admin Reglas', 'admin_reglas', 'admin_reglas@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 6);
-
-INSERT OR IGNORE INTO Users
-(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
-VALUES
-('Estación Norte', 'estacion_1', 'estacion1@mail.com', 'estacion123', 'N/A', 'Bogotá Norte', '2000-01-01', 1);
-
-INSERT OR IGNORE INTO Users
-(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
-VALUES
-('Estación Sur', 'estacion_2', 'estacion2@mail.com', 'estacion123', 'N/A', 'Bogotá Sur', '2000-01-01', 1);
-
-INSERT OR IGNORE INTO Users
-(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
-VALUES
-('Autoridad Reguladora', 'autoridad', 'autoridad@mail.com', 'autoridad123', 'N/A', 'Bogotá', '1985-01-01', 3);
-
-INSERT OR IGNORE INTO Users
-(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
-VALUES
-('Distribuidor Uno', 'distribuidor_1', 'dist1@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 5);
-
-INSERT OR IGNORE INTO Users
-(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
-VALUES
-('Distribuidor Dos', 'distribuidor_2', 'dist2@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 5);
-
-INSERT OR IGNORE INTO Users
-(nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id)
-VALUES
-('Usuario Vehiculo', 'user_vehicle', 'user_vehicle@mail.com', 'user123', 'Masculino', 'Bogotá', '2000-05-15', 2);
+INSERT OR IGNORE INTO Users (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id) VALUES
+('Admin Usuarios', 'admin_users', 'admin_users@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 7),
+('Admin Reglas', 'admin_reglas', 'admin_reglas@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 6),
+('Estación Norte', 'estacion_1', 'estacion1@mail.com', 'estacion123', 'N/A', 'Bogotá Norte', '2000-01-01', 1),
+('Estación Sur', 'estacion_2', 'estacion2@mail.com', 'estacion123', 'N/A', 'Bogotá Sur', '2000-01-01', 1),
+('Autoridad Reguladora', 'autoridad', 'autoridad@mail.com', 'autoridad123', 'N/A', 'Bogotá', '1985-01-01', 3),
+('Distribuidor Uno', 'distribuidor_1', 'dist1@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 5),
+('Distribuidor Dos', 'distribuidor_2', 'dist2@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 5),
+('Juan Perez', 'juan_user', 'juan_user@mail.com', 'user123', 'Masculino', 'Bogotá', '2000-05-15', 2),
+('Sara Diaz', 'sara_user', 'sara_user@mail.com', 'user123', 'Femenino', 'Bogotá', '2000-05-15', 2),
+('Pedro mendez', 'pedro_user', 'pedro_user@mail.com', 'user123', 'Masculino', 'Bogotá', '2000-05-15', 2);
 
 INSERT OR IGNORE INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES
 ('Servicio particular', 10000, '2026-03-01', 2);
@@ -198,3 +178,8 @@ INSERT OR IGNORE INTO Precios (precio, id_estacion, id_combustible) VALUES
 (22000, 4, 2),
 (11000, 4, 3),
 (3000, 4, 4);
+
+INSERT INTO Subsidios (subsidio, porcentaje, user_id) VALUES
+(0, 0, 8),
+(1, 10, 9),
+(1, 25, 10);

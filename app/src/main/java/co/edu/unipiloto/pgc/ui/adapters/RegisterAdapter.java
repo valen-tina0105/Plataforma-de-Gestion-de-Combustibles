@@ -38,7 +38,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.Regist
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RegistersViewHolder holder, int position) {
-        holder.viewRegistro.setText("Registro " + registers.get(position).getId());
+        holder.viewRegistro.setText("Registro " + (position + 1));
         holder.viewEstacion.setText("Estacion: " + registers.get(position).getEstacion().getUsername());
         holder.viewCombustible.setText("Tipo de combustible: " + registers.get(position).getCombustible().getNombre());
         holder.viewCantidad.setText("Cantidad: " + registers.get(position).getCantidad());

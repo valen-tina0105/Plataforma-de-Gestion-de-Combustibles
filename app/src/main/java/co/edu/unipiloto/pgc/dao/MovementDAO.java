@@ -28,10 +28,14 @@ public class MovementDAO {
                 "SELECT m.id, m.tipo, m.cantidad, m.total, m.fecha, m.tipo_movimiento, " +
                         "e.id, e.nombre_completo, e.username, e.email, e.password, e.genero, e.direccion, e.fecha_nacimiento, " +
                         "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
+                        "re.id, re.nombre, " +
+                        "ru.id, ru.nombre, " +
                         "c.id, c.nombre " +
                         "FROM Movimientos m " +
                         "INNER JOIN Users e ON m.estacion_id = e.id " +
                         "LEFT JOIN Users u ON m.user_id = u.id " +
+                        "INNER JOIN Roles re ON e.rol_id = re.id " +
+                        "LEFT JOIN Roles ru ON u.rol_id = ru.id " +
                         "INNER JOIN Combustibles c ON m.id_combustible = c.id " +
                         "WHERE m.estacion_id = ? " +
                         "ORDER BY m.fecha ASC",
@@ -58,8 +62,9 @@ public class MovementDAO {
             estacion.setDireccion(cursor.getString(12));
             estacion.setFechaNacimiento(cursor.getString(13));
 
+            User usuario = null;
             if (!cursor.isNull(14)) {
-                User usuario = new User();
+                usuario = new User();
                 usuario.setId(cursor.getInt(14));
                 usuario.setNombreCompleto(cursor.getString(15));
                 usuario.setUsername(cursor.getString(16));
@@ -72,9 +77,23 @@ public class MovementDAO {
 
             }
 
+            Rol rolEstacion = new Rol();
+            rolEstacion.setId(cursor.getInt(22));
+            rolEstacion.setNombre(cursor.getString(23));
+            estacion.setRol(rolEstacion);
+
+            Rol rolUsuario = null;
+            if (!cursor.isNull(24)) {
+                rolUsuario = new Rol();
+                rolUsuario.setId(cursor.getInt(24));
+                rolUsuario.setNombre(cursor.getString(25));
+                usuario.setRol(rolUsuario);
+            }
+
             Fuel fuel = new Fuel();
-            fuel.setId(cursor.getInt(22));
-            fuel.setNombre(cursor.getString(23));
+            fuel.setId(cursor.getInt(26));
+            fuel.setNombre(cursor.getString(27));
+
             movement.setCombustible(fuel);
             movement.setEstacion(estacion);
             movements.add(movement);
@@ -94,10 +113,14 @@ public class MovementDAO {
                         "m.id, m.tipo, m.cantidad, m.total, m.fecha, m.tipo_movimiento, " +
                         "e.id, e.nombre_completo, e.username, e.email, e.password, e.genero, e.direccion, e.fecha_nacimiento, " +
                         "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
+                        "re.id, re.nombre, " +
+                        "ru.id, ru.nombre, " +
                         "c.id, c.nombre " +
                         "FROM Movimientos m " +
                         "INNER JOIN Users e ON m.estacion_id = e.id " +
                         "LEFT JOIN Users u ON m.user_id = u.id " +
+                        "INNER JOIN Roles re ON e.rol_id = re.id " +
+                        "LEFT JOIN Roles ru ON u.rol_id = ru.id " +
                         "INNER JOIN Combustibles c ON m.id_combustible = c.id " +
                         "WHERE m.estacion_id = ? " +
                         "ORDER BY CASE " +
@@ -127,8 +150,9 @@ public class MovementDAO {
             estacion.setDireccion(cursor.getString(12));
             estacion.setFechaNacimiento(cursor.getString(13));
 
+            User usuario = null;
             if (!cursor.isNull(14)) {
-                User usuario = new User();
+                usuario = new User();
                 usuario.setId(cursor.getInt(14));
                 usuario.setNombreCompleto(cursor.getString(15));
                 usuario.setUsername(cursor.getString(16));
@@ -141,9 +165,23 @@ public class MovementDAO {
                 movement.setUsuario(usuario);
             }
 
+            Rol rolEstacion = new Rol();
+            rolEstacion.setId(cursor.getInt(22));
+            rolEstacion.setNombre(cursor.getString(23));
+            estacion.setRol(rolEstacion);
+
+            Rol rolUsuario = null;
+            if (!cursor.isNull(24)) {
+                rolUsuario = new Rol();
+                rolUsuario.setId(cursor.getInt(24));
+                rolUsuario.setNombre(cursor.getString(25));
+                usuario.setRol(rolUsuario);
+            }
+
             Fuel fuel = new Fuel();
-            fuel.setId(cursor.getInt(22));
-            fuel.setNombre(cursor.getString(23));
+            fuel.setId(cursor.getInt(26));
+            fuel.setNombre(cursor.getString(27));
+
             movement.setCombustible(fuel);
             movement.setEstacion(estacion);
             movements.add(movement);
@@ -163,10 +201,14 @@ public class MovementDAO {
                         "m.id, m.tipo, m.cantidad, m.total, m.fecha, m.tipo_movimiento, " +
                         "e.id, e.nombre_completo, e.username, e.email, e.password, e.genero, e.direccion, e.fecha_nacimiento, " +
                         "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
+                        "re.id, re.nombre, " +
+                        "ru.id, ru.nombre, " +
                         "c.id, c.nombre " +
                         "FROM Movimientos m " +
                         "INNER JOIN Users e ON m.estacion_id = e.id " +
                         "LEFT JOIN Users u ON m.user_id = u.id " +
+                        "INNER JOIN Roles re ON e.rol_id = re.id " +
+                        "LEFT JOIN Roles ru ON u.rol_id = ru.id " +
                         "INNER JOIN Combustibles c ON m.id_combustible = c.id " +
                         "WHERE m.estacion_id = ? " +
                         "ORDER BY m.fecha DESC",
@@ -193,8 +235,9 @@ public class MovementDAO {
             estacion.setDireccion(cursor.getString(12));
             estacion.setFechaNacimiento(cursor.getString(13));
 
+            User usuario = null;
             if (!cursor.isNull(14)) {
-                User usuario = new User();
+                usuario = new User();
                 usuario.setId(cursor.getInt(14));
                 usuario.setNombreCompleto(cursor.getString(15));
                 usuario.setUsername(cursor.getString(16));
@@ -207,10 +250,23 @@ public class MovementDAO {
                 movement.setUsuario(usuario);
             }
 
+            Rol rolEstacion = new Rol();
+            rolEstacion.setId(cursor.getInt(22));
+            rolEstacion.setNombre(cursor.getString(23));
+            estacion.setRol(rolEstacion);
+
+            Rol rolUsuario = null;
+            if (!cursor.isNull(24)) {
+                rolUsuario = new Rol();
+                rolUsuario.setId(cursor.getInt(24));
+                rolUsuario.setNombre(cursor.getString(25));
+                usuario.setRol(rolUsuario);
+            }
 
             Fuel fuel = new Fuel();
-            fuel.setId(cursor.getInt(22));
-            fuel.setNombre(cursor.getString(23));
+            fuel.setId(cursor.getInt(26));
+            fuel.setNombre(cursor.getString(27));
+
             movement.setCombustible(fuel);
             movement.setEstacion(estacion);
             movements.add(movement);

@@ -23,7 +23,6 @@ import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.dao.InventoryDAO;
 import co.edu.unipiloto.pgc.model.Inventory;
 import co.edu.unipiloto.pgc.model.User;
-import co.edu.unipiloto.pgc.ui.adapters.HistoryAdapter;
 import co.edu.unipiloto.pgc.ui.adapters.InventoryAdapter;
 
 public class InventoryManagementActivity extends BaseActivity {

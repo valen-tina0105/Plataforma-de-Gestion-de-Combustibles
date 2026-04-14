@@ -14,30 +14,30 @@ import java.util.ArrayList;
 import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.model.Transaction;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
+public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.PurchaseViewHolder> {
     private ArrayList<Transaction> transactions;
-    public TransactionAdapter(ArrayList<Transaction> transactions) {
+    public PurchaseAdapter(ArrayList<Transaction> transactions) {
         this.transactions = transactions;
     }
 
     @NonNull
     @Override
-    public TransactionAdapter.TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_item, parent, false);
-        return new TransactionViewHolder(view);
+    public PurchaseAdapter.PurchaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.purchase_item, parent, false);
+        return new PurchaseViewHolder(view);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull TransactionAdapter.TransactionViewHolder holder, int position) {
-        holder.viewTransaccion.setText("Transaccion " + (position + 1));
-        holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacion().getUsername());
+    public void onBindViewHolder(@NonNull PurchaseAdapter.PurchaseViewHolder holder, int position) {
+        holder.viewCompra.setText("Compra " + (position + 1));
         holder.viewTipoVehiculo.setText("Tipo de vehiculo: " + transactions.get(position).getTipoVehiculo());
         holder.viewCombustible.setText("Tipo de combustible: " + transactions.get(position).getCombustible());
         holder.viewCantidad.setText("Cantidad: " + transactions.get(position).getCantidad());
-        holder.viewUsuario.setText("Usuario: " + transactions.get(position).getUsuario().getUsername());
         holder.viewTotal.setText("Total: " + transactions.get(position).getTotal());
         holder.viewFecha.setText("Fecha: " + transactions.get(position).getFechaFormateada());
+        holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacion().getUsername());
+        holder.viewUsuario.setText("Usuario: " + transactions.get(position).getUsuario().getUsername());
     }
 
     @Override
@@ -51,17 +51,17 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         notifyDataSetChanged();
     }
 
-    public class TransactionViewHolder extends RecyclerView.ViewHolder{
-        TextView viewTransaccion, viewEstacion, viewTipoVehiculo, viewCantidad, viewTotal, viewFecha, viewCombustible, viewUsuario;
-        public TransactionViewHolder(@NonNull View itemView) {
+    public class PurchaseViewHolder extends RecyclerView.ViewHolder{
+        TextView viewCompra, viewTipoVehiculo, viewEstacion, viewCantidad, viewTotal, viewFecha, viewCombustible, viewUsuario;
+        public PurchaseViewHolder(@NonNull View itemView) {
             super(itemView);
-            viewTransaccion = itemView.findViewById(R.id.viewTransaccion);
-            viewEstacion = itemView.findViewById(R.id.viewEstacion);
+            viewCompra = itemView.findViewById(R.id.viewCompra);
             viewTipoVehiculo = itemView.findViewById(R.id.viewTipoVehiculo);
             viewCombustible = itemView.findViewById(R.id.viewCombustible);
             viewCantidad = itemView.findViewById(R.id.viewCantidad);
             viewTotal = itemView.findViewById(R.id.viewTotal);
             viewFecha = itemView.findViewById(R.id.viewFecha);
+            viewEstacion = itemView.findViewById(R.id.viewEstacion);
             viewUsuario = itemView.findViewById(R.id.viewUsuario);
         }
     }

@@ -30,7 +30,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Transact
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull HistoryAdapter.TransactionViewHolder holder, int position) {
-        holder.viewHistorial.setText("Transaccion " + transactions.get(position).getId());
+        holder.viewHistorial.setText("Transaccion " + (position + 1));
         holder.viewTipoVehiculo.setText("Tipo de vehiculo: " + transactions.get(position).getTipoVehiculo());
         holder.viewCombustible.setText("Tipo de combustible: " + transactions.get(position).getCombustible());
         holder.viewCantidad.setText("Cantidad: " + transactions.get(position).getCantidad());

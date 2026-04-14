@@ -57,9 +57,14 @@
     <string name="historialCombustible">Consultar historial de movimientos de combustible</string>
     <string name="filtrar">Tipo de filtro: </string>
     <string-array name="filtro">
-        <item>Todos</item>
+        <item>Sin filtro</item>
         <item>Tipo de movimiento</item>
         <item>Fecha de transacción</item>
+    </string-array>
+    <string-array name="filtrar">
+        <item>Sin filtro</item>
+        <item>Estacion</item>
+        <item>Fecha de compra</item>
     </string-array>
     <string name="btnFiltrar">Filtrar</string>
     <string name="tituloPriceValidation">Validar cumplimiento de precios segun decreto 1428</string>
@@ -78,4 +83,7 @@
     <string name="usernameCliente">Username cliente</string>
     <string name="consultarSaldoDisponible">Consultar saldo disponible de subsidio de combustible</string>
     <string name="tituloInventoryManagement">Inventario de estacion</string>
+    <string name="tituloUserInformation">Información de usuario</string>
+    <string name="tituloGasolinePurchases">Historial de compras de combustible</string>
+    <string name="tituloSubsidy">Subsidio</string>
 </resources>

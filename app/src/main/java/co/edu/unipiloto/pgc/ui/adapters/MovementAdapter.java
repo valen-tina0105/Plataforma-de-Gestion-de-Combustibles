@@ -57,7 +57,7 @@ public class MovementAdapter extends BaseAdapter {
 
         Movement m = movements.get(position);
 
-        viewMovimiento.setText("Movimiento " + m.getId());
+        viewMovimiento.setText("Movimiento " + (position + 1));
         viewTipo.setText("Tipo: " + (m.getTipoVehiculo() != null ? m.getTipoVehiculo() : "N/A"));
         viewCombustible.setText("Combustible: " + m.getCombustible().getNombre());
         viewCantidad.setText("Cantidad: " + m.getCantidad());
