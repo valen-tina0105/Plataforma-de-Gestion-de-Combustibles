@@ -23,7 +23,8 @@ public class UserDAO {
 
         Cursor cursor = db.rawQuery(
                 "SELECT u.id, u.nombre_completo, u.username, u.email, u.password, " +
-                        "u.genero, u.direccion, u.fecha_nacimiento, r.id, r.nombre " +
+                        "u.genero, u.direccion, u.latitud, u.longitud, u.fecha_nacimiento, " +
+                        "r.id, r.nombre " +
                         "FROM Users u " +
                         "INNER JOIN Roles r ON u.rol_id = r.id",
                 null
@@ -39,11 +40,14 @@ public class UserDAO {
             user.setPassword(cursor.getString(4));
             user.setGenero(cursor.getString(5));
             user.setDireccion(cursor.getString(6));
-            user.setFechaNacimiento(cursor.getString(7));
+            user.setLatitud(cursor.getDouble(7));
+            user.setLongitud(cursor.getDouble(8));
+
+            user.setFechaNacimiento(cursor.getString(9));
 
             Rol rol = new Rol();
-            rol.setId(cursor.getInt(8));
-            rol.setNombre(cursor.getString(9));
+            rol.setId(cursor.getInt(10));
+            rol.setNombre(cursor.getString(11));
 
             user.setRol(rol);
 
@@ -78,13 +82,15 @@ public class UserDAO {
 
         Cursor cursor = db.rawQuery(
                 "SELECT u.id, u.nombre_completo, u.username, u.email, u.password, " +
-                        "u.genero, u.direccion, u.fecha_nacimiento, r.id, r.nombre " +
+                        "u.genero, u.direccion, u.latitud, u.longitud, u.fecha_nacimiento, " +
+                        "r.id, r.nombre " +
                         "FROM Users u " +
                         "INNER JOIN Roles r ON u.rol_id = r.id " +
                         "WHERE u.username = ? AND u.password = ? " +
                         "LIMIT 1",
                 new String[]{username, password}
         );
+
         try {
             if (cursor.moveToFirst()) {
 
@@ -97,11 +103,14 @@ public class UserDAO {
                 user.setPassword(cursor.getString(4));
                 user.setGenero(cursor.getString(5));
                 user.setDireccion(cursor.getString(6));
-                user.setFechaNacimiento(cursor.getString(7));
+                user.setLatitud(cursor.getDouble(7));
+                user.setLongitud(cursor.getDouble(8));
+
+                user.setFechaNacimiento(cursor.getString(9));
 
                 Rol rol = new Rol();
-                rol.setId(cursor.getInt(8));
-                rol.setNombre(cursor.getString(9));
+                rol.setId(cursor.getInt(10));
+                rol.setNombre(cursor.getString(11));
 
                 user.setRol(rol);
 
@@ -110,6 +119,7 @@ public class UserDAO {
         } finally {
             cursor.close();
         }
+
         return null;
     }
 
@@ -117,8 +127,8 @@ public class UserDAO {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.execSQL(
-                "INSERT INTO Users (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id) " +
-                        "VALUES (?,?,?,?,?,?,?,?)",
+                "INSERT INTO Users (nombre_completo, username, email, password, genero, direccion, latitud, longitud, fecha_nacimiento, rol_id) " +
+                        "VALUES (?,?,?,?,?,?,?,?,?,?)",
                 new Object[]{
                         user.getNombreCompleto(),
                         user.getUsername(),
@@ -126,11 +136,12 @@ public class UserDAO {
                         user.getPassword(),
                         user.getGenero(),
                         user.getDireccion(),
+                        user.getLatitud(),
+                        user.getLongitud(),
                         user.getFechaNacimiento(),
                         user.getRol().getId()
                 }
         );
-
     }
 
     public ArrayList<User> getAllStations() {
@@ -139,7 +150,8 @@ public class UserDAO {
 
         Cursor cursor = db.rawQuery(
                 "SELECT u.id, u.nombre_completo, u.username, u.email, u.password, " +
-                        "u.genero, u.direccion, u.fecha_nacimiento, r.id, r.nombre " +
+                        "u.genero, u.direccion, u.latitud, u.longitud, u.fecha_nacimiento, " +
+                        "r.id, r.nombre " +
                         "FROM Users u " +
                         "INNER JOIN Roles r ON u.rol_id = r.id " +
                         "WHERE r.id = 1",
@@ -156,11 +168,14 @@ public class UserDAO {
             user.setPassword(cursor.getString(4));
             user.setGenero(cursor.getString(5));
             user.setDireccion(cursor.getString(6));
-            user.setFechaNacimiento(cursor.getString(7));
+            user.setLatitud(cursor.getDouble(7));
+            user.setLongitud(cursor.getDouble(8));
+
+            user.setFechaNacimiento(cursor.getString(9));
 
             Rol rol = new Rol();
-            rol.setId(cursor.getInt(8));
-            rol.setNombre(cursor.getString(9));
+            rol.setId(cursor.getInt(10));
+            rol.setNombre(cursor.getString(11));
 
             user.setRol(rol);
 
@@ -170,14 +185,14 @@ public class UserDAO {
         cursor.close();
         return users;
     }
-
     public User getUserByUsername(String username) {
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
                 "SELECT u.id, u.nombre_completo, u.username, u.email, u.password, " +
-                        "u.genero, u.direccion, u.fecha_nacimiento, r.id, r.nombre " +
+                        "u.genero, u.direccion, u.latitud, u.longitud, u.fecha_nacimiento, " +
+                        "r.id, r.nombre " +
                         "FROM Users u " +
                         "INNER JOIN Roles r ON u.rol_id = r.id " +
                         "WHERE u.username = ? " +
@@ -197,11 +212,13 @@ public class UserDAO {
                 user.setPassword(cursor.getString(4));
                 user.setGenero(cursor.getString(5));
                 user.setDireccion(cursor.getString(6));
-                user.setFechaNacimiento(cursor.getString(7));
+                user.setLatitud(cursor.getDouble(7));
+                user.setLongitud(cursor.getDouble(8));
+                user.setFechaNacimiento(cursor.getString(9));
 
                 Rol rol = new Rol();
-                rol.setId(cursor.getInt(8));
-                rol.setNombre(cursor.getString(9));
+                rol.setId(cursor.getInt(10));
+                rol.setNombre(cursor.getString(11));
 
                 user.setRol(rol);
 

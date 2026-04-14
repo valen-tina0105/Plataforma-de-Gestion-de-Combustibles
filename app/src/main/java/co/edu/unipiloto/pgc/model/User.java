@@ -2,7 +2,7 @@ package co.edu.unipiloto.pgc.model;
 
 import java.io.Serializable;
 
-public class User implements Serializable{
+public class User implements Serializable {
 
     private int id;
     private String nombreCompleto;
@@ -10,6 +10,8 @@ public class User implements Serializable{
     private String email;
     private Rol rol;
     private String genero;
+    public double latitud;
+    public double longitud;
     private String direccion;
     private String fechaNacimiento;
     private String password;
@@ -71,6 +73,22 @@ public class User implements Serializable{
 
     public void setGenero(String genero) {
         this.genero = genero;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
     }
 
     public String getDireccion() {
