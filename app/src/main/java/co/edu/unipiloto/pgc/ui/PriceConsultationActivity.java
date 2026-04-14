@@ -69,16 +69,8 @@ public class PriceConsultationActivity extends BaseActivity {
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
 
-        stationDAO = new StationDAO(this);
-        stations = stationDAO.getAllStations(user.getLatitud(), user.getLongitud());
-
-        adapterEstaciones = new StationsAdapter(stations);
-
         RecyclerView listaEstaciones = findViewById(R.id.listaEstaciones);
         listaEstaciones.setLayoutManager(new LinearLayoutManager(this));
-
-        adapterEstaciones = new StationsAdapter(stations);
-        listaEstaciones.setAdapter(adapterEstaciones);
 
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
