@@ -48,6 +48,8 @@ public class SignUpActivity extends AppCompatActivity {
     private UserDAO userDAO;
     private RolDAO rolDAO;
     private Spinner spinnerRoles;
+    private double latitud = 0.0;
+    private double longitud = 0.0;
 
 
     @Override
@@ -94,10 +96,10 @@ public class SignUpActivity extends AppCompatActivity {
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             if (location != null) {
-                double lat = location.getLatitude();
-                double lng = location.getLongitude();
+                latitud = location.getLatitude();
+                longitud = location.getLongitude();
 
-                obtenerDireccion(lat, lng, txtDireccion);
+                obtenerDireccion(latitud, longitud, txtDireccion);
             } else {
                 Toast.makeText(this, "No se pudo obtener la ubicación", Toast.LENGTH_SHORT).show();
             }
@@ -195,7 +197,10 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(this, "Seleccione género", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        if (latitud == 0.0 || longitud == 0.0) {
+            Toast.makeText(this, "Debe obtener la ubicación", Toast.LENGTH_SHORT).show();
+            return;
+        }
         RadioButton selectedRadio = findViewById(selectedId);
         String genero = selectedRadio.getText().toString();
         Rol rolSeleccionado = roles.get(spinnerRoles.getSelectedItemPosition());
@@ -206,6 +211,8 @@ public class SignUpActivity extends AppCompatActivity {
         user.setPassword(password.getText().toString());
         user.setGenero(genero);
         user.setDireccion(direccion.getText().toString());
+        user.setLatitud(latitud);
+        user.setLongitud(longitud);
         String fechaBD = (String) fecha.getTag();
         user.setFechaNacimiento(fechaBD);
         user.setRol(rolSeleccionado);
