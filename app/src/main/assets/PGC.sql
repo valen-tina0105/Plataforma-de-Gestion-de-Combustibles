@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS Users (
     email TEXT,
     rol_id INTEGER NOT NULL,
     direccion TEXT,
+    latitud REAL,
+    longitud REAL,
     fecha_nacimiento TEXT,
     genero TEXT,
     password TEXT NOT NULL,
@@ -115,17 +117,45 @@ INSERT OR IGNORE INTO Combustibles (id, nombre) VALUES
 (3, 'ACPM(Diésel)'),
 (4, 'Gas Natural Vehicular');
 
-INSERT OR IGNORE INTO Users (nombre_completo, username, email, password, genero, direccion, fecha_nacimiento, rol_id) VALUES
-('Admin Usuarios', 'admin_users', 'admin_users@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 7),
-('Admin Reglas', 'admin_reglas', 'admin_reglas@mail.com', 'admin123', 'Masculino', 'Bogotá', '1990-01-01', 6),
-('Estación Norte', 'estacion_1', 'estacion1@mail.com', 'estacion123', 'N/A', 'Bogotá Norte', '2000-01-01', 1),
-('Estación Sur', 'estacion_2', 'estacion2@mail.com', 'estacion123', 'N/A', 'Bogotá Sur', '2000-01-01', 1),
-('Autoridad Reguladora', 'autoridad', 'autoridad@mail.com', 'autoridad123', 'N/A', 'Bogotá', '1985-01-01', 3),
-('Distribuidor Uno', 'distribuidor_1', 'dist1@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 5),
-('Distribuidor Dos', 'distribuidor_2', 'dist2@mail.com', 'distribuidor123', 'N/A', 'Bogotá', '1995-01-01', 5),
-('Juan Perez', 'juan_user', 'juan_user@mail.com', 'user123', 'Masculino', 'Bogotá', '2000-05-15', 2),
-('Sara Diaz', 'sara_user', 'sara_user@mail.com', 'user123', 'Femenino', 'Bogotá', '2000-05-15', 2),
-('Pedro mendez', 'pedro_user', 'pedro_user@mail.com', 'user123', 'Masculino', 'Bogotá', '2000-05-15', 2);
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, latitud, longitud, fecha_nacimiento, rol_id)
+VALUES
+('Admin Usuarios', 'admin_users', 'admin_users@mail.com', 'admin123', 'Masculino', 'Bogotá', 4.6097, -74.0817, '1990-01-01', 7);
+
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, latitud, longitud, fecha_nacimiento, rol_id)
+VALUES
+('Admin Reglas', 'admin_reglas', 'admin_reglas@mail.com', 'admin123', 'Masculino', 'Bogotá', 4.6097, -74.0817, '1990-01-01', 6);
+
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, latitud, longitud, fecha_nacimiento, rol_id)
+VALUES
+('Estación Norte', 'estacion_1', 'estacion1@mail.com', 'estacion123', 'N/A', 'Bogotá Norte', 4.7110, -74.0721, '2000-01-01', 1);
+
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, latitud, longitud, fecha_nacimiento, rol_id)
+VALUES
+('Estación Sur', 'estacion_2', 'estacion2@mail.com', 'estacion123', 'N/A', 'Bogotá Sur', 4.5708, -74.1302, '2000-01-01', 1);
+
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, latitud, longitud, fecha_nacimiento, rol_id)
+VALUES
+('Autoridad Reguladora', 'autoridad', 'autoridad@mail.com', 'autoridad123', 'N/A', 'Bogotá', 4.6097, -74.0817, '1985-01-01', 3);
+
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, latitud, longitud, fecha_nacimiento, rol_id)
+VALUES
+('Distribuidor Uno', 'distribuidor_1', 'dist1@mail.com', 'distribuidor123', 'N/A', 'Bogotá', 4.6097, -74.0817, '1995-01-01', 5);
+
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, latitud, longitud, fecha_nacimiento, rol_id)
+VALUES
+('Distribuidor Dos', 'distribuidor_2', 'dist2@mail.com', 'distribuidor123', 'N/A', 'Bogotá', 4.6097, -74.0817, '1995-01-01', 5);
+
+INSERT OR IGNORE INTO Users
+(nombre_completo, username, email, password, genero, direccion, latitud, longitud, fecha_nacimiento, rol_id)
+VALUES
+('Usuario Vehiculo', 'user_vehicle', 'user_vehicle@mail.com', 'user123', 'Masculino', 'Calle 69A #91-24, Engativá, Bogotá', 4.7086, -74.1182, '2000-05-15', 2);
 
 INSERT OR IGNORE INTO Reglas (tipo_vehiculo, precio, fecha, admin_id) VALUES
 ('Servicio particular', 10000, '2026-03-01', 2);

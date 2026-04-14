@@ -36,58 +36,18 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- CARD -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardPrecio"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listaEstaciones"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="32dp"
-        app:cardBackgroundColor="@color/card_background"
-        app:cardCornerRadius="12dp"
-        app:layout_constraintTop_toBottomOf="@id/tituloConsulta"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <!-- TIPO VEHÍCULO -->
-            <TextView
-                android:id="@+id/txtTipoVehiculo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tipo: -"
-                android:textSize="16sp"
-                android:textColor="@android:color/white"
-                android:fontFamily="@font/montserrat_bold"/>
-
-            <!-- PRECIO -->
-            <TextView
-                android:id="@+id/txtPrecio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Precio: -"
-                android:textSize="20sp"
-                android:layout_marginTop="16dp"
-                android:textColor="@android:color/white"
-                android:fontFamily="@font/montserrat_bold"/>
-
-            <!-- FECHA -->
-            <TextView
-                android:id="@+id/txtFecha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Actualizado: -"
-                android:textSize="14sp"
-                android:layout_marginTop="16dp"
-                android:textColor="@android:color/white"
-                android:fontFamily="@font/montserrat_regular"/>
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintTop_toBottomOf="@+id/tituloConsulta" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
