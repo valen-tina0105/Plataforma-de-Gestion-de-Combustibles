@@ -26,12 +26,14 @@ import co.edu.unipiloto.pgc.dao.FuelDAO;
 import co.edu.unipiloto.pgc.dao.InventoryDAO;
 import co.edu.unipiloto.pgc.dao.PriceDAO;
 import co.edu.unipiloto.pgc.dao.RuleDAO;
+import co.edu.unipiloto.pgc.dao.SubsidyDAO;
 import co.edu.unipiloto.pgc.dao.TransactionDAO;
 import co.edu.unipiloto.pgc.dao.UserDAO;
 import co.edu.unipiloto.pgc.model.Fuel;
 import co.edu.unipiloto.pgc.model.Inventory;
 import co.edu.unipiloto.pgc.model.Price;
 import co.edu.unipiloto.pgc.model.Rule;
+import co.edu.unipiloto.pgc.model.Subsidy;
 import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
 import co.edu.unipiloto.pgc.ui.adapters.TransactionAdapter;
@@ -143,6 +145,9 @@ public class PriceCalculatorActivity extends BaseActivity {
         UserDAO userDAO = new UserDAO(this);
         User usuarioCliente = userDAO.getUserByUsername(username);
 
+        SubsidyDAO subsidyDAO = new SubsidyDAO(this);
+        Subsidy subsidy = subsidyDAO.getSubsidyById(usuarioCliente);
+
         if (usuarioCliente == null) {
             Toast.makeText(this, "Usuario no existe", Toast.LENGTH_SHORT).show();
             return;
@@ -154,12 +159,20 @@ public class PriceCalculatorActivity extends BaseActivity {
         }
 
         double totalReal = 0;
+        double totalConDescuento = 0;
 
         Fuel fuel = (Fuel) tipoCombustible.getSelectedItem();
 
         for (Price price : prices){
             if (price.getCombustible().getId() == fuel.getId()) {
                 totalReal = cantidad * price.getPrecio();
+                if (subsidy != null && subsidy.getSubsidio() == 1) {
+                    double porcentaje = subsidy.getPorcentaje();
+                    double descuento = totalReal * (porcentaje / 100.0);
+                    totalConDescuento = totalReal - descuento;
+                } else {
+                    totalConDescuento = totalReal;
+                }
                 for (Inventory inventory : inventories){
                     if (inventory.getCombustible().getId() == fuel.getId()){
                         double nuevaCantidad = inventory.getCantidadCombustible() - cantidad;
@@ -175,13 +188,22 @@ public class PriceCalculatorActivity extends BaseActivity {
             }
         }
 
-        total.setText("Total: " + totalReal + "$");
+        if (subsidy != null && subsidy.getSubsidio() == 1) {
+            double descuento = totalReal - totalConDescuento;
+            Toast.makeText(this, "Descuento aplicado: $" + descuento, Toast.LENGTH_SHORT).show();
+        }
+
+        if (subsidy != null && subsidy.getSubsidio() == 1) {
+            total.setText("Total con subsidio: " + totalConDescuento + "$");
+        } else {
+            total.setText("Total: " + totalReal + "$");
+        }
 
         Transaction transaction = new Transaction();
         transaction.setTipoVehiculo(tipoDeVehiculo);
         transaction.setCombustible(fuel);
         transaction.setCantidad(cantidad);
-        transaction.setTotal(totalReal);
+        transaction.setTotal(totalConDescuento);
         transaction.setEstacion(user);
         transaction.setUsuario(usuarioCliente);
         transactionDAO.insertarTransaccion(transaction);
@@ -203,7 +225,7 @@ public class PriceCalculatorActivity extends BaseActivity {
                     if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
                         Snackbar.make(findViewById(android.R.id.content),
                                         "Cantidad de Gasolina Corriente muy bajo",
-                                        Snackbar.LENGTH_INDEFINITE)
+                                        Snackbar.LENGTH_LONG)
                                 .setAction("Ver", v -> {
                                     Intent intent = new Intent(this, InventoryManagementActivity.class);
                                     intent.putExtra("user", user);
@@ -218,7 +240,7 @@ public class PriceCalculatorActivity extends BaseActivity {
                     if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
                         Snackbar.make(findViewById(android.R.id.content),
                                         "Cantidad de Gasolina Extra muy bajo",
-                                        Snackbar.LENGTH_INDEFINITE)
+                                        Snackbar.LENGTH_LONG)
                                 .setAction("Ver", v -> {
                                     Intent intent = new Intent(this, InventoryManagementActivity.class);
                                     intent.putExtra("user", user);
@@ -233,7 +255,7 @@ public class PriceCalculatorActivity extends BaseActivity {
                     if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
                         Snackbar.make(findViewById(android.R.id.content),
                                         "Cantidad de ACPM(Diésel) muy bajo",
-                                        Snackbar.LENGTH_INDEFINITE)
+                                        Snackbar.LENGTH_LONG)
                                 .setAction("Ver", v -> {
                                     Intent intent = new Intent(this, InventoryManagementActivity.class);
                                     intent.putExtra("user", user);
@@ -248,7 +270,7 @@ public class PriceCalculatorActivity extends BaseActivity {
                     if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
                         Snackbar.make(findViewById(android.R.id.content),
                                         "Cantidad de Gas Natural Vehicular Corriente muy bajo",
-                                        Snackbar.LENGTH_INDEFINITE)
+                                        Snackbar.LENGTH_LONG)
                                 .setAction("Ver", v -> {
                                     Intent intent = new Intent(this, InventoryManagementActivity.class);
                                     intent.putExtra("user", user);

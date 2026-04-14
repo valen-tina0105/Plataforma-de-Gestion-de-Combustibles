@@ -17,6 +17,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.R;
@@ -40,8 +42,30 @@ public class PriceConsultationActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_consultation);
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("user");
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue_gradient_end));
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            Intent sendIntent;
+            if (id == R.id.nav_compras) {
+                sendIntent = new Intent(this, GasolinePurchasesActivity.class);
+                sendIntent.putExtra("user", user);
+                startActivity(sendIntent);
+                finish();
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);                return true;
+            } else if (id == R.id.nav_informacion) {
+                sendIntent = new Intent(this, UserInformationActivity.class);
+                sendIntent.putExtra("user", user);
+                startActivity(sendIntent);
+                finish();
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);                    return true;
+            } else return id == R.id.nav_consultar;
+        });
+
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
 

@@ -55,6 +55,14 @@ CREATE TABLE IF NOT EXISTS Reglas (
     FOREIGN KEY (admin_id) REFERENCES Users(id)
 );
 
+CREATE TABLE IF NOT EXISTS Subsidios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subsidio INTEGER NOT NULL CHECK(subsidio IN (0,1)),
+    porcentaje REAL DEFAULT 0,
+    user_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS Transacciones (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tipo_vehiculo TEXT NOT NULL,
@@ -200,3 +208,8 @@ INSERT OR IGNORE INTO Precios (precio, id_estacion, id_combustible) VALUES
 (22000, 4, 2),
 (11000, 4, 3),
 (3000, 4, 4);
+
+INSERT INTO Subsidios (subsidio, porcentaje, user_id) VALUES
+(0, 0, 8),
+(1, 10, 9),
+(1, 25, 10);

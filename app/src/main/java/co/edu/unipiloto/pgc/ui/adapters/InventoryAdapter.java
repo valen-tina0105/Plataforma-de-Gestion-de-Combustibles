@@ -30,7 +30,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull InventoryAdapter.InventoryViewHolder holder, int position) {
-        holder.viewInventario.setText("Inventario " + inventories.get(position).getId());
+        holder.viewInventario.setText("Inventario " + (position + 1));
         holder.viewEstacion.setText("Estacion: " + inventories.get(position).getEstacion().getUsername());
         holder.viewCombustible.setText("Tipo de combustible: " + inventories.get(position).getCombustible().getNombre());
         holder.viewCantidadCombustible.setText("Cantidad de combustible: " + inventories.get(position).getCantidadCombustible());
