@@ -69,8 +69,6 @@ public class PriceConsultationActivity extends BaseActivity {
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
 
-        Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("user");
         stationDAO = new StationDAO(this);
         stations = stationDAO.getAllStations(user.getLatitud(), user.getLongitud());
 
