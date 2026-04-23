@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlataformaDeGestionDeCombustibles">
         <activity
+            android:name=".ui.ConfirmDeliveryActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.GasolinePurchasesActivity"
             android:exported="false" />
         <activity

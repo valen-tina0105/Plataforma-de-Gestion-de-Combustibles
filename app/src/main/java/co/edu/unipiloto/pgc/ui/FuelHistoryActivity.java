@@ -60,7 +60,7 @@ public class FuelHistoryActivity extends BaseActivity {
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 return true;
             } else if (id == R.id.nav_registrar) {
-                sendIntent = new Intent(this, FuelOutletActivity.class);
+                sendIntent = new Intent(this, ConfirmDeliveryActivity.class);
                 sendIntent.putExtra("user", user);
                 startActivity(sendIntent);
                 finish();

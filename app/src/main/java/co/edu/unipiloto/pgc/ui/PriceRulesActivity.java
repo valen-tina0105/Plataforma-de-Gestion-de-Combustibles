@@ -9,10 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,11 +19,8 @@ import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.dao.RuleDAO;
-import co.edu.unipiloto.pgc.model.Register;
 import co.edu.unipiloto.pgc.model.Rule;
-import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
-import co.edu.unipiloto.pgc.ui.adapters.DeliveriesAdapter;
 import co.edu.unipiloto.pgc.ui.adapters.RulesAdapter;
 
 public class PriceRulesActivity extends BaseActivity {

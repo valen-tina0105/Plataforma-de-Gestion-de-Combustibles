@@ -86,4 +86,6 @@
     <string name="tituloUserInformation">Información de usuario</string>
     <string name="tituloGasolinePurchases">Historial de compras de combustible</string>
     <string name="tituloSubsidy">Subsidio</string>
+    <string name="confirmar_entregas">Confirmar Entregas</string>
+    <string name="confirmar_entrega">Confirmar entrega</string>
 </resources>

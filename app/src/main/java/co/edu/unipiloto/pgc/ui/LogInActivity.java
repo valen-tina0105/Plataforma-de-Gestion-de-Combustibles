@@ -2,16 +2,13 @@ package co.edu.unipiloto.pgc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
@@ -19,10 +16,7 @@ import java.util.ArrayList;
 import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.dao.RolDAO;
 import co.edu.unipiloto.pgc.dao.UserDAO;
-import co.edu.unipiloto.pgc.model.Register;
 import co.edu.unipiloto.pgc.model.Rol;
-import co.edu.unipiloto.pgc.model.Rule;
-import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
 
 public class LogInActivity extends BaseActivity {
@@ -67,7 +61,7 @@ public class LogInActivity extends BaseActivity {
         Intent intent;
         switch (user.getRol().getNombre()) {
             case "Estacion de servicio":
-                intent = new Intent(this, FuelOutletActivity.class);
+                intent = new Intent(this, ConfirmDeliveryActivity.class);
                 intent.putExtra("user", user);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
