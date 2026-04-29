@@ -6,15 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Spinner;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
@@ -35,10 +31,14 @@ public class GasolinePurchasesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gasoline_purchases);
+        
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
+        
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue_gradient_end));
+
+        setupToolbar(findViewById(R.id.toolbar), user);
 
         transactionDAO = new TransactionDAO(this);
         transactions = transactionDAO.getAllTransactionsByUser(user);
@@ -51,30 +51,6 @@ public class GasolinePurchasesActivity extends BaseActivity {
 
         Button btnFiltrar = findViewById(R.id.btnFiltrar);
         btnFiltrar.setOnClickListener(this::onFilter);
-
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            Intent sendIntent;
-            if (id == R.id.nav_consultar) {
-                sendIntent = new Intent(this, PriceConsultationActivity.class);
-                sendIntent.putExtra("user", user);
-                startActivity(sendIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            } else if (id == R.id.nav_informacion) {
-                sendIntent = new Intent(this, UserInformationActivity.class);
-                sendIntent.putExtra("user", user);
-                startActivity(sendIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            } else return id == R.id.nav_compras;
-        });
-
-        ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
-        btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
 
     @SuppressLint("NotifyDataSetChanged")
