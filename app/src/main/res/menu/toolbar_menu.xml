@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/nav_consultar"
+        android:icon="@drawable/ic_price_search"
+        android:title="Consultar"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/nav_compras"
+        android:icon="@drawable/baseline_shopping_cart_24"
+        android:title="Compras"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/nav_informacion"
+        android:icon="@drawable/outline_account_circle_24"
+        android:title="Información"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/baseline_logout_24"
+        android:title="Cerrar Sesión"
+        app:showAsAction="never" />
+</menu>
