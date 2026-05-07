@@ -7,9 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.database.DatabaseHelper;
-import co.edu.unipiloto.pgc.model.Register;
 import co.edu.unipiloto.pgc.model.Rol;
-import co.edu.unipiloto.pgc.model.User;
 
 public class RolDAO {
     private DatabaseHelper dbHelper;

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.model.Delivery;
-import co.edu.unipiloto.pgc.model.Register;
 
 public class DeliveriesAdapter extends RecyclerView.Adapter<DeliveriesAdapter.DeliveriesViewHolder> {
 

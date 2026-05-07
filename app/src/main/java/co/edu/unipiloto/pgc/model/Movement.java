@@ -1,6 +1,8 @@
 package co.edu.unipiloto.pgc.model;
 
-public class Movement {
+import java.io.Serializable;
+
+public class Movement implements Serializable {
 
     private int id;
     private String tipoVehiculo;
@@ -9,7 +11,7 @@ public class Movement {
     private Double total;
     private String fecha;
     private User estacion;
-    private User usuario;
+    private User usuario; // Representa al cliente o al distribuidor
     private String tipoMovimiento;
 
     public Movement() {

@@ -77,27 +77,23 @@ CREATE TABLE IF NOT EXISTS Transacciones (
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Registros (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_combustible INTEGER NOT NULL,
-    cantidad REAL NOT NULL CHECK(cantidad > 0),
-    fecha TEXT,
-    estacion_id INTEGER,
-    FOREIGN KEY (id_combustible) REFERENCES Combustibles(id),
-    FOREIGN KEY (estacion_id) REFERENCES Users(id) ON DELETE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS Entregas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     placa TEXT NOT NULL,
     id_combustible INTEGER NOT NULL,
     cantidad REAL NOT NULL CHECK(cantidad > 0),
     fecha TEXT,
+    estado TEXT NOT NULL CHECK(
+        estado IN ('PENDIENTE','EN_CAMINO','ENTREGADO','CONFIRMADO')
+    ) DEFAULT 'PENDIENTE',
     estacion_destino_id INTEGER NOT NULL,
     distribuidor_id INTEGER,
+    fecha_confirmacion TEXT,
+    confirmado_por INTEGER,
     FOREIGN KEY (id_combustible) REFERENCES Combustibles(id),
     FOREIGN KEY (estacion_destino_id) REFERENCES Users(id) ON DELETE CASCADE,
-    FOREIGN KEY (distribuidor_id) REFERENCES Users(id) ON DELETE CASCADE
+    FOREIGN KEY (distribuidor_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (confirmado_por) REFERENCES Users(id)
 );
 
-CREATE VIEW Movimientos AS SELECT t.id, t.tipo_vehiculo AS tipo, t.id_combustible, t.cantidad, t.total, t.fecha, t.estacion_id, t.user_id, 'SALIDA' AS tipo_movimiento FROM Transacciones t UNION ALL SELECT r.id, NULL AS tipo, r.id_combustible, r.cantidad, NULL AS total, r.fecha, r.estacion_id, NULL AS user_id, 'ENTRADA' AS tipo_movimiento FROM Registros r;
+CREATE VIEW Movimientos AS SELECT t.id, t.tipo_vehiculo AS tipo, t.id_combustible, t.cantidad, t.total, t.fecha, t.estacion_id, t.user_id, 'SALIDA' AS tipo_movimiento FROM Transacciones t UNION ALL SELECT e.id, NULL AS tipo, e.id_combustible, e.cantidad, NULL AS total, e.fecha, e.estacion_destino_id AS estacion_id, e.distribuidor_id AS user_id, 'ENTRADA' AS tipo_movimiento FROM Entregas e WHERE e.estado = 'CONFIRMADO';

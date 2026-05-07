@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "PGC_v17";
+    private static final String DB_NAME = "PGC_v19";
     private Context context;
 
     public DatabaseHelper(Context context) {
@@ -32,7 +32,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ejecutarSQLDesdeArchivo(db, "InsertSubsidios.sql");
         ejecutarSQLDesdeArchivo(db, "InsertEntregas.sql");
         ejecutarSQLDesdeArchivo(db, "InsertTransacciones.sql");
-        ejecutarSQLDesdeArchivo(db, "InsertRegistros.sql");
     }
 
     @Override
