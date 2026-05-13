@@ -4,12 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="10dp"
-    app:cardBackgroundColor="@color/card_background"
+    android:layout_margin="8dp"
     app:cardCornerRadius="10dp"
-    app:cardElevation="2dp">
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/card_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,68 +17,63 @@
 
         <TextView
             android:id="@+id/viewEntrega"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
-            android:textColor="@color/button_blue"
-            android:textSize="14sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp"
-            android:background="@android:color/darker_gray"
-            android:alpha="0.3" />
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/viewPlaca"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_regular"
-            android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/viewFecha"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_regular"
-            android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/viewCombustible"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_regular"
-            android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/viewCantidad"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_regular"
-            android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/viewEstacionDestino"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_regular"
-            android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/viewDistribuidor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/viewEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/button_blue"
+            android:fontFamily="@font/montserrat_bold" />
+
+        <Button
+            android:id="@+id/btnRealizarEntrega"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_regular"
-            android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:layout_marginTop="8dp"
+            android:text="Realizar entrega"
+            android:backgroundTint="@color/button_blue"
+            android:visibility="gone" />
 
     </LinearLayout>
-
 </com.google.android.material.card.MaterialCardView>

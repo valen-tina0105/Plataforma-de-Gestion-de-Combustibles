@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import co.edu.unipiloto.pgc.database.DatabaseHelper;
 import co.edu.unipiloto.pgc.model.Delivery;
 import co.edu.unipiloto.pgc.model.Fuel;
-import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.User;
 
 public class DeliveryDAO {
@@ -38,26 +37,34 @@ public class DeliveryDAO {
         );
     }
 
-    public ArrayList<Delivery> getAllDeliveries(User distribuidor) {
-
+    public ArrayList<Delivery> getDeliveriesByState(User user, String estado) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         ArrayList<Delivery> list = new ArrayList<>();
 
-        Cursor cursor = db.rawQuery(
-                "SELECT e.id, e.placa, e.cantidad, e.fecha, e.estado, " +
-                        "c.id, c.nombre, " +
-                        "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
-                        "d.id, d.nombre_completo, d.username, d.email, d.password, d.genero, d.direccion, d.fecha_nacimiento, " +
-                        "ur.id, ur.nombre, dr.id, dr.nombre " +
-                        "FROM Entregas e " +
-                        "INNER JOIN Combustibles c ON e.id_combustible = c.id " +
-                        "INNER JOIN Users u ON e.estacion_destino_id = u.id " +
-                        "INNER JOIN Roles ur ON u.rol_id = ur.id " +
-                        "INNER JOIN Users d ON e.distribuidor_id = d.id " +
-                        "INNER JOIN Roles dr ON d.rol_id = dr.id " +
-                        "WHERE d.id = ?",
-                new String[]{String.valueOf(distribuidor.getId())}
-        );
+        String query = "SELECT e.id, e.placa, e.cantidad, e.fecha, e.estado, " +
+                "c.id, c.nombre, " +
+                "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
+                "d.id, d.nombre_completo, d.username, d.email, d.password, d.genero, d.direccion, d.fecha_nacimiento, " +
+                "ur.id, ur.nombre, dr.id, dr.nombre " +
+                "FROM Entregas e " +
+                "INNER JOIN Combustibles c ON e.id_combustible = c.id " +
+                "INNER JOIN Users u ON e.estacion_destino_id = u.id " +
+                "INNER JOIN Roles ur ON u.rol_id = ur.id " +
+                "INNER JOIN Users d ON e.distribuidor_id = d.id " +
+                "INNER JOIN Roles dr ON d.rol_id = dr.id ";
+
+        String where;
+        String[] args;
+
+        if (user.getRol().getId() == 5) { // Distribuidor
+            where = "WHERE d.id = ? AND e.estado = ?";
+            args = new String[]{String.valueOf(user.getId()), estado};
+        } else { // Estacion
+            where = "WHERE u.id = ? AND e.estado = ?";
+            args = new String[]{String.valueOf(user.getId()), estado};
+        }
+
+        Cursor cursor = db.rawQuery(query + where, args);
 
         while (cursor.moveToNext()) {
             list.add(mapDelivery(cursor));
@@ -67,42 +74,19 @@ public class DeliveryDAO {
         return list;
     }
 
-    public ArrayList<Delivery> getDeliveriesByStation(int stationId) {
-
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        ArrayList<Delivery> list = new ArrayList<>();
-
-        Cursor cursor = db.rawQuery(
-                "SELECT e.id, e.placa, e.cantidad, e.fecha, e.estado, " +
-                        "c.id, c.nombre, " +
-                        "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
-                        "d.id, d.nombre_completo, d.username, d.email, d.password, d.genero, d.direccion, d.fecha_nacimiento, " +
-                        "ur.id, ur.nombre, dr.id, dr.nombre " +
-                        "FROM Entregas e " +
-                        "INNER JOIN Combustibles c ON e.id_combustible = c.id " +
-                        "INNER JOIN Users u ON e.estacion_destino_id = u.id " +
-                        "INNER JOIN Roles ur ON u.rol_id = ur.id " +
-                        "INNER JOIN Users d ON e.distribuidor_id = d.id " +
-                        "INNER JOIN Roles dr ON d.rol_id = dr.id " +
-                        "WHERE u.id = ?",
-                new String[]{String.valueOf(stationId)}
+    public void markAsDelivered(int deliveryId, String placa) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.execSQL(
+                "UPDATE Entregas SET estado = 'ENTREGADO', placa = ? WHERE id = ? AND estado = 'PENDIENTE'",
+                new Object[]{placa, deliveryId}
         );
-
-        while (cursor.moveToNext()) {
-            list.add(mapDelivery(cursor));
-        }
-
-        cursor.close();
-        return list;
     }
 
     public void confirmDelivery(int deliveryId, int userId) {
-
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.beginTransaction();
         try {
-
             Cursor cursor = db.rawQuery(
                     "SELECT id_combustible, cantidad, estacion_destino_id, estado " +
                             "FROM Entregas WHERE id = ?",
@@ -120,8 +104,8 @@ public class DeliveryDAO {
             String estado = cursor.getString(3);
             cursor.close();
 
-            if ("CONFIRMADO".equals(estado)) {
-                throw new RuntimeException("YA_CONFIRMADO");
+            if (!"ENTREGADO".equals(estado)) {
+                throw new RuntimeException("Solo se pueden confirmar entregas con estado ENTREGADO");
             }
 
             Cursor inv = db.rawQuery(
@@ -163,9 +147,7 @@ public class DeliveryDAO {
     }
 
     private Delivery mapDelivery(Cursor cursor) {
-
         Delivery d = new Delivery();
-
         d.setId(cursor.getInt(0));
         d.setPlaca(cursor.getString(1));
         d.setCantidad(cursor.getDouble(2));
@@ -191,5 +173,19 @@ public class DeliveryDAO {
         d.setDistribuidor(distribuidor);
 
         return d;
+    }
+    
+    // Legacy methods kept or updated for compatibility if needed, but the UI should use getDeliveriesByState
+    public ArrayList<Delivery> getAllDeliveries(User distribuidor) {
+        return getDeliveriesByState(distribuidor, "PENDIENTE");
+    }
+
+    public ArrayList<Delivery> getDeliveriesByStation(int stationId) {
+        User u = new User();
+        u.setId(stationId);
+        co.edu.unipiloto.pgc.model.Rol r = new co.edu.unipiloto.pgc.model.Rol();
+        r.setId(1); // Station
+        u.setRol(r);
+        return getDeliveriesByState(u, "ENTREGADO");
     }
 }

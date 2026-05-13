@@ -2,11 +2,11 @@ package co.edu.unipiloto.pgc.ui.adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +18,6 @@ import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.dao.DeliveryDAO;
 import co.edu.unipiloto.pgc.model.Delivery;
 import co.edu.unipiloto.pgc.model.User;
-import android.widget.TextView;
 
 public class ConfirmDeliveryAdapter extends RecyclerView.Adapter<ConfirmDeliveryAdapter.ViewHolder> {
 
@@ -50,7 +49,9 @@ public class ConfirmDeliveryAdapter extends RecyclerView.Adapter<ConfirmDelivery
         holder.txtCombustible.setText("Combustible: " + delivery.getCombustible().getNombre());
         holder.txtCantidad.setText("Cantidad: " + delivery.getCantidad());
         holder.txtEstado.setText("Estado: " + delivery.getEstado());
-        if ("PENDIENTE".equals(delivery.getEstado())) {
+        
+        // El botón debe mostrarse únicamente cuando el estado sea: ENTREGADO
+        if ("ENTREGADO".equals(delivery.getEstado())) {
             holder.btnConfirmar.setVisibility(View.VISIBLE);
         } else {
             holder.btnConfirmar.setVisibility(View.GONE);
@@ -60,24 +61,17 @@ public class ConfirmDeliveryAdapter extends RecyclerView.Adapter<ConfirmDelivery
     }
 
     private void confirmDelivery(Context context, Delivery delivery) {
-
         new AlertDialog.Builder(context)
-                .setTitle("Confirmar entrega")
-                .setMessage("¿Deseas confirmar esta entrega?")
+                .setTitle("Confirmar recepción")
+                .setMessage("¿Deseas confirmar la recepción de esta entrega?")
                 .setPositiveButton("Sí", (dialog, which) -> {
-
                     try {
                         deliveryDAO.confirmDelivery(delivery.getId(), user.getId());
-
                         Toast.makeText(context, "Entrega confirmada", Toast.LENGTH_SHORT).show();
-
                         reloadCallback.run();
-
                     } catch (Exception e) {
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-                        e.printStackTrace();
                     }
-
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
@@ -89,13 +83,11 @@ public class ConfirmDeliveryAdapter extends RecyclerView.Adapter<ConfirmDelivery
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView txtPlaca, txtCombustible, txtCantidad, txtEstado;
         Button btnConfirmar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             txtPlaca = itemView.findViewById(R.id.txtPlaca);
             txtCombustible = itemView.findViewById(R.id.txtCombustible);
             txtCantidad = itemView.findViewById(R.id.txtCantidad);

@@ -6,12 +6,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.widget.ImageButton;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,32 +44,38 @@ public class InventoryManagementActivity extends BaseActivity {
         adapterInventario = new InventoryAdapter(inventories);
         listaInventario.setAdapter(adapterInventario);
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            Intent sendIntent;
-            if (id == R.id.nav_calcular) {
-                sendIntent = new Intent(this, PriceCalculatorActivity.class);
-                sendIntent.putExtra("user", user);
-                startActivity(sendIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);                return true;
-            } else if (id == R.id.nav_historial) {
-                sendIntent = new Intent(this, FuelHistoryActivity.class);
-                sendIntent.putExtra("user", user);
-                startActivity(sendIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);                return true;
-            } else if (id == R.id.nav_registrar) {
-                sendIntent = new Intent(this, ConfirmDeliveryActivity.class);
-                sendIntent.putExtra("user", user);
-                startActivity(sendIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);                return true;
-            } else return id == R.id.nav_inventario;
-        });
+        setupBottomNavigation();
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setSelectedItemId(R.id.nav_inventario);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_inventario) return true;
+
+            Intent nextIntent = null;
+            if (id == R.id.nav_solicitud) {
+                nextIntent = new Intent(this, RequestDeliveryActivity.class);
+            } else if (id == R.id.nav_calcular) {
+                nextIntent = new Intent(this, PriceCalculatorActivity.class);
+            } else if (id == R.id.nav_confirmar) {
+                nextIntent = new Intent(this, ConfirmDeliveryActivity.class);
+            } else if (id == R.id.nav_historial) {
+                nextIntent = new Intent(this, FuelHistoryActivity.class);
+            }
+
+            if (nextIntent != null) {
+                nextIntent.putExtra("user", user);
+                startActivity(nextIntent);
+                finish();
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                return true;
+            }
+            return false;
+        });
     }
 }
