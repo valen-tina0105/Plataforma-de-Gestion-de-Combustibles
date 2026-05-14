@@ -36,6 +36,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- BOTÓN MAPA -->
+    <Button
+        android:id="@+id/btnMostrarMapa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/mostrar_estaciones_mapa"
+        android:backgroundTint="@color/button_blue"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/tituloConsulta"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- RECYCLERVIEW -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaEstaciones"
@@ -48,6 +61,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tituloConsulta" />
+        app:layout_constraintTop_toBottomOf="@+id/btnMostrarMapa" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

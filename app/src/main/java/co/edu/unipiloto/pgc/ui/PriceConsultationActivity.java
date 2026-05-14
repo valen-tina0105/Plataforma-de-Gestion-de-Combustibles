@@ -6,9 +6,11 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,6 +36,11 @@ public class PriceConsultationActivity extends BaseActivity {
     private User user;
     private RecyclerView listaEstaciones;
     private LocationManager locationManager;
+    private Button btnMostrarMapa;
+    
+    // Coordenadas por defecto (Bogotá) como respaldo
+    private double currentLat = 4.6097; 
+    private double currentLon = -74.0817;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +58,40 @@ public class PriceConsultationActivity extends BaseActivity {
         listaEstaciones = findViewById(R.id.listaEstaciones);
         listaEstaciones.setLayoutManager(new LinearLayoutManager(this));
 
+        btnMostrarMapa = findViewById(R.id.btnMostrarMapa);
+        btnMostrarMapa.setOnClickListener(v -> openGoogleMapsForGasStations());
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+        // Carga inicial con ubicación por defecto
+        updateStationsList(currentLat, currentLon);
+        
+        // Intentar obtener la ubicación actual real
         checkLocationPermissionAndGetLocation();
+    }
+
+    private void openGoogleMapsForGasStations() {
+        // Usar geo:0,0?q=... es la forma más efectiva para que Google Maps use
+        // la ubicación actual del GPS del dispositivo directamente para la búsqueda.
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=estaciones+de+servicio");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        try {
+            if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(mapIntent);
+            } else {
+                Intent genericMapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                if (genericMapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(genericMapIntent);
+                } else {
+                    Toast.makeText(this, "No se encontró una aplicación de mapas instalada", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Error al abrir el mapa", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void checkLocationPermissionAndGetLocation() {
@@ -81,10 +119,14 @@ public class PriceConsultationActivity extends BaseActivity {
             }
 
             if (bestLocation != null) {
-                updateStationsList(bestLocation.getLatitude(), bestLocation.getLongitude());
-            } else {
-                requestSingleUpdate();
+                currentLat = bestLocation.getLatitude();
+                currentLon = bestLocation.getLongitude();
+                updateStationsList(currentLat, currentLon);
             }
+            
+            // Siempre intentamos una actualización fresca
+            requestSingleUpdate();
+            
         } catch (SecurityException e) {
             Log.e("LOCATION_ERROR", "Error al obtener ubicación", e);
         }
@@ -97,7 +139,9 @@ public class PriceConsultationActivity extends BaseActivity {
             locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, new LocationListener() {
                 @Override
                 public void onLocationChanged(@NonNull Location location) {
-                    updateStationsList(location.getLatitude(), location.getLongitude());
+                    currentLat = location.getLatitude();
+                    currentLon = location.getLongitude();
+                    updateStationsList(currentLat, currentLon);
                 }
                 @Override public void onStatusChanged(String provider, int status, Bundle extras) {}
                 @Override public void onProviderEnabled(@NonNull String provider) {}
@@ -107,7 +151,9 @@ public class PriceConsultationActivity extends BaseActivity {
     }
 
     private void updateStationsList(double latUser, double lonUser) {
-        stationDAO = new StationDAO(this);
+        if (stationDAO == null) {
+            stationDAO = new StationDAO(this);
+        }
         stations = stationDAO.getAllStations(latUser, lonUser);
 
         adapterEstaciones = new StationsAdapter(this, stations);
@@ -121,8 +167,7 @@ public class PriceConsultationActivity extends BaseActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 fetchCurrentLocation();
             } else {
-                Toast.makeText(this, "Permiso denegado. Mostrando ubicación por defecto.", Toast.LENGTH_SHORT).show();
-                updateStationsList(4.6097, -74.0817);
+                Toast.makeText(this, "Permiso de ubicación denegado.", Toast.LENGTH_SHORT).show();
             }
         }
     }

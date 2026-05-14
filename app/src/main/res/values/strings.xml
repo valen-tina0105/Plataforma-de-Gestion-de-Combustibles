@@ -88,4 +88,6 @@
     <string name="tituloSubsidy">Subsidio</string>
     <string name="confirmar_entregas">Confirmar Entregas</string>
     <string name="confirmar_entrega">Confirmar entrega</string>
+
+    <string name="mostrar_estaciones_mapa">Mostrar estaciones en el mapa</string>
 </resources>
