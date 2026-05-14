@@ -93,16 +93,39 @@ public class SignUpActivity extends AppCompatActivity {
                 return;
             }
 
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    0,
+                    0,
+                    new android.location.LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                            latitud = location.getLatitude();
+                            longitud = location.getLongitude();
 
-            if (location != null) {
-                latitud = location.getLatitude();
-                longitud = location.getLongitude();
+                            obtenerDireccion(latitud, longitud, txtDireccion);
 
-                obtenerDireccion(latitud, longitud, txtDireccion);
-            } else {
-                Toast.makeText(this, "No se pudo obtener la ubicación", Toast.LENGTH_SHORT).show();
-            }
+                            Toast.makeText(SignUpActivity.this,
+                                    "Ubicación obtenida correctamente",
+                                    Toast.LENGTH_SHORT).show();
+
+                            locationManager.removeUpdates(this);
+                        }
+
+                        @Override
+                        public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+                        @Override
+                        public void onProviderEnabled(String provider) {}
+
+                        @Override
+                        public void onProviderDisabled(String provider) {
+                            Toast.makeText(SignUpActivity.this,
+                                    "Active el GPS",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+            );
         });
 
         EditText fecha = findViewById(R.id.fechaNacimiento);
@@ -135,6 +158,31 @@ public class SignUpActivity extends AppCompatActivity {
 
         Button btnRegistrarse = findViewById(R.id.btnRegistrarse);
         btnRegistrarse.setOnClickListener(this::onSignUp);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        super.onRequestPermissionsResult(
+                requestCode,
+                permissions,
+                grantResults
+        );
+
+        if (requestCode == 1) {
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                Toast.makeText(this,
+                        "Permiso concedido. Presione nuevamente obtener ubicación",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this,
+                        "Permiso de ubicación denegado",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void obtenerDireccion(double lat, double lng, TextView txtDireccion) {

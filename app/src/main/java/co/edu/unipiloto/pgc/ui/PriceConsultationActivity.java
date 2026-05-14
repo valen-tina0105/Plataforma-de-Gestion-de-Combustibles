@@ -62,7 +62,7 @@ public class PriceConsultationActivity extends BaseActivity {
             stationDAO = new StationDAO(this);
             stations = stationDAO.getAllStations(latUser, lonUser);
 
-            adapterEstaciones = new StationsAdapter(stations);
+            adapterEstaciones = new StationsAdapter(this, stations);
             listaEstaciones.setAdapter(adapterEstaciones);
 
         } else {
