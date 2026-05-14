@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "PGC_v22";
+    private static final String DB_NAME = "PGC_v28";
     private Context context;
 
     public DatabaseHelper(Context context) {
