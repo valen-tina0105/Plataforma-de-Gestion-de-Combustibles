@@ -31,27 +31,7 @@ public class UserDAO {
         );
 
         while (cursor.moveToNext()) {
-            User user = new User();
-
-            user.setId(cursor.getInt(0));
-            user.setNombreCompleto(cursor.getString(1));
-            user.setUsername(cursor.getString(2));
-            user.setEmail(cursor.getString(3));
-            user.setPassword(cursor.getString(4));
-            user.setGenero(cursor.getString(5));
-            user.setDireccion(cursor.getString(6));
-            user.setLatitud(cursor.getDouble(7));
-            user.setLongitud(cursor.getDouble(8));
-
-            user.setFechaNacimiento(cursor.getString(9));
-
-            Rol rol = new Rol();
-            rol.setId(cursor.getInt(10));
-            rol.setNombre(cursor.getString(11));
-
-            user.setRol(rol);
-
-            users.add(user);
+            users.add(mapUser(cursor));
         }
 
         cursor.close();
@@ -93,28 +73,7 @@ public class UserDAO {
 
         try {
             if (cursor.moveToFirst()) {
-
-                User user = new User();
-
-                user.setId(cursor.getInt(0));
-                user.setNombreCompleto(cursor.getString(1));
-                user.setUsername(cursor.getString(2));
-                user.setEmail(cursor.getString(3));
-                user.setPassword(cursor.getString(4));
-                user.setGenero(cursor.getString(5));
-                user.setDireccion(cursor.getString(6));
-                user.setLatitud(cursor.getDouble(7));
-                user.setLongitud(cursor.getDouble(8));
-
-                user.setFechaNacimiento(cursor.getString(9));
-
-                Rol rol = new Rol();
-                rol.setId(cursor.getInt(10));
-                rol.setNombre(cursor.getString(11));
-
-                user.setRol(rol);
-
-                return user;
+                return mapUser(cursor);
             }
         } finally {
             cursor.close();
@@ -145,6 +104,14 @@ public class UserDAO {
     }
 
     public ArrayList<User> getAllStations() {
+        return getUsersByRol(1);
+    }
+
+    public ArrayList<User> getAllDistributors() {
+        return getUsersByRol(5);
+    }
+
+    private ArrayList<User> getUsersByRol(int rolId) {
         ArrayList<User> users = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -154,39 +121,19 @@ public class UserDAO {
                         "r.id, r.nombre " +
                         "FROM Users u " +
                         "INNER JOIN Roles r ON u.rol_id = r.id " +
-                        "WHERE r.id = 1",
-                null
+                        "WHERE r.id = ?",
+                new String[]{String.valueOf(rolId)}
         );
 
         while (cursor.moveToNext()) {
-            User user = new User();
-
-            user.setId(cursor.getInt(0));
-            user.setNombreCompleto(cursor.getString(1));
-            user.setUsername(cursor.getString(2));
-            user.setEmail(cursor.getString(3));
-            user.setPassword(cursor.getString(4));
-            user.setGenero(cursor.getString(5));
-            user.setDireccion(cursor.getString(6));
-            user.setLatitud(cursor.getDouble(7));
-            user.setLongitud(cursor.getDouble(8));
-
-            user.setFechaNacimiento(cursor.getString(9));
-
-            Rol rol = new Rol();
-            rol.setId(cursor.getInt(10));
-            rol.setNombre(cursor.getString(11));
-
-            user.setRol(rol);
-
-            users.add(user);
+            users.add(mapUser(cursor));
         }
 
         cursor.close();
         return users;
     }
-    public User getUserByUsername(String username) {
 
+    public User getUserByUsername(String username) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
@@ -202,32 +149,32 @@ public class UserDAO {
 
         try {
             if (cursor.moveToFirst()) {
-
-                User user = new User();
-
-                user.setId(cursor.getInt(0));
-                user.setNombreCompleto(cursor.getString(1));
-                user.setUsername(cursor.getString(2));
-                user.setEmail(cursor.getString(3));
-                user.setPassword(cursor.getString(4));
-                user.setGenero(cursor.getString(5));
-                user.setDireccion(cursor.getString(6));
-                user.setLatitud(cursor.getDouble(7));
-                user.setLongitud(cursor.getDouble(8));
-                user.setFechaNacimiento(cursor.getString(9));
-
-                Rol rol = new Rol();
-                rol.setId(cursor.getInt(10));
-                rol.setNombre(cursor.getString(11));
-
-                user.setRol(rol);
-
-                return user;
+                return mapUser(cursor);
             }
         } finally {
             cursor.close();
         }
 
         return null;
+    }
+
+    private User mapUser(Cursor cursor) {
+        User user = new User();
+        user.setId(cursor.getInt(0));
+        user.setNombreCompleto(cursor.getString(1));
+        user.setUsername(cursor.getString(2));
+        user.setEmail(cursor.getString(3));
+        user.setPassword(cursor.getString(4));
+        user.setGenero(cursor.getString(5));
+        user.setDireccion(cursor.getString(6));
+        user.setLatitud(cursor.getDouble(7));
+        user.setLongitud(cursor.getDouble(8));
+        user.setFechaNacimiento(cursor.getString(9));
+
+        Rol rol = new Rol();
+        rol.setId(cursor.getInt(10));
+        rol.setNombre(cursor.getString(11));
+        user.setRol(rol);
+        return user;
     }
 }

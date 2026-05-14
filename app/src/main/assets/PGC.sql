@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS Entregas (
     cantidad REAL NOT NULL CHECK(cantidad > 0),
     fecha TEXT,
     estado TEXT NOT NULL CHECK(
-        estado IN ('PENDIENTE','EN_CAMINO','ENTREGADO','CONFIRMADO')
+        estado IN ('PENDIENTE','ENTREGADO','CONFIRMADO')
     ) DEFAULT 'PENDIENTE',
     estacion_destino_id INTEGER NOT NULL,
     distribuidor_id INTEGER,

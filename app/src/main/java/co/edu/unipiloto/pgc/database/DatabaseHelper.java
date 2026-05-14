@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "PGC_v19";
+    private static final String DB_NAME = "PGC_v22";
     private Context context;
 
     public DatabaseHelper(Context context) {
@@ -47,7 +47,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String linea;
 
             while ((linea = reader.readLine()) != null) {
-                sql.append(linea);
+                String lineaLimpia = linea.trim();
+                if (lineaLimpia.isEmpty() || lineaLimpia.startsWith("--")) {
+                    continue;
+                }
+                sql.append(linea).append("\n");
             }
 
             String[] sentencias = sql.toString().split(";");

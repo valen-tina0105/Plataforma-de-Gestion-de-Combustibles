@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Window;
 import android.widget.ImageButton;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,49 +36,50 @@ public class ConfirmDeliveryActivity extends BaseActivity {
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue_gradient_end));
 
         user = (User) getIntent().getSerializableExtra("user");
-
         deliveryDAO = new DeliveryDAO(this);
 
         recyclerView = findViewById(R.id.listaEntregasConfirmar);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            Intent sendIntent;
-            if (id == R.id.nav_calcular) {
-                sendIntent = new Intent(this, PriceCalculatorActivity.class);
-                sendIntent.putExtra("user", user);
-                startActivity(sendIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            } else if (id == R.id.nav_historial) {
-                sendIntent = new Intent(this, FuelHistoryActivity.class);
-                sendIntent.putExtra("user", user);
-                startActivity(sendIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            } else if (id == R.id.nav_inventario) {
-                sendIntent = new Intent(this, InventoryManagementActivity.class);
-                sendIntent.putExtra("user", user);
-                startActivity(sendIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            } else return id == R.id.nav_registrar;
-        });
-
+        setupBottomNavigation();
         loadDeliveries();
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
 
-    private void loadDeliveries() {
-        deliveries = deliveryDAO.getDeliveriesByStation(user.getId());
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setSelectedItemId(R.id.nav_confirmar);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_confirmar) return true;
 
+            Intent nextIntent = null;
+            if (id == R.id.nav_solicitud) {
+                nextIntent = new Intent(this, RequestDeliveryActivity.class);
+            } else if (id == R.id.nav_calcular) {
+                nextIntent = new Intent(this, PriceCalculatorActivity.class);
+            } else if (id == R.id.nav_historial) {
+                nextIntent = new Intent(this, FuelHistoryActivity.class);
+            } else if (id == R.id.nav_inventario) {
+                nextIntent = new Intent(this, InventoryManagementActivity.class);
+            }
+
+            if (nextIntent != null) {
+                nextIntent.putExtra("user", user);
+                startActivity(nextIntent);
+                finish();
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void loadDeliveries() {
+        // En el nuevo flujo, ConfirmDeliveryActivity muestra las entregas con estado ENTREGADO
+        deliveries = deliveryDAO.getDeliveriesByState(user, "ENTREGADO");
         adapter = new ConfirmDeliveryAdapter(deliveries, user, deliveryDAO, this::loadDeliveries);
         recyclerView.setAdapter(adapter);
     }

@@ -92,33 +92,39 @@ public class PriceCalculatorActivity extends BaseActivity {
         Button btnCalcular = findViewById(R.id.btnCalcular);
         btnCalcular.setOnClickListener(this::onSendCalculate);
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            Intent sendIntent;
-            if (id == R.id.nav_historial) {
-                sendIntent = new Intent(this, FuelHistoryActivity.class);
-                sendIntent.putExtra("user", user);
-                startActivity(sendIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);                return true;
-            } else if (id == R.id.nav_registrar) {
-                sendIntent = new Intent(this, ConfirmDeliveryActivity.class);
-                sendIntent.putExtra("user", user);
-                startActivity(sendIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);                return true;
-            } else if (id == R.id.nav_inventario) {
-                sendIntent = new Intent(this, InventoryManagementActivity.class);
-                sendIntent.putExtra("user", user);
-                startActivity(sendIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);                    return true;
-            } else return id == R.id.nav_calcular;
-        });
+        setupBottomNavigation();
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setSelectedItemId(R.id.nav_calcular);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_calcular) return true;
+
+            Intent nextIntent = null;
+            if (id == R.id.nav_solicitud) {
+                nextIntent = new Intent(this, RequestDeliveryActivity.class);
+            } else if (id == R.id.nav_confirmar) {
+                nextIntent = new Intent(this, ConfirmDeliveryActivity.class);
+            } else if (id == R.id.nav_historial) {
+                nextIntent = new Intent(this, FuelHistoryActivity.class);
+            } else if (id == R.id.nav_inventario) {
+                nextIntent = new Intent(this, InventoryManagementActivity.class);
+            }
+
+            if (nextIntent != null) {
+                nextIntent.putExtra("user", user);
+                startActivity(nextIntent);
+                finish();
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                return true;
+            }
+            return false;
+        });
     }
 
     public void onSendCalculate(View view) {
@@ -145,13 +151,13 @@ public class PriceCalculatorActivity extends BaseActivity {
         UserDAO userDAO = new UserDAO(this);
         User usuarioCliente = userDAO.getUserByUsername(username);
 
-        SubsidyDAO subsidyDAO = new SubsidyDAO(this);
-        Subsidy subsidy = subsidyDAO.getSubsidyById(usuarioCliente);
-
         if (usuarioCliente == null) {
             Toast.makeText(this, "Usuario no existe", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        SubsidyDAO subsidyDAO = new SubsidyDAO(this);
+        Subsidy subsidy = subsidyDAO.getSubsidyById(usuarioCliente);
 
         if (rules.isEmpty()) {
             Toast.makeText(this, "No hay ninguna regla establecida", Toast.LENGTH_SHORT).show();
