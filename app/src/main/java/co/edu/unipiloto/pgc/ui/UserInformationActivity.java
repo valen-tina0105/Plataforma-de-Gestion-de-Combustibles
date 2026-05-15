@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -16,6 +17,7 @@ import co.edu.unipiloto.pgc.model.User;
 public class UserInformationActivity extends BaseActivity {
 
     private User user;
+    private TextView txtTieneSubsidio, txtPorcentaje;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,21 +46,35 @@ public class UserInformationActivity extends BaseActivity {
         txtFecha.setText("🎂 Nacimiento: " + user.getFechaNacimiento());
         txtGenero.setText("⚧️ Género: " + user.getGenero());
 
-        TextView txtTieneSubsidio = findViewById(R.id.txtTieneSubsidio);
-        TextView txtPorcentaje = findViewById(R.id.txtPorcentaje);
+        txtTieneSubsidio = findViewById(R.id.txtTieneSubsidio);
+        txtPorcentaje = findViewById(R.id.txtPorcentaje);
 
+        loadSubsidyInfo();
+    }
+
+    private void loadSubsidyInfo() {
         SubsidyDAO subsidioDAO = new SubsidyDAO(this);
-        Subsidy subsidio = subsidioDAO.getSubsidyById(user);
+        subsidioDAO.getSubsidyById(user, new SubsidyDAO.SubsidyCallback() {
+            @Override
+            public void onSuccess(Subsidy subsidio) {
+                if(subsidio != null && subsidio.getSubsidio() == 1){
+                    txtTieneSubsidio.setText("✔ Tiene subsidio");
+                    txtTieneSubsidio.setTextColor(getResources().getColor(android.R.color.holo_green_light));
 
-        if(subsidio != null && subsidio.getSubsidio() == 1){
-            txtTieneSubsidio.setText("✔ Tiene subsidio");
-            txtTieneSubsidio.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+                    txtPorcentaje.setVisibility(View.VISIBLE);
+                    txtPorcentaje.setText("Descuento: " + subsidio.getPorcentaje() + "%");
+                } else {
+                    txtTieneSubsidio.setText("✘ No tiene subsidio");
+                    txtTieneSubsidio.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+                    txtPorcentaje.setVisibility(View.GONE);
+                }
+            }
 
-            txtPorcentaje.setText("Descuento: " + subsidio.getPorcentaje() + "%");
-        } else {
-            txtTieneSubsidio.setText("✘ No tiene subsidio");
-            txtTieneSubsidio.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-            txtPorcentaje.setVisibility(View.GONE);
-        }
+            @Override
+            public void onError(String message) {
+                txtTieneSubsidio.setText("✘ Error al verificar subsidio");
+                txtPorcentaje.setVisibility(View.GONE);
+            }
+        });
     }
 }

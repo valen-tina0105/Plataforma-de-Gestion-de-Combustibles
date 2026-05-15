@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import co.edu.unipiloto.pgc.model.Fuel;
 import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.Rule;
+import co.edu.unipiloto.pgc.model.Subsidy;
 import co.edu.unipiloto.pgc.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -43,4 +44,8 @@ public interface ApiService {
     //Fuel Services
     @GET("fuels")
     Call<ArrayList<Fuel>> getAllFuels();
+
+    //Subsidy Services
+    @GET("subsidies/{id}")
+    Call<Subsidy> getSubsidyById(@Path("id") int id);
 }

@@ -151,7 +151,6 @@ public class PriceCalculatorActivity extends BaseActivity {
         Spinner tipoVehiculo = findViewById(R.id.tipoVehiculo);
         EditText textoCantidad = findViewById(R.id.textoCantidad);
         EditText textoUsername = findViewById(R.id.textoUsername);
-        TextView total = findViewById(R.id.total);
         String tipoDeVehiculo = tipoVehiculo.getSelectedItem().toString();
 
         if (textoCantidad.getText().toString().isEmpty()) {
@@ -177,88 +176,18 @@ public class PriceCalculatorActivity extends BaseActivity {
                 runOnUiThread(() -> {
 
                     SubsidyDAO subsidyDAO = new SubsidyDAO(PriceCalculatorActivity.this);
-                    Subsidy subsidy = subsidyDAO.getSubsidyById(usuarioCliente);
-
-                    if (rules == null || rules.isEmpty()) {
-                        Toast.makeText(PriceCalculatorActivity.this,
-                                "No hay ninguna regla establecida",
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    double totalReal = 0;
-                    double totalConDescuento = 0;
-
-                    Fuel fuel = (Fuel) tipoCombustible.getSelectedItem();
-                    if (fuel == null) return;
-
-                    for (Price price : prices) {
-
-                        if (price.getCombustible().getId() == fuel.getId()) {
-
-                            totalReal = cantidad * price.getPrecio();
-
-                            if (subsidy != null && subsidy.getSubsidio() == 1) {
-
-                                double porcentaje = subsidy.getPorcentaje();
-                                double descuento = totalReal * (porcentaje / 100.0);
-                                totalConDescuento = totalReal - descuento;
-
-                            } else {
-                                totalConDescuento = totalReal;
-                            }
-
-                            for (Inventory inventory : inventories) {
-
-                                if (inventory.getCombustible().getId() == fuel.getId()) {
-
-                                    double nuevaCantidad =
-                                            inventory.getCantidadCombustible() - cantidad;
-
-                                    if (nuevaCantidad < 0) {
-
-                                        Toast.makeText(
-                                                PriceCalculatorActivity.this,
-                                                "No hay suficiente combustible",
-                                                Toast.LENGTH_SHORT
-                                        ).show();
-
-                                        return;
-                                    }
-
-                                    inventoryDAO.actualizarCantidad(
-                                            inventory.getId(),
-                                            nuevaCantidad
-                                    );
-
-                                    inventory.setCantidadCombustible(nuevaCantidad);
-                                }
-                            }
-
-                            break;
+                    subsidyDAO.getSubsidyById(usuarioCliente, new SubsidyDAO.SubsidyCallback() {
+                        @Override
+                        public void onSuccess(Subsidy subsidy) {
+                            processCalculation(usuarioCliente, subsidy, cantidad, tipoDeVehiculo, textoCantidad, textoUsername, tipoVehiculo);
                         }
-                    }
 
-                    Transaction transaction = new Transaction();
-
-                    transaction.setTipoVehiculo(tipoDeVehiculo);
-                    transaction.setCombustible(fuel);
-                    transaction.setCantidad(cantidad);
-                    transaction.setTotal(totalConDescuento);
-                    transaction.setEstacion(user);
-                    transaction.setUsuario(usuarioCliente);
-
-                    transactionDAO.insertarTransaccion(transaction);
-
-                    transactions = transactionDAO.getAllTransactions(user);
-                    adapterTransacciones.updateList(transactions);
-
-                    textoCantidad.setText("");
-                    textoUsername.setText("");
-                    tipoVehiculo.setSelection(0);
-                    tipoCombustible.setSelection(0);
-
-                    alerta();
+                        @Override
+                        public void onError(String message) {
+                            // Si falla el subsidio, procesamos sin subsidio (o manejamos el error)
+                            processCalculation(usuarioCliente, null, cantidad, tipoDeVehiculo, textoCantidad, textoUsername, tipoVehiculo);
+                        }
+                    });
                 });
             }
 
@@ -274,6 +203,89 @@ public class PriceCalculatorActivity extends BaseActivity {
                 );
             }
         });
+    }
+
+    private void processCalculation(User usuarioCliente, Subsidy subsidy, int cantidad, String tipoDeVehiculo, EditText textoCantidad, EditText textoUsername, Spinner tipoVehiculo) {
+        if (rules == null || rules.isEmpty()) {
+            Toast.makeText(PriceCalculatorActivity.this,
+                    "No hay ninguna regla establecida",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double totalReal = 0;
+        double totalConDescuento = 0;
+
+        Fuel fuel = (Fuel) tipoCombustible.getSelectedItem();
+        if (fuel == null) return;
+
+        for (Price price : prices) {
+
+            if (price.getCombustible().getId() == fuel.getId()) {
+
+                totalReal = (double) cantidad * price.getPrecio();
+
+                if (subsidy != null && subsidy.getSubsidio() == 1) {
+
+                    double porcentaje = subsidy.getPorcentaje();
+                    double descuento = totalReal * (porcentaje / 100.0);
+                    totalConDescuento = totalReal - descuento;
+
+                } else {
+                    totalConDescuento = totalReal;
+                }
+
+                for (Inventory inventory : inventories) {
+
+                    if (inventory.getCombustible().getId() == fuel.getId()) {
+
+                        double nuevaCantidad =
+                                inventory.getCantidadCombustible() - cantidad;
+
+                        if (nuevaCantidad < 0) {
+
+                            Toast.makeText(
+                                    PriceCalculatorActivity.this,
+                                    "No hay suficiente combustible",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+
+                            return;
+                        }
+
+                        inventoryDAO.actualizarCantidad(
+                                inventory.getId(),
+                                nuevaCantidad
+                        );
+
+                        inventory.setCantidadCombustible(nuevaCantidad);
+                    }
+                }
+
+                break;
+            }
+        }
+
+        Transaction transaction = new Transaction();
+
+        transaction.setTipoVehiculo(tipoDeVehiculo);
+        transaction.setCombustible(fuel);
+        transaction.setCantidad(cantidad);
+        transaction.setTotal(totalConDescuento);
+        transaction.setEstacion(user);
+        transaction.setUsuario(usuarioCliente);
+
+        transactionDAO.insertarTransaccion(transaction);
+
+        transactions = transactionDAO.getAllTransactions(user);
+        adapterTransacciones.updateList(transactions);
+
+        textoCantidad.setText("");
+        textoUsername.setText("");
+        tipoVehiculo.setSelection(0);
+        tipoCombustible.setSelection(0);
+
+        alerta();
     }
 
     public void alerta(){
