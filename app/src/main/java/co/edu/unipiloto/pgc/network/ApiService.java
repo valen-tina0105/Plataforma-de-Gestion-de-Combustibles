@@ -2,6 +2,7 @@ package co.edu.unipiloto.pgc.network;
 
 import java.util.ArrayList;
 
+import co.edu.unipiloto.pgc.model.Delivery;
 import co.edu.unipiloto.pgc.model.Fuel;
 import co.edu.unipiloto.pgc.model.Inventory;
 import co.edu.unipiloto.pgc.model.Rol;
@@ -63,4 +64,17 @@ public interface ApiService {
 
     @PUT("inventories/{id}/cantidad")
     Call<Void> updateInventoryQuantity(@Path("id") int inventoryId, @Query("cantidad") double cantidad);
+
+    //Delivery Services
+    @POST("deliveries")
+    Call<Void> createDelivery(@Body Delivery delivery);
+
+    @GET("deliveries/by-state")
+    Call<ArrayList<Delivery>> getDeliveriesByState(@Query("userId") int userId, @Query("estado") String estado);
+
+    @PUT("deliveries/{id}/delivered")
+    Call<Void> markAsDelivered(@Path("id") int id, @Query("placa") String placa);
+
+    @PUT("deliveries/{id}/confirm")
+    Call<Void> confirmDelivery(@Path("id") int id);
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -78,8 +79,20 @@ public class ConfirmDeliveryActivity extends BaseActivity {
     }
 
     private void loadDeliveries() {
-        deliveries = deliveryDAO.getDeliveriesByState(user, "ENTREGADO");
-        adapter = new ConfirmDeliveryAdapter(deliveries, user, deliveryDAO, this::loadDeliveries);
-        recyclerView.setAdapter(adapter);
+        deliveryDAO.getDeliveriesByState(user, "ENTREGADO", new DeliveryDAO.ApiCallback<ArrayList<Delivery>>() {
+            @Override
+            public void onSuccess(ArrayList<Delivery> result) {
+                runOnUiThread(() -> {
+                    deliveries = result;
+                    adapter = new ConfirmDeliveryAdapter(deliveries, user, deliveryDAO, ConfirmDeliveryActivity.this::loadDeliveries);
+                    recyclerView.setAdapter(adapter);
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(ConfirmDeliveryActivity.this, message, Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 }

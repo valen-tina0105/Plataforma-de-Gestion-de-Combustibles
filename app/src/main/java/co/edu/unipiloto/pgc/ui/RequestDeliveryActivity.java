@@ -112,16 +112,27 @@ public class RequestDeliveryActivity extends BaseActivity {
         Fuel fuel = (Fuel) spinnerCombustible.getSelectedItem();
 
         Delivery delivery = new Delivery();
-        delivery.setEstacion(user);
-        delivery.setDistribuidor(distributor);
+        delivery.setEstacionId(user.getId());
+        delivery.setDistribuidorId(distributor.getId());
         delivery.setCombustible(fuel);
         delivery.setCantidad(cantidad);
         delivery.setPlaca("PENDIENTE"); // Initial placeholder for placa
         delivery.setEstado("PENDIENTE");
 
-        deliveryDAO.insertDelivery(delivery);
-        Toast.makeText(this, "Solicitud creada con éxito", Toast.LENGTH_SHORT).show();
-        editCantidad.setText("");
+        deliveryDAO.insertDelivery(delivery, new DeliveryDAO.ApiCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                runOnUiThread(() -> {
+                    Toast.makeText(RequestDeliveryActivity.this, "Solicitud creada con éxito", Toast.LENGTH_SHORT).show();
+                    editCantidad.setText("");
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(RequestDeliveryActivity.this, message, Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 
     private void setupBottomNavigation() {

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -47,9 +48,20 @@ public class FuelDeliveryActivity extends BaseActivity {
     }
 
     private void loadDeliveries() {
-        // Mostrar únicamente entregas con estado PENDIENTE
-        deliveries = deliveryDAO.getDeliveriesByState(user, "PENDIENTE");
-        adapterEntregas = new DeliveriesAdapter(deliveries, deliveryDAO, this::loadDeliveries);
-        listaEntregas.setAdapter(adapterEntregas);
+        deliveryDAO.getDeliveriesByState(user, "PENDIENTE", new DeliveryDAO.ApiCallback<ArrayList<Delivery>>() {
+            @Override
+            public void onSuccess(ArrayList<Delivery> result) {
+                runOnUiThread(() -> {
+                    deliveries = result;
+                    adapterEntregas = new DeliveriesAdapter(deliveries, deliveryDAO, FuelDeliveryActivity.this::loadDeliveries);
+                    listaEntregas.setAdapter(adapterEntregas);
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(FuelDeliveryActivity.this, message, Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 }

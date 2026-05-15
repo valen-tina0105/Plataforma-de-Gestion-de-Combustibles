@@ -8,20 +8,16 @@ public class Delivery {
     private String placa;
     private Fuel combustible;
     private double cantidad;
-    private Date fecha;
     private String fechaFormateada;
+    private String estado;
+    private int estacionId;
+    private String estacionUsername;
 
-    private String estado; // 🔥 NUEVO
-    private String fechaConfirmacion; // 🔥 NUEVO
-
-    private User estacion;
-    private User distribuidor;
+    private int distribuidorId;
+    private String distribuidorUsername;
 
     public Delivery() {
-        fecha = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        fechaFormateada = formatter.format(fecha);
-        estado = "PENDIENTE"; // 🔥 default
+        estado = "PENDIENTE";
     }
 
     public int getId() { return id; }
@@ -36,21 +32,41 @@ public class Delivery {
     public double getCantidad() { return cantidad; }
     public void setCantidad(double cantidad) { this.cantidad = cantidad; }
 
-    public Date getFecha() { return fecha; }
-    public void setFecha(Date fecha) { this.fecha = fecha; }
-
     public String getFechaFormateada() { return fechaFormateada; }
     public void setFechaFormateada(String fechaFormateada) { this.fechaFormateada = fechaFormateada; }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
 
-    public String getFechaConfirmacion() { return fechaConfirmacion; }
-    public void setFechaConfirmacion(String fechaConfirmacion) { this.fechaConfirmacion = fechaConfirmacion; }
+    public int getEstacionId() {
+        return estacionId;
+    }
 
-    public User getEstacion() { return estacion; }
-    public void setEstacion(User estacion) { this.estacion = estacion; }
+    public void setEstacionId(int estacionId) {
+        this.estacionId = estacionId;
+    }
 
-    public User getDistribuidor() { return distribuidor; }
-    public void setDistribuidor(User distribuidor) { this.distribuidor = distribuidor; }
+    public String getEstacionUsername() {
+        return estacionUsername;
+    }
+
+    public void setEstacionUsername(String estacionUsername) {
+        this.estacionUsername = estacionUsername;
+    }
+
+    public int getDistribuidorId() {
+        return distribuidorId;
+    }
+
+    public void setDistribuidorId(int distribuidorId) {
+        this.distribuidorId = distribuidorId;
+    }
+
+    public String getDistribuidorUsername() {
+        return distribuidorUsername;
+    }
+
+    public void setDistribuidorUsername(String distribuidorUsername) {
+        this.distribuidorUsername = distribuidorUsername;
+    }
 }

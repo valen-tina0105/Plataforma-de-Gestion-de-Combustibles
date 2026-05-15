@@ -10,14 +10,10 @@ public class Rule {
     private double precio;
     private int adminId;
     private String adminUsername;
-    private Date fecha;
 
     private String fechaFormateada;
 
     public Rule() {
-        fecha = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        fechaFormateada = formatter.format(fecha);
     }
 
     public int getId() {
@@ -58,14 +54,6 @@ public class Rule {
 
     public void setAdminId(int adminId) {
         this.adminId = adminId;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
     }
 
     public String getFechaFormateada() {
