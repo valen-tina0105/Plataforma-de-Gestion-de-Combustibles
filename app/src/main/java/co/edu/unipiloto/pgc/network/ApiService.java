@@ -3,6 +3,7 @@ package co.edu.unipiloto.pgc.network;
 import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.model.Rol;
+import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -30,4 +31,11 @@ public interface ApiService {
 
     @GET("users/distributors")
     Call<ArrayList<User>> getAllDistributors();
+
+    //Rule Services
+    @GET("rules")
+    Call<ArrayList<Rule>> getAllRulees();
+
+    @POST("rules")
+    Call<Rule> saveRule(@Body Rule rule);
 }

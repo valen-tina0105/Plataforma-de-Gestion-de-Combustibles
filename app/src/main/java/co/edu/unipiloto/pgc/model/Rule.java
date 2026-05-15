@@ -4,11 +4,12 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Rule{
+public class Rule {
     private int id;
     private String tipoVehiculo;
     private double precio;
-    private User admin;
+    private int adminId;
+    private String adminUsername;
     private Date fecha;
 
     private String fechaFormateada;
@@ -43,12 +44,20 @@ public class Rule{
         this.precio = precio;
     }
 
-    public User getAdmin() {
-        return admin;
+    public String getAdminUsername() {
+        return adminUsername;
     }
 
-    public void setAdmin(User admin) {
-        this.admin = admin;
+    public void setAdminUsername(String adminUsername) {
+        this.adminUsername = adminUsername;
+    }
+
+    public int getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(int adminId) {
+        this.adminId = adminId;
     }
 
     public Date getFecha() {

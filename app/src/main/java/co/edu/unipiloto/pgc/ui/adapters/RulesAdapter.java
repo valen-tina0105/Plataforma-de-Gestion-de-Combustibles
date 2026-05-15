@@ -35,7 +35,7 @@ public class RulesAdapter extends RecyclerView.Adapter<RulesAdapter.RuleViewHold
         holder.viewRegla.setText("Regla: " + rules.get(position).getId());
         holder.viewTipoVehiculo.setText("Tipo de vehiculo: " + rules.get(position).getTipoVehiculo());
         holder.viewPrecio.setText("Precio: " + rules.get(position).getPrecio());
-        holder.viewCreadoPor.setText("Creado por: " + rules.get(position).getAdmin().getUsername());
+        holder.viewCreadoPor.setText("Creado por: " + rules.get(position).getAdminUsername());
         holder.viewFecha.setText("Fecha: " + rules.get(position).getFechaFormateada());
     }
 

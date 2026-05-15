@@ -64,7 +64,17 @@ public class PriceCalculatorActivity extends BaseActivity {
         transactionDAO = new TransactionDAO(this);
         transactions = transactionDAO.getAllTransactions(user);
         ruleDAO = new RuleDAO(this);
-        rules = ruleDAO.getAllRules();
+        ruleDAO.getAllRules(new RuleDAO.RulesCallbacK() {
+            @Override
+            public void onSuccess(ArrayList<Rule> rules) {
+                PriceCalculatorActivity.this.rules = rules;
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e("PriceCalculatorActivity", "Error al obtener reglas: " + message);
+            }
+        });
         priceDAO = new PriceDAO(this);
         prices = priceDAO.getAllPrices(user);
         inventoryDAO = new InventoryDAO(this);
