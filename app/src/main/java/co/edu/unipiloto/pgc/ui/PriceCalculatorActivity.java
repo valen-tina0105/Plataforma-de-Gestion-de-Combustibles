@@ -77,8 +77,10 @@ public class PriceCalculatorActivity extends BaseActivity {
         });
         priceDAO = new PriceDAO(this);
         prices = priceDAO.getAllPrices(user);
+        
         inventoryDAO = new InventoryDAO(this);
-        inventories = inventoryDAO.getAllInventories(user);
+        loadInventories();
+        
         tipoCombustible = findViewById(R.id.tipoCombustible);
 
         FuelDAO fuelDAO = new FuelDAO(this);
@@ -100,8 +102,6 @@ public class PriceCalculatorActivity extends BaseActivity {
             }
         });
 
-        alerta();
-
         RecyclerView listaTransacciones = findViewById(R.id.listaTransacciones);
         listaTransacciones.setLayoutManager(new LinearLayoutManager(this));
 
@@ -115,6 +115,21 @@ public class PriceCalculatorActivity extends BaseActivity {
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
+    }
+
+    private void loadInventories() {
+        inventoryDAO.getAllInventories(user, new InventoryDAO.InventoriesCallback() {
+            @Override
+            public void onSuccess(ArrayList<Inventory> inventoriesList) {
+                inventories = inventoriesList;
+                alerta();
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e("PriceCalculator", "Error al cargar inventarios: " + message);
+            }
+        });
     }
 
     private void setupBottomNavigation() {
@@ -184,7 +199,6 @@ public class PriceCalculatorActivity extends BaseActivity {
 
                         @Override
                         public void onError(String message) {
-                            // Si falla el subsidio, procesamos sin subsidio (o manejamos el error)
                             processCalculation(usuarioCliente, null, cantidad, tipoDeVehiculo, textoCantidad, textoUsername, tipoVehiculo);
                         }
                     });
@@ -235,12 +249,17 @@ public class PriceCalculatorActivity extends BaseActivity {
                     totalConDescuento = totalReal;
                 }
 
+                if (inventories == null) {
+                    Toast.makeText(this, "Inventario no cargado aún", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 for (Inventory inventory : inventories) {
 
                     if (inventory.getCombustible().getId() == fuel.getId()) {
 
                         double nuevaCantidad =
-                                inventory.getCantidadCombustible() - cantidad;
+                                inventory.getCantidadActual() - cantidad;
 
                         if (nuevaCantidad < 0) {
 
@@ -255,10 +274,20 @@ public class PriceCalculatorActivity extends BaseActivity {
 
                         inventoryDAO.actualizarCantidad(
                                 inventory.getId(),
-                                nuevaCantidad
-                        );
+                                nuevaCantidad,
+                                new InventoryDAO.UpdateCallback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        inventory.setCantidadActual(nuevaCantidad);
+                                        alerta();
+                                    }
 
-                        inventory.setCantidadCombustible(nuevaCantidad);
+                                    @Override
+                                    public void onError(String message) {
+                                        Log.e("PriceCalculator", "Error al actualizar cantidad: " + message);
+                                    }
+                                }
+                        );
                     }
                 }
 
@@ -284,8 +313,6 @@ public class PriceCalculatorActivity extends BaseActivity {
         textoUsername.setText("");
         tipoVehiculo.setSelection(0);
         tipoCombustible.setSelection(0);
-
-        alerta();
     }
 
     public void alerta(){
@@ -293,67 +320,44 @@ public class PriceCalculatorActivity extends BaseActivity {
         for(Inventory inventory:inventories){
             switch(inventory.getCombustible().getId()){
                 case 1:
-                    if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
-                        Snackbar.make(findViewById(android.R.id.content),
-                                        "Cantidad de Gasolina Corriente muy bajo",
-                                        Snackbar.LENGTH_LONG)
-                                .setAction("Ver", v -> {
-                                    Intent intent = new Intent(this, InventoryManagementActivity.class);
-                                    intent.putExtra("user", user);
-                                    startActivity(intent);
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                })
-                                .show();
+                    if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
+                        showLowFuelSnackbar("Cantidad de Gasolina Corriente muy bajo");
                         return;
                     }
                     break;
                 case 2:
-                    if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
-                        Snackbar.make(findViewById(android.R.id.content),
-                                        "Cantidad de Gasolina Extra muy bajo",
-                                        Snackbar.LENGTH_LONG)
-                                .setAction("Ver", v -> {
-                                    Intent intent = new Intent(this, InventoryManagementActivity.class);
-                                    intent.putExtra("user", user);
-                                    startActivity(intent);
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                })
-                                .show();
+                    if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
+                        showLowFuelSnackbar("Cantidad de Gasolina Extra muy bajo");
                         return;
                     }
                     break;
                 case 3:
-                    if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
-                        Snackbar.make(findViewById(android.R.id.content),
-                                        "Cantidad de ACPM(Diésel) muy bajo",
-                                        Snackbar.LENGTH_LONG)
-                                .setAction("Ver", v -> {
-                                    Intent intent = new Intent(this, InventoryManagementActivity.class);
-                                    intent.putExtra("user", user);
-                                    startActivity(intent);
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                })
-                                .show();
+                    if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
+                        showLowFuelSnackbar("Cantidad de ACPM(Diésel) muy bajo");
                         return;
                     }
                     break;
                 case 4:
-                    if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
-                        Snackbar.make(findViewById(android.R.id.content),
-                                        "Cantidad de Gas Natural Vehicular Corriente muy bajo",
-                                        Snackbar.LENGTH_LONG)
-                                .setAction("Ver", v -> {
-                                    Intent intent = new Intent(this, InventoryManagementActivity.class);
-                                    intent.putExtra("user", user);
-                                    startActivity(intent);
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                })
-                                .show();
+                    if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
+                        showLowFuelSnackbar("Cantidad de Gas Natural Vehicular Corriente muy bajo");
                         return;
                     }
                     break;
             }
         }
+    }
+
+    private void showLowFuelSnackbar(String message) {
+        Snackbar.make(findViewById(android.R.id.content),
+                        message,
+                        Snackbar.LENGTH_LONG)
+                .setAction("Ver", v -> {
+                    Intent intent = new Intent(this, InventoryManagementActivity.class);
+                    intent.putExtra("user", user);
+                    startActivity(intent);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                })
+                .show();
     }
 
 }

@@ -50,7 +50,6 @@ public class ConfirmDeliveryAdapter extends RecyclerView.Adapter<ConfirmDelivery
         holder.txtCantidad.setText("Cantidad: " + delivery.getCantidad());
         holder.txtEstado.setText("Estado: " + delivery.getEstado());
         
-        // El botón debe mostrarse únicamente cuando el estado sea: ENTREGADO
         if ("ENTREGADO".equals(delivery.getEstado())) {
             holder.btnConfirmar.setVisibility(View.VISIBLE);
         } else {

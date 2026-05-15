@@ -2,11 +2,13 @@ package co.edu.unipiloto.pgc.model;
 
 public class Inventory {
     private int id;
-    private User estacion;
+    private int estacionId;
+    private String estacionUsername;
     private Fuel combustible;
-    private double cantidadCombustible;
+    private double cantidadActual;
     private double capacidadMaxima;
     private double nivelMinimo;
+
     public Inventory() {
     }
 
@@ -18,6 +20,22 @@ public class Inventory {
         this.id = id;
     }
 
+    public int getEstacionId() {
+        return estacionId;
+    }
+
+    public void setEstacionId(int estacionId) {
+        this.estacionId = estacionId;
+    }
+
+    public String getEstacionUsername() {
+        return estacionUsername;
+    }
+
+    public void setEstacionUsername(String estacionUsername) {
+        this.estacionUsername = estacionUsername;
+    }
+
     public Fuel getCombustible() {
         return combustible;
     }
@@ -26,20 +44,12 @@ public class Inventory {
         this.combustible = combustible;
     }
 
-    public User getEstacion() {
-        return estacion;
+    public double getCantidadActual() {
+        return cantidadActual;
     }
 
-    public void setEstacion(User estacion) {
-        this.estacion = estacion;
-    }
-
-    public double getCantidadCombustible() {
-        return cantidadCombustible;
-    }
-
-    public void setCantidadCombustible(double cantidadCombustible) {
-        this.cantidadCombustible = cantidadCombustible;
+    public void setCantidadActual(double cantidadActual) {
+        this.cantidadActual = cantidadActual;
     }
 
     public double getCapacidadMaxima() {

@@ -174,18 +174,4 @@ public class DeliveryDAO {
 
         return d;
     }
-    
-    // Legacy methods kept or updated for compatibility if needed, but the UI should use getDeliveriesByState
-    public ArrayList<Delivery> getAllDeliveries(User distribuidor) {
-        return getDeliveriesByState(distribuidor, "PENDIENTE");
-    }
-
-    public ArrayList<Delivery> getDeliveriesByStation(int stationId) {
-        User u = new User();
-        u.setId(stationId);
-        co.edu.unipiloto.pgc.model.Rol r = new co.edu.unipiloto.pgc.model.Rol();
-        r.setId(1); // Station
-        u.setRol(r);
-        return getDeliveriesByState(u, "ENTREGADO");
-    }
 }

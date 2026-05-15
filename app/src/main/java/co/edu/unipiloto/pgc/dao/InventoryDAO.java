@@ -1,84 +1,69 @@
 package co.edu.unipiloto.pgc.dao;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import co.edu.unipiloto.pgc.database.DatabaseHelper;
-import co.edu.unipiloto.pgc.model.Fuel;
 import co.edu.unipiloto.pgc.model.Inventory;
-import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.User;
+import co.edu.unipiloto.pgc.network.ApiService;
+import co.edu.unipiloto.pgc.network.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InventoryDAO {
-    private DatabaseHelper dbHelper;
+    private ApiService apiService;
+
+    public interface InventoriesCallback {
+        void onSuccess(ArrayList<Inventory> inventories);
+        void onError(String message);
+    }
+
+    public interface UpdateCallback {
+        void onSuccess();
+        void onError(String message);
+    }
+
     public InventoryDAO(Context context) {
-        dbHelper = new DatabaseHelper(context);
+        apiService = RetrofitClient.getClient().create(ApiService.class);
     }
 
-    public ArrayList<Inventory> getAllInventories(User estacionId) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        ArrayList<Inventory> inventories = new ArrayList<>();
+    public void getAllInventories(User station, InventoriesCallback callback) {
+        Call<ArrayList<Inventory>> call = apiService.getInventoriesByStation(station.getId());
+        call.enqueue(new Callback<ArrayList<Inventory>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Inventory>> call, Response<ArrayList<Inventory>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onError("Error al obtener inventarios");
+                }
+            }
 
-        Cursor cursor = db.rawQuery(
-                "SELECT " +
-                        "i.id, i.cantidad_combustible, i.capacidad_maxima, i.nivel_minimo," +
-                        "c.id, c.nombre, " +
-                        "u.id, u.nombre_completo, u.username, u.email, u.password, " +
-                        "u.genero, u.direccion, u.fecha_nacimiento, " +
-                        "r.id, r.nombre " +
-                        "FROM Inventarios i " +
-                        "INNER JOIN Combustibles c ON i.id_combustible = c.id " +
-                        "INNER JOIN Users u ON i.id_estacion = u.id " +
-                        "INNER JOIN Roles r ON u.rol_id = r.id " +
-                        "WHERE u.id = ?",
-                new String[]{String.valueOf(estacionId.getId())}
-        );
-
-        while (cursor.moveToNext()) {
-            Inventory inventory = new Inventory();
-            inventory.setId(cursor.getInt(0));
-            inventory.setCantidadCombustible(cursor.getDouble(1));
-            inventory.setCapacidadMaxima(cursor.getDouble(2));
-            inventory.setNivelMinimo(cursor.getDouble(3));
-
-            Fuel fuel = new Fuel();
-            fuel.setId(cursor.getInt(4));
-            fuel.setNombre(cursor.getString(5));
-
-            User user = new User();
-            user.setId(cursor.getInt(6));
-            user.setNombreCompleto(cursor.getString(7));
-            user.setUsername(cursor.getString(8));
-            user.setEmail(cursor.getString(9));
-            user.setPassword(cursor.getString(10));
-            user.setGenero(cursor.getString(11));
-            user.setDireccion(cursor.getString(12));
-            user.setFechaNacimiento(cursor.getString(13));
-
-            Rol rol = new Rol();
-            rol.setId(cursor.getInt(14));
-            rol.setNombre(cursor.getString(15));
-
-            user.setRol(rol);
-            inventory.setEstacion(user);
-            inventory.setCombustible(fuel);
-            inventories.add(inventory);
-
-        }
-        cursor.close();
-        return inventories;
+            @Override
+            public void onFailure(Call<ArrayList<Inventory>> call, Throwable t) {
+                callback.onError("Error de red: " + t.getMessage());
+            }
+        });
     }
 
-    public void actualizarCantidad(int inventoryId, double nuevaCantidad) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+    public void actualizarCantidad(int inventoryId, double nuevaCantidad, UpdateCallback callback) {
+        Call<Void> call = apiService.updateInventoryQuantity(inventoryId, nuevaCantidad);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess();
+                } else {
+                    callback.onError("Error al actualizar inventario");
+                }
+            }
 
-        db.execSQL(
-                "UPDATE Inventarios SET cantidad_combustible = ? WHERE id = ?",
-                new Object[]{nuevaCantidad, inventoryId}
-        );
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.onError("Error de red: " + t.getMessage());
+            }
+        });
     }
-
 }

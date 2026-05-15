@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ public class InventoryManagementActivity extends BaseActivity {
     private ArrayList<Inventory> inventories;
     private InventoryDAO inventoryDAO;
     private InventoryAdapter adapterInventario;
+    private RecyclerView listaInventario;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -37,18 +39,38 @@ public class InventoryManagementActivity extends BaseActivity {
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
         inventoryDAO = new InventoryDAO(this);
-        inventories = inventoryDAO.getAllInventories(user);
-        RecyclerView listaInventario = findViewById(R.id.listaInventario);
+        
+        listaInventario = findViewById(R.id.listaInventario);
         listaInventario.setLayoutManager(new LinearLayoutManager(this));
 
-        adapterInventario = new InventoryAdapter(inventories);
-        listaInventario.setAdapter(adapterInventario);
+        loadInventory();
 
         setupBottomNavigation();
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
+
+    private void loadInventory() {
+        inventoryDAO.getAllInventories(user, new InventoryDAO.InventoriesCallback() {
+            @Override
+            public void onSuccess(ArrayList<Inventory> inventoriesList) {
+                runOnUiThread(() -> {
+                    inventories = inventoriesList;
+                    adapterInventario = new InventoryAdapter(inventories);
+                    listaInventario.setAdapter(adapterInventario);
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() ->
+                        Toast.makeText(InventoryManagementActivity.this, "Error al cargar inventario: " + message, Toast.LENGTH_SHORT).show()
+                );
+            }
+        });
+    }
+
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);

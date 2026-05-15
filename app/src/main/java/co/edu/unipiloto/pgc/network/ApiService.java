@@ -3,6 +3,7 @@ package co.edu.unipiloto.pgc.network;
 import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.model.Fuel;
+import co.edu.unipiloto.pgc.model.Inventory;
 import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Station;
@@ -12,6 +13,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -54,4 +56,11 @@ public interface ApiService {
     //Station Services
     @GET("stations/nearby")
     Call<ArrayList<Station>> getNearbyStations(@Query("lat") double lat, @Query("lon") double lon);
+
+    //Inventory Services
+    @GET("inventories/station/{id}")
+    Call<ArrayList<Inventory>> getInventoriesByStation(@Path("id") int stationId);
+
+    @PUT("inventories/{id}/cantidad")
+    Call<Void> updateInventoryQuantity(@Path("id") int inventoryId, @Query("cantidad") double cantidad);
 }
