@@ -2,6 +2,7 @@ package co.edu.unipiloto.pgc.network;
 
 import java.util.ArrayList;
 
+import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -10,7 +11,11 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface ApiService {
+    //Rol Services
+    @GET("roles")
+    Call<ArrayList<Rol>> getAllRoles();
 
+    //User Services
     @POST("auth/login")
     Call<User> login(@Body LoginRequest request);
 

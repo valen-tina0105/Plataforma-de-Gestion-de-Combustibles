@@ -20,9 +20,6 @@ import retrofit2.Response;
 public class UserDAO {
     private ApiService apiService;
 
-
-
-
     public interface LoginCallback {
         void onSuccess(User user);
 

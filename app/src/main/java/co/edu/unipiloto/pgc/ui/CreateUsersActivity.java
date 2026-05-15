@@ -38,24 +38,40 @@ public class CreateUsersActivity extends BaseActivity {
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue_gradient_end));
         userDAO = new UserDAO(this);
         rolDAO = new RolDAO(this);
-        roles = rolDAO.getAllRoles();
+        rolDAO.getAllRoles(new RolDAO.RolesCallbacK(){
+
+            @Override
+            public void onSuccess(ArrayList<Rol> roles) {
+                ArrayList<String> rolesTexto = new ArrayList<>();
+                CreateUsersActivity.this.roles = roles;
+
+                for(Rol rol : roles){
+                    rolesTexto.add(rol.getNombre());
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        CreateUsersActivity.this,
+                        R.layout.spinner_item,
+                        rolesTexto
+                );
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerRoles.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() ->
+                        Toast.makeText(CreateUsersActivity.this,
+                                message,
+                                Toast.LENGTH_SHORT).show()
+                );
+            }
+        });
 
         spinnerRoles = findViewById(R.id.roles);
 
-        ArrayList<String> rolesTexto = new ArrayList<>();
 
-        for(Rol rol : roles){
-            rolesTexto.add(rol.getNombre());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                R.layout.spinner_item,
-                rolesTexto
-        );
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerRoles.setAdapter(adapter);
 
         Button btnCrear = findViewById(R.id.btnCrear);
         btnCrear.setOnClickListener(this::onCreateUser);

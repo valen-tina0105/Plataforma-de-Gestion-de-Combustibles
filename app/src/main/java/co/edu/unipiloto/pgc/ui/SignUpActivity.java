@@ -60,24 +60,36 @@ public class SignUpActivity extends AppCompatActivity {
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.light_blue));
         userDAO = new UserDAO(this);
         rolDAO = new RolDAO(this);
-        roles = rolDAO.getAllRoles();
+        roles = new ArrayList<>();
+        rolDAO.getAllRoles(new RolDAO.RolesCallbacK() {
+            @Override
+            public void onSuccess(ArrayList<Rol> roles) {
+                SignUpActivity.this.roles = roles;
+
+                ArrayList<String> rolesTexto = new ArrayList<>();
+
+                for (Rol rol : roles) {
+                    if (!rol.getNombre().contains("Administrador"))
+                        rolesTexto.add(rol.getNombre());
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        SignUpActivity.this,
+                        R.layout.spinner_item,
+                        rolesTexto
+                );
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerRoles.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(String message) {
+
+            }
+        });
         spinnerRoles = findViewById(R.id.roles);
 
-        ArrayList<String> rolesTexto = new ArrayList<>();
-
-        for (Rol rol : roles) {
-            if (!rol.getNombre().contains("Administrador"))
-                rolesTexto.add(rol.getNombre());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                R.layout.spinner_item,
-                rolesTexto
-        );
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerRoles.setAdapter(adapter);
 
         TextView txtDireccion = findViewById(R.id.direccion);
         Button btnUbicacion = findViewById(R.id.btnUbicacion);

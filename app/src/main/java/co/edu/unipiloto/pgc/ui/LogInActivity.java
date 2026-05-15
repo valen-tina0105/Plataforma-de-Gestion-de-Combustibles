@@ -21,10 +21,7 @@ import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.User;
 
 public class LogInActivity extends BaseActivity {
-    private ArrayList<User> users;
-    private ArrayList<Rol> roles;
     private UserDAO userDAO;
-    private RolDAO rolDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +30,7 @@ public class LogInActivity extends BaseActivity {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.dark_blue));
         userDAO = new UserDAO(this);
-        rolDAO = new RolDAO(this);
-        roles = rolDAO.getAllRoles();
+
         TextView signUp = findViewById(R.id.signUp);
 
         signUp.setOnClickListener(v -> {
