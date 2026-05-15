@@ -27,7 +27,7 @@ public interface ApiService {
     Call<User> getUserByUsername(@Path("username") String username);
 
     @GET("auth/verificarUsername/{username}")
-    Call<Boolean> verificarUsername(String username);
+    Call<Boolean> verificarUsername(@Path("username") String username);
 
     @GET("users/distributors")
     Call<ArrayList<User>> getAllDistributors();

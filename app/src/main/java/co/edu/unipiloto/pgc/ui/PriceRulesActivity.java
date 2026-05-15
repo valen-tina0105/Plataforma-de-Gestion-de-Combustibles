@@ -54,7 +54,7 @@ public class PriceRulesActivity extends BaseActivity {
 
             @Override
             public void onError(String message) {
-                Log.e("PriceRulesActivity", "Error al obtener reglas: " + message);
+                runOnUiThread(() -> Toast.makeText(PriceRulesActivity.this, message, Toast.LENGTH_SHORT).show());
             }
         });
 
@@ -98,8 +98,7 @@ public class PriceRulesActivity extends BaseActivity {
 
                     @Override
                     public void onError(String message) {
-                        Log.e("PriceRulesActivity", "Error al obtener reglas: " + message);
-
+                        runOnUiThread(() -> Toast.makeText(PriceRulesActivity.this, message, Toast.LENGTH_SHORT).show());
                     }
                 });
                 precio.setText("");
@@ -108,7 +107,7 @@ public class PriceRulesActivity extends BaseActivity {
 
             @Override
             public void onError(String message) {
-                Log.e("PriceRulesActivity", "Error al guardar regla: " + message);
+                runOnUiThread(() -> Toast.makeText(PriceRulesActivity.this, message, Toast.LENGTH_SHORT).show());
             }
         });
 
