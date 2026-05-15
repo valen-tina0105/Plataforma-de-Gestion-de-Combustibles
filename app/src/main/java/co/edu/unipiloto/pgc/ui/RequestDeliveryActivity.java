@@ -66,6 +66,7 @@ public class RequestDeliveryActivity extends BaseActivity {
         userDAO.getAllDistributors(new UserDAO.DistributorCallback() {
             @Override
             public void onSuccess(ArrayList<User> distributors) {
+                RequestDeliveryActivity.this.distributors = distributors;
                 ArrayList<String> distributorUsernames = new ArrayList<>();
                 for (User distributor : distributors) {
                     distributorUsernames.add(distributor.getUsername());
@@ -77,15 +78,24 @@ public class RequestDeliveryActivity extends BaseActivity {
 
             @Override
             public void onError(String message) {
-
+                Toast.makeText(RequestDeliveryActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
-        fuels = fuelDAO.getAllFuels();
 
+        fuelDAO.getAllFuels(new FuelDAO.FuelsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Fuel> fuelsList) {
+                fuels = fuelsList;
+                ArrayAdapter<Fuel> fuelAdapter = new ArrayAdapter<>(RequestDeliveryActivity.this, android.R.layout.simple_spinner_item, fuels);
+                fuelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerCombustible.setAdapter(fuelAdapter);
+            }
 
-        ArrayAdapter<Fuel> fuelAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, fuels);
-        fuelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCombustible.setAdapter(fuelAdapter);
+            @Override
+            public void onError(String message) {
+                Toast.makeText(RequestDeliveryActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void createRequest() {
@@ -97,6 +107,7 @@ public class RequestDeliveryActivity extends BaseActivity {
 
         double cantidad = Double.parseDouble(cantidadStr);
         int selectedIndex = spinnerDistribuidor.getSelectedItemPosition();
+        if (distributors == null || distributors.isEmpty()) return;
         User distributor = distributors.get(selectedIndex);
         Fuel fuel = (Fuel) spinnerCombustible.getSelectedItem();
 

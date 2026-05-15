@@ -2,6 +2,7 @@ package co.edu.unipiloto.pgc.network;
 
 import java.util.ArrayList;
 
+import co.edu.unipiloto.pgc.model.Fuel;
 import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.User;
@@ -38,4 +39,8 @@ public interface ApiService {
 
     @POST("rules")
     Call<Rule> saveRule(@Body Rule rule);
+
+    //Fuel Services
+    @GET("fuels")
+    Call<ArrayList<Fuel>> getAllFuels();
 }

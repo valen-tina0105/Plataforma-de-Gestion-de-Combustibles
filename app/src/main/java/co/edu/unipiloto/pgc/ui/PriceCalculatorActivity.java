@@ -82,15 +82,23 @@ public class PriceCalculatorActivity extends BaseActivity {
         tipoCombustible = findViewById(R.id.tipoCombustible);
 
         FuelDAO fuelDAO = new FuelDAO(this);
-        ArrayList<Fuel> listaCombustibles = fuelDAO.getAllFuels();
+        fuelDAO.getAllFuels(new FuelDAO.FuelsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Fuel> fuelsList) {
+                ArrayAdapter<Fuel> adapter = new ArrayAdapter<>(
+                        PriceCalculatorActivity.this,
+                        android.R.layout.simple_spinner_item,
+                        fuelsList
+                );
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                tipoCombustible.setAdapter(adapter);
+            }
 
-        ArrayAdapter<Fuel> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                listaCombustibles
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        tipoCombustible.setAdapter(adapter);
+            @Override
+            public void onError(String message) {
+                Toast.makeText(PriceCalculatorActivity.this, "Error al cargar combustibles: " + message, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         alerta();
 
@@ -171,7 +179,7 @@ public class PriceCalculatorActivity extends BaseActivity {
                     SubsidyDAO subsidyDAO = new SubsidyDAO(PriceCalculatorActivity.this);
                     Subsidy subsidy = subsidyDAO.getSubsidyById(usuarioCliente);
 
-                    if (rules.isEmpty()) {
+                    if (rules == null || rules.isEmpty()) {
                         Toast.makeText(PriceCalculatorActivity.this,
                                 "No hay ninguna regla establecida",
                                 Toast.LENGTH_SHORT).show();
@@ -182,6 +190,7 @@ public class PriceCalculatorActivity extends BaseActivity {
                     double totalConDescuento = 0;
 
                     Fuel fuel = (Fuel) tipoCombustible.getSelectedItem();
+                    if (fuel == null) return;
 
                     for (Price price : prices) {
 
@@ -268,7 +277,7 @@ public class PriceCalculatorActivity extends BaseActivity {
     }
 
     public void alerta(){
-
+        if (inventories == null) return;
         for(Inventory inventory:inventories){
             switch(inventory.getCombustible().getId()){
                 case 1:
