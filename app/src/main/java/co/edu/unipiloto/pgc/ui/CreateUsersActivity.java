@@ -37,9 +37,9 @@ public class CreateUsersActivity extends BaseActivity {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue_gradient_end));
         userDAO = new UserDAO(this);
-        users = userDAO.getAllUsers();
         rolDAO = new RolDAO(this);
         roles = rolDAO.getAllRoles();
+
         spinnerRoles = findViewById(R.id.roles);
 
         ArrayList<String> rolesTexto = new ArrayList<>();
@@ -66,38 +66,68 @@ public class CreateUsersActivity extends BaseActivity {
     public void onCreateUser(View view) {
         EditText textoUsuario = findViewById(R.id.textoUsuario),
                 textoContrasenia = findViewById(R.id.textoContrasenia);
-        Spinner roles = findViewById(R.id.roles);
         if(textoUsuario.getText().toString().isEmpty()
                 || textoContrasenia.getText().toString().isEmpty()){
             Toast.makeText(this,"Complete todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (userDAO.verificarUsername(textoUsuario.getText().toString())){
-            Toast.makeText(this,"Username ya existente", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (textoContrasenia.getText().toString().length() > 20){
-            Toast.makeText(this,"Contraseña muy larga", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (textoUsuario.getText().toString().length() > 20){
-            Toast.makeText(this,"Usuario muy largo", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        User user = new User();
-        user.setUsername(textoUsuario.getText().toString());
-        user.setPassword(textoContrasenia.getText().toString());
-        for(int i=0; i<this.roles.size(); i++){
-            if(this.roles.get(i).getNombre().equals(roles.getSelectedItem().toString())){
-                user.setRol(this.roles.get(i));
-            }
-        }
+        userDAO.verificarUsername(textoUsuario.getText().toString(), new UserDAO.UsernameCallback() {
+            @Override
+            public void onSuccess(boolean exists) {
 
-        userDAO.insertarUsuario(user);
-        users = userDAO.getAllUsers();
-        Toast.makeText(this, "Usuario Creado Correctamente", Toast.LENGTH_SHORT).show();
-        textoUsuario.setText("");
-        textoContrasenia.setText("");
+                if (exists) {
+                    runOnUiThread(() ->
+                            Toast.makeText(CreateUsersActivity.this,
+                                    "Username ya existente",
+                                    Toast.LENGTH_SHORT).show()
+                    );
+                    return;
+                }
+
+                if (textoContrasenia.getText().toString().length() > 20){
+                    Toast.makeText(CreateUsersActivity.this,"Contraseña muy larga", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (textoUsuario.getText().toString().length() > 20){
+                    Toast.makeText(CreateUsersActivity.this,"Usuario muy largo", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                User user = new User();
+                user.setUsername(textoUsuario.getText().toString());
+                user.setPassword(textoContrasenia.getText().toString());
+                for(int i=0; i<roles.size(); i++){
+                    if(roles.get(i).getNombre().equals(spinnerRoles.getSelectedItem().toString())){
+                        user.setRol(roles.get(i));
+                    }
+                }
+
+                userDAO.insertarUsuario(user, new UserDAO.RegisterCallback() {
+                    @Override
+                    public void onSuccess(User user) {
+                        runOnUiThread(() -> {
+                            Toast.makeText(CreateUsersActivity.this, "Usuario Creado Correctamente", Toast.LENGTH_SHORT).show();
+                            textoUsuario.setText("");
+                            textoContrasenia.setText("");
+                        });
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        runOnUiThread(() -> Toast.makeText(CreateUsersActivity.this, message, Toast.LENGTH_SHORT).show());
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() ->
+                        Toast.makeText(CreateUsersActivity.this,
+                                message,
+                                Toast.LENGTH_SHORT).show()
+                );
+            }
+        });
+
     }
 
 }

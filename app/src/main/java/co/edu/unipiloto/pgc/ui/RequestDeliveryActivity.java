@@ -63,17 +63,25 @@ public class RequestDeliveryActivity extends BaseActivity {
     }
 
     private void loadSpinners() {
-        distributors = userDAO.getAllDistributors();
+        userDAO.getAllDistributors(new UserDAO.DistributorCallback() {
+            @Override
+            public void onSuccess(ArrayList<User> distributors) {
+                ArrayList<String> distributorUsernames = new ArrayList<>();
+                for (User distributor : distributors) {
+                    distributorUsernames.add(distributor.getUsername());
+                }
+                ArrayAdapter<String> distAdapter = new ArrayAdapter<>(RequestDeliveryActivity.this, android.R.layout.simple_spinner_item, distributorUsernames);
+                distAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerDistribuidor.setAdapter(distAdapter);
+            }
+
+            @Override
+            public void onError(String message) {
+
+            }
+        });
         fuels = fuelDAO.getAllFuels();
 
-        ArrayList<String> distributorUsernames = new ArrayList<>();
-        for (User distributor : distributors) {
-            distributorUsernames.add(distributor.getUsername());
-        }
-
-        ArrayAdapter<String> distAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, distributorUsernames);
-        distAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDistribuidor.setAdapter(distAdapter);
 
         ArrayAdapter<Fuel> fuelAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, fuels);
         fuelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

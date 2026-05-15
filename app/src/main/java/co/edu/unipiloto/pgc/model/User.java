@@ -8,13 +8,13 @@ public class User implements Serializable {
     private String nombreCompleto;
     private String username;
     private String email;
-    private Rol rol;
-    private String genero;
+    private String password;
+    private String direccion;
     public double latitud;
     public double longitud;
-    private String direccion;
     private String fechaNacimiento;
-    private String password;
+    private String genero;
+    private Rol rol;
 
     public User() {
     }

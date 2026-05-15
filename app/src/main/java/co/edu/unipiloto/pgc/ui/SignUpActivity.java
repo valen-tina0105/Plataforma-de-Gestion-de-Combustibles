@@ -59,7 +59,6 @@ public class SignUpActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.light_blue));
         userDAO = new UserDAO(this);
-        users = userDAO.getAllUsers();
         rolDAO = new RolDAO(this);
         roles = rolDAO.getAllRoles();
         spinnerRoles = findViewById(R.id.roles);
@@ -235,41 +234,72 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        if (userDAO.verificarUsername(usuario.getText().toString())) {
-            Toast.makeText(this, "Username ya existente", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        userDAO.verificarUsername(usuario.getText().toString(), new UserDAO.UsernameCallback() {
+            @Override
+            public void onSuccess(boolean exists) {
 
-        int selectedId = radioGenero.getCheckedRadioButtonId();
-        if (selectedId == -1) {
-            Toast.makeText(this, "Seleccione género", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (latitud == 0.0 || longitud == 0.0) {
-            Toast.makeText(this, "Debe obtener la ubicación", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        RadioButton selectedRadio = findViewById(selectedId);
-        String genero = selectedRadio.getText().toString();
-        Rol rolSeleccionado = roles.get(spinnerRoles.getSelectedItemPosition());
-        User user = new User();
-        user.setNombreCompleto(nombre.getText().toString());
-        user.setUsername(usuario.getText().toString());
-        user.setEmail(email.getText().toString());
-        user.setPassword(password.getText().toString());
-        user.setGenero(genero);
-        user.setDireccion(direccion.getText().toString());
-        user.setLatitud(latitud);
-        user.setLongitud(longitud);
-        String fechaBD = (String) fecha.getTag();
-        user.setFechaNacimiento(fechaBD);
-        user.setRol(rolSeleccionado);
+                if (exists) {
+                    runOnUiThread(() ->
+                            Toast.makeText(SignUpActivity.this,
+                                    "Username ya existente",
+                                    Toast.LENGTH_SHORT).show()
+                    );
+                    return;
+                }
 
-        userDAO.insertarUsuario(user);
 
-        Toast.makeText(this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, LogInActivity.class);
-        startActivity(intent);
-        finish();
+                int selectedId = radioGenero.getCheckedRadioButtonId();
+                if (selectedId == -1) {
+                    Toast.makeText(SignUpActivity.this, "Seleccione género", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (latitud == 0.0 || longitud == 0.0) {
+                    Toast.makeText(SignUpActivity.this, "Debe obtener la ubicación", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                RadioButton selectedRadio = findViewById(selectedId);
+                String genero = selectedRadio.getText().toString();
+                Rol rolSeleccionado = roles.get(spinnerRoles.getSelectedItemPosition());
+                User user = new User();
+                user.setNombreCompleto(nombre.getText().toString());
+                user.setUsername(usuario.getText().toString());
+                user.setEmail(email.getText().toString());
+                user.setPassword(password.getText().toString());
+                user.setGenero(genero);
+                user.setDireccion(direccion.getText().toString());
+                user.setLatitud(latitud);
+                user.setLongitud(longitud);
+                String fechaBD = (String) fecha.getTag();
+                user.setFechaNacimiento(fechaBD);
+                user.setRol(rolSeleccionado);
+
+                userDAO.insertarUsuario(user, new UserDAO.RegisterCallback() {
+                    @Override
+                    public void onSuccess(User user) {
+                        runOnUiThread(() -> {
+                            Toast.makeText(SignUpActivity.this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(SignUpActivity.this, LogInActivity.class);
+                            startActivity(intent);
+                            finish();
+                        });
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        runOnUiThread(() -> Toast.makeText(SignUpActivity.this, message, Toast.LENGTH_SHORT).show());
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() ->
+                        Toast.makeText(SignUpActivity.this,
+                                message,
+                                Toast.LENGTH_SHORT).show()
+                );
+            }
+        });
+
     }
 }

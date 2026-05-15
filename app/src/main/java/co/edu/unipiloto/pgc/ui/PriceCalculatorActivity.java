@@ -2,6 +2,7 @@ package co.edu.unipiloto.pgc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -149,78 +150,111 @@ public class PriceCalculatorActivity extends BaseActivity {
         String username = textoUsername.getText().toString();
 
         UserDAO userDAO = new UserDAO(this);
-        User usuarioCliente = userDAO.getUserByUsername(username);
 
-        if (usuarioCliente == null) {
-            Toast.makeText(this, "Usuario no existe", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        userDAO.getUserByUsername(username, new UserDAO.LoginCallback() {
 
-        SubsidyDAO subsidyDAO = new SubsidyDAO(this);
-        Subsidy subsidy = subsidyDAO.getSubsidyById(usuarioCliente);
+            @Override
+            public void onSuccess(User usuarioCliente) {
 
-        if (rules.isEmpty()) {
-            Toast.makeText(this, "No hay ninguna regla establecida", Toast.LENGTH_SHORT).show();
-            return;
-        }
+                runOnUiThread(() -> {
 
-        double totalReal = 0;
-        double totalConDescuento = 0;
+                    SubsidyDAO subsidyDAO = new SubsidyDAO(PriceCalculatorActivity.this);
+                    Subsidy subsidy = subsidyDAO.getSubsidyById(usuarioCliente);
 
-        Fuel fuel = (Fuel) tipoCombustible.getSelectedItem();
-
-        for (Price price : prices){
-            if (price.getCombustible().getId() == fuel.getId()) {
-                totalReal = cantidad * price.getPrecio();
-                if (subsidy != null && subsidy.getSubsidio() == 1) {
-                    double porcentaje = subsidy.getPorcentaje();
-                    double descuento = totalReal * (porcentaje / 100.0);
-                    totalConDescuento = totalReal - descuento;
-                } else {
-                    totalConDescuento = totalReal;
-                }
-                for (Inventory inventory : inventories){
-                    if (inventory.getCombustible().getId() == fuel.getId()){
-                        double nuevaCantidad = inventory.getCantidadCombustible() - cantidad;
-                        if (nuevaCantidad < 0) {
-                            Toast.makeText(this, "No hay suficiente combustible", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        inventoryDAO.actualizarCantidad(inventory.getId(), nuevaCantidad);
-                        inventory.setCantidadCombustible(nuevaCantidad);
+                    if (rules.isEmpty()) {
+                        Toast.makeText(PriceCalculatorActivity.this,
+                                "No hay ninguna regla establecida",
+                                Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                }
-                break;
+
+                    double totalReal = 0;
+                    double totalConDescuento = 0;
+
+                    Fuel fuel = (Fuel) tipoCombustible.getSelectedItem();
+
+                    for (Price price : prices) {
+
+                        if (price.getCombustible().getId() == fuel.getId()) {
+
+                            totalReal = cantidad * price.getPrecio();
+
+                            if (subsidy != null && subsidy.getSubsidio() == 1) {
+
+                                double porcentaje = subsidy.getPorcentaje();
+                                double descuento = totalReal * (porcentaje / 100.0);
+                                totalConDescuento = totalReal - descuento;
+
+                            } else {
+                                totalConDescuento = totalReal;
+                            }
+
+                            for (Inventory inventory : inventories) {
+
+                                if (inventory.getCombustible().getId() == fuel.getId()) {
+
+                                    double nuevaCantidad =
+                                            inventory.getCantidadCombustible() - cantidad;
+
+                                    if (nuevaCantidad < 0) {
+
+                                        Toast.makeText(
+                                                PriceCalculatorActivity.this,
+                                                "No hay suficiente combustible",
+                                                Toast.LENGTH_SHORT
+                                        ).show();
+
+                                        return;
+                                    }
+
+                                    inventoryDAO.actualizarCantidad(
+                                            inventory.getId(),
+                                            nuevaCantidad
+                                    );
+
+                                    inventory.setCantidadCombustible(nuevaCantidad);
+                                }
+                            }
+
+                            break;
+                        }
+                    }
+
+                    Transaction transaction = new Transaction();
+
+                    transaction.setTipoVehiculo(tipoDeVehiculo);
+                    transaction.setCombustible(fuel);
+                    transaction.setCantidad(cantidad);
+                    transaction.setTotal(totalConDescuento);
+                    transaction.setEstacion(user);
+                    transaction.setUsuario(usuarioCliente);
+
+                    transactionDAO.insertarTransaccion(transaction);
+
+                    transactions = transactionDAO.getAllTransactions(user);
+                    adapterTransacciones.updateList(transactions);
+
+                    textoCantidad.setText("");
+                    textoUsername.setText("");
+                    tipoVehiculo.setSelection(0);
+                    tipoCombustible.setSelection(0);
+
+                    alerta();
+                });
             }
-        }
 
-        if (subsidy != null && subsidy.getSubsidio() == 1) {
-            double descuento = totalReal - totalConDescuento;
-            Toast.makeText(this, "Descuento aplicado: $" + descuento, Toast.LENGTH_SHORT).show();
-        }
+            @Override
+            public void onError(String message) {
 
-        if (subsidy != null && subsidy.getSubsidio() == 1) {
-            total.setText("Total con subsidio: " + totalConDescuento + "$");
-        } else {
-            total.setText("Total: " + totalReal + "$");
-        }
-
-        Transaction transaction = new Transaction();
-        transaction.setTipoVehiculo(tipoDeVehiculo);
-        transaction.setCombustible(fuel);
-        transaction.setCantidad(cantidad);
-        transaction.setTotal(totalConDescuento);
-        transaction.setEstacion(user);
-        transaction.setUsuario(usuarioCliente);
-        transactionDAO.insertarTransaccion(transaction);
-        transactions = transactionDAO.getAllTransactions(user);
-        adapterTransacciones.updateList(transactions);
-
-        textoCantidad.setText("");
-        textoUsername.setText("");
-        tipoVehiculo.setSelection(0);
-        tipoCombustible.setSelection(0);
-        alerta();
+                runOnUiThread(() ->
+                        Toast.makeText(
+                                PriceCalculatorActivity.this,
+                                "Usuario no existe",
+                                Toast.LENGTH_SHORT
+                        ).show()
+                );
+            }
+        });
     }
 
     public void alerta(){

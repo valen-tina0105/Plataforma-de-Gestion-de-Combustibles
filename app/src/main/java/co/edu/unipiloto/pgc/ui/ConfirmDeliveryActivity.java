@@ -78,7 +78,6 @@ public class ConfirmDeliveryActivity extends BaseActivity {
     }
 
     private void loadDeliveries() {
-        // En el nuevo flujo, ConfirmDeliveryActivity muestra las entregas con estado ENTREGADO
         deliveries = deliveryDAO.getDeliveriesByState(user, "ENTREGADO");
         adapter = new ConfirmDeliveryAdapter(deliveries, user, deliveryDAO, this::loadDeliveries);
         recyclerView.setAdapter(adapter);
