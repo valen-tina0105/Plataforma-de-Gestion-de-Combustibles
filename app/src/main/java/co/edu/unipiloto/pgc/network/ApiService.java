@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import co.edu.unipiloto.pgc.model.Fuel;
 import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.Rule;
+import co.edu.unipiloto.pgc.model.Station;
 import co.edu.unipiloto.pgc.model.Subsidy;
 import co.edu.unipiloto.pgc.model.User;
 import retrofit2.Call;
@@ -12,6 +13,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
     //Rol Services
@@ -48,4 +50,8 @@ public interface ApiService {
     //Subsidy Services
     @GET("subsidies/{id}")
     Call<Subsidy> getSubsidyById(@Path("id") int id);
+
+    //Station Services
+    @GET("stations/nearby")
+    Call<ArrayList<Station>> getNearbyStations(@Query("lat") double lat, @Query("lon") double lon);
 }
