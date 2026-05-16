@@ -74,6 +74,18 @@ public class InventoryManagementActivity extends BaseActivity {
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+
+        if (user != null && user.getRol() != null) {
+            int rolId = user.getRol().getId();
+            if (rolId == 5) {
+                bottomNav.getMenu().clear();
+                bottomNav.inflateMenu(R.menu.bottom_nav_menu_distributor);
+            } else {
+                bottomNav.getMenu().clear();
+                bottomNav.inflateMenu(R.menu.bottom_nav_menu);
+            }
+        }
+
         bottomNav.setSelectedItemId(R.id.nav_inventario);
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -88,6 +100,8 @@ public class InventoryManagementActivity extends BaseActivity {
                 nextIntent = new Intent(this, ConfirmDeliveryActivity.class);
             } else if (id == R.id.nav_historial) {
                 nextIntent = new Intent(this, FuelHistoryActivity.class);
+            } else if (id == R.id.nav_entregas){
+                nextIntent = new Intent(this, FuelDeliveryActivity.class);
             }
 
             if (nextIntent != null) {

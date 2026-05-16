@@ -62,7 +62,7 @@ public interface ApiService {
     Call<ArrayList<Station>> getNearbyStations(@Query("lat") double lat, @Query("lon") double lon);
 
     //Inventory Services
-    @GET("inventories/station/{id}")
+    @GET("inventories/owner/{id}")
     Call<ArrayList<Inventory>> getInventoriesByStation(@Path("id") int stationId);
 
     @PUT("inventories/{id}/cantidad")
@@ -101,7 +101,7 @@ public interface ApiService {
     Call<Void> insertTransaction(@Body Transaction transaction);
 
     //Price Services
-    @GET("prices/{id}")
+    @GET("prices/owner/{id}")
     Call<ArrayList<Price>> getAllPrices(@Path("id") int estacionId);
 
     //Movement Services
