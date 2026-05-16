@@ -1,6 +1,4 @@
 # Plataforma de Gestión de Combustibles
-
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Android SDK](https://img.shields.io/badge/Android-24%2B-brightgreen.svg)](https://developer.android.com)
 [![Version](https://img.shields.io/badge/version-1.0-orange.svg)]()
 
@@ -181,14 +179,3 @@ Plataforma-de-Gestion-de-Combustibles/
 ├── gradle.properties
 └── gradle/libs.versions.toml
 ```
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT. Ver el archivo LICENSE para más detalles.
-
-## Contacto
-
-Para preguntas o sugerencias sobre este proyecto:
-
-- **Email**: <contacto@proyecto.com>
-- **GitHub**: <https://github.com/usuario/proyecto>
