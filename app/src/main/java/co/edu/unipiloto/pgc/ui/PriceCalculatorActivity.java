@@ -138,7 +138,7 @@ public class PriceCalculatorActivity extends BaseActivity {
         Button btnCalcular = findViewById(R.id.btnCalcular);
         btnCalcular.setOnClickListener(this::onSendCalculate);
 
-        setupBottomNavigation();
+        setupBottomNavigation(user);
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
@@ -159,34 +159,7 @@ public class PriceCalculatorActivity extends BaseActivity {
         });
     }
 
-    private void setupBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        bottomNav.setSelectedItemId(R.id.nav_calcular);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_calcular) return true;
 
-            Intent nextIntent = null;
-            if (id == R.id.nav_solicitud) {
-                nextIntent = new Intent(this, RequestDeliveryActivity.class);
-            } else if (id == R.id.nav_confirmar) {
-                nextIntent = new Intent(this, ConfirmDeliveryActivity.class);
-            } else if (id == R.id.nav_historial) {
-                nextIntent = new Intent(this, FuelHistoryActivity.class);
-            } else if (id == R.id.nav_inventario) {
-                nextIntent = new Intent(this, InventoryManagementActivity.class);
-            }
-
-            if (nextIntent != null) {
-                nextIntent.putExtra("user", user);
-                startActivity(nextIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            }
-            return false;
-        });
-    }
 
     public void onSendCalculate(View view) {
 

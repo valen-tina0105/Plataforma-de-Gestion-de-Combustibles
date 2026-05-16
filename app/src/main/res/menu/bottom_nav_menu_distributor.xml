@@ -11,4 +11,9 @@
         android:icon="@drawable/baseline_inventory_24"
         android:title="Inventario" />
 
+    <item
+        android:id="@+id/nav_precios"
+        android:icon="@drawable/outline_currency_exchange_24"
+        android:title="Precios" />
+
 </menu>

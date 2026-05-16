@@ -2,6 +2,7 @@ package co.edu.unipiloto.pgc.network;
 
 import java.util.ArrayList;
 
+import co.edu.unipiloto.pgc.dto.UpdatePriceRequestDTO;
 import co.edu.unipiloto.pgc.model.Delivery;
 import co.edu.unipiloto.pgc.model.Fuel;
 import co.edu.unipiloto.pgc.model.Inventory;
@@ -103,6 +104,10 @@ public interface ApiService {
     //Price Services
     @GET("prices/owner/{id}")
     Call<ArrayList<Price>> getAllPrices(@Path("id") int estacionId);
+
+    @PUT("prices/{id}")
+    Call<Void> updatePrice(@Path("id") int id, @Body UpdatePriceRequestDTO request);
+
 
     //Movement Services
     @GET("movements/{id}")

@@ -3,10 +3,12 @@ package co.edu.unipiloto.pgc.dao;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.database.DatabaseHelper;
+import co.edu.unipiloto.pgc.dto.UpdatePriceRequestDTO;
 import co.edu.unipiloto.pgc.model.Fuel;
 import co.edu.unipiloto.pgc.model.Price;
 import co.edu.unipiloto.pgc.model.Rol;
@@ -45,6 +47,26 @@ public class PriceDAO {
             @Override
             public void onFailure(Call<ArrayList<Price>> call, Throwable t) {
                 callback.onError("Error de red: " + t.getMessage());
+            }
+        });
+    }
+
+    public void updatePrice(int id, UpdatePriceRequestDTO precio) {
+        Call<Void> call = apiService.updatePrice(id, precio);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.d("API", "Precio actualizado");
+                } else {
+                    Log.e("API", "Error al actualizar el precio");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("API", t.getMessage());
             }
         });
     }

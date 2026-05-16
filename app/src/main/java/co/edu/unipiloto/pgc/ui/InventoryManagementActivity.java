@@ -40,12 +40,12 @@ public class InventoryManagementActivity extends BaseActivity {
         user = (User) intent.getSerializableExtra("user");
         inventoryDAO = new InventoryDAO(this);
         
-        listaInventario = findViewById(R.id.listaInventario);
+        listaInventario = findViewById(R.id.listaPrecios);
         listaInventario.setLayoutManager(new LinearLayoutManager(this));
 
         loadInventory();
 
-        setupBottomNavigation();
+        setupBottomNavigation(user);
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
@@ -72,46 +72,5 @@ public class InventoryManagementActivity extends BaseActivity {
     }
 
 
-    private void setupBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
 
-        if (user != null && user.getRol() != null) {
-            int rolId = user.getRol().getId();
-            if (rolId == 5) {
-                bottomNav.getMenu().clear();
-                bottomNav.inflateMenu(R.menu.bottom_nav_menu_distributor);
-            } else {
-                bottomNav.getMenu().clear();
-                bottomNav.inflateMenu(R.menu.bottom_nav_menu);
-            }
-        }
-
-        bottomNav.setSelectedItemId(R.id.nav_inventario);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_inventario) return true;
-
-            Intent nextIntent = null;
-            if (id == R.id.nav_solicitud) {
-                nextIntent = new Intent(this, RequestDeliveryActivity.class);
-            } else if (id == R.id.nav_calcular) {
-                nextIntent = new Intent(this, PriceCalculatorActivity.class);
-            } else if (id == R.id.nav_confirmar) {
-                nextIntent = new Intent(this, ConfirmDeliveryActivity.class);
-            } else if (id == R.id.nav_historial) {
-                nextIntent = new Intent(this, FuelHistoryActivity.class);
-            } else if (id == R.id.nav_entregas){
-                nextIntent = new Intent(this, FuelDeliveryActivity.class);
-            }
-
-            if (nextIntent != null) {
-                nextIntent.putExtra("user", user);
-                startActivity(nextIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            }
-            return false;
-        });
-    }
 }

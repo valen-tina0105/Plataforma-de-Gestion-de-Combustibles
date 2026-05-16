@@ -61,40 +61,12 @@ public class FuelHistoryActivity extends BaseActivity {
         Button btnFiltrar = findViewById(R.id.btnFiltrar);
         btnFiltrar.setOnClickListener(this::onFilter);
 
-        setupBottomNavigation();
+        setupBottomNavigation(user);
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
 
-    private void setupBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        bottomNav.setSelectedItemId(R.id.nav_historial);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_historial) return true;
-
-            Intent nextIntent = null;
-            if (id == R.id.nav_solicitud) {
-                nextIntent = new Intent(this, RequestDeliveryActivity.class);
-            } else if (id == R.id.nav_calcular) {
-                nextIntent = new Intent(this, PriceCalculatorActivity.class);
-            } else if (id == R.id.nav_confirmar) {
-                nextIntent = new Intent(this, ConfirmDeliveryActivity.class);
-            } else if (id == R.id.nav_inventario) {
-                nextIntent = new Intent(this, InventoryManagementActivity.class);
-            }
-
-            if (nextIntent != null) {
-                nextIntent.putExtra("user", user);
-                startActivity(nextIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            }
-            return false;
-        });
-    }
 
     @SuppressLint("NotifyDataSetChanged")
     public void onFilter(View view) {

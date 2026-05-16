@@ -82,7 +82,7 @@
     <string name="consultaPrecios">Consulta de precios para usuarios particulares</string>
     <string name="usernameCliente">Username cliente</string>
     <string name="consultarSaldoDisponible">Consultar saldo disponible de subsidio de combustible</string>
-    <string name="tituloInventoryManagement">Inventario de estacion</string>
+    <string name="tituloInventoryManagement">Inventario</string>
     <string name="tituloUserInformation">Información de usuario</string>
     <string name="tituloGasolinePurchases">Historial de compras de combustible</string>
     <string name="tituloSubsidy">Subsidio</string>
@@ -90,4 +90,5 @@
     <string name="confirmar_entrega">Confirmar entrega</string>
 
     <string name="mostrar_estaciones_mapa">Mostrar estaciones en el mapa</string>
+    <string name="precios_de_combustible">Precios de Combustible</string>
 </resources>

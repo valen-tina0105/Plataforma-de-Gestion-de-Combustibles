@@ -59,7 +59,7 @@ public class RequestDeliveryActivity extends BaseActivity {
         btnSolicitar.setOnClickListener(v -> createRequest());
         btnCerrarSesion.setOnClickListener(this::onLogOut);
 
-        setupBottomNavigation();
+        setupBottomNavigation(user);
     }
 
     private void loadSpinners() {
@@ -135,32 +135,5 @@ public class RequestDeliveryActivity extends BaseActivity {
         });
     }
 
-    private void setupBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        bottomNav.setSelectedItemId(R.id.nav_solicitud);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_solicitud) return true;
 
-            Intent intent = null;
-            if (id == R.id.nav_calcular) {
-                intent = new Intent(this, PriceCalculatorActivity.class);
-            } else if (id == R.id.nav_confirmar) {
-                intent = new Intent(this, ConfirmDeliveryActivity.class);
-            } else if (id == R.id.nav_historial) {
-                intent = new Intent(this, FuelHistoryActivity.class);
-            } else if (id == R.id.nav_inventario) {
-                intent = new Intent(this, InventoryManagementActivity.class);
-            }
-
-            if (intent != null) {
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            }
-            return false;
-        });
-    }
 }

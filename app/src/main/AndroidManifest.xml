@@ -4,11 +4,12 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
+
             <data android:scheme="geo" />
         </intent>
     </queries>
@@ -21,8 +22,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.PlataformaDeGestionDeCombustibles">
+        android:theme="@style/Theme.PlataformaDeGestionDeCombustibles"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.PriceManagmentActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.RequestDeliveryActivity"
             android:exported="false" />

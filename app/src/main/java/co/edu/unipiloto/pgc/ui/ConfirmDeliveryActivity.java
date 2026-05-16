@@ -42,41 +42,14 @@ public class ConfirmDeliveryActivity extends BaseActivity {
         recyclerView = findViewById(R.id.listaEntregasConfirmar);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        setupBottomNavigation();
+        setupBottomNavigation(user);
         loadDeliveries();
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
     }
 
-    private void setupBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        bottomNav.setSelectedItemId(R.id.nav_confirmar);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_confirmar) return true;
 
-            Intent nextIntent = null;
-            if (id == R.id.nav_solicitud) {
-                nextIntent = new Intent(this, RequestDeliveryActivity.class);
-            } else if (id == R.id.nav_calcular) {
-                nextIntent = new Intent(this, PriceCalculatorActivity.class);
-            } else if (id == R.id.nav_historial) {
-                nextIntent = new Intent(this, FuelHistoryActivity.class);
-            } else if (id == R.id.nav_inventario) {
-                nextIntent = new Intent(this, InventoryManagementActivity.class);
-            }
-
-            if (nextIntent != null) {
-                nextIntent.putExtra("user", user);
-                startActivity(nextIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            }
-            return false;
-        });
-    }
 
     private void loadDeliveries() {
         deliveryDAO.getDeliveriesByState(user, "ENTREGADO", new DeliveryDAO.ApiCallback<ArrayList<Delivery>>() {

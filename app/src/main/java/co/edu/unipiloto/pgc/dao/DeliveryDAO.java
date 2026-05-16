@@ -5,6 +5,7 @@ import co.edu.unipiloto.pgc.model.Delivery;
 import co.edu.unipiloto.pgc.model.User;
 import co.edu.unipiloto.pgc.network.ApiService;
 import co.edu.unipiloto.pgc.network.RetrofitClient;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,6 +24,19 @@ public class DeliveryDAO {
         apiService = RetrofitClient.getClient().create(ApiService.class);
     }
 
+    private String getErrorMessage(Response<?> response, String defaultMsg) {
+        try {
+            if (response.errorBody() != null) {
+                String errorBody = response.errorBody().string();
+                JSONObject jsonObject = new JSONObject(errorBody);
+                return jsonObject.optString("error", defaultMsg + ": " + response.code());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return defaultMsg + ": " + response.code();
+    }
+
     public void insertDelivery(Delivery delivery, ApiCallback<Void> callback) {
         apiService.createDelivery(delivery).enqueue(new Callback<Void>() {
             @Override
@@ -30,7 +44,7 @@ public class DeliveryDAO {
                 if (response.isSuccessful()) {
                     callback.onSuccess(null);
                 } else {
-                    callback.onError("Error al crear entrega: " + response.code());
+                    callback.onError(getErrorMessage(response, "Error al crear entrega"));
                 }
             }
 
@@ -48,7 +62,7 @@ public class DeliveryDAO {
                 if (response.isSuccessful()) {
                     callback.onSuccess(response.body());
                 } else {
-                    callback.onError("Error al obtener entregas: " + response.code());
+                    callback.onError(getErrorMessage(response, "Error al obtener entregas"));
                 }
             }
 
@@ -66,7 +80,7 @@ public class DeliveryDAO {
                 if (response.isSuccessful()) {
                     callback.onSuccess(null);
                 } else {
-                    callback.onError("Error al marcar como entregado: " + response.code());
+                    callback.onError(getErrorMessage(response, "Error al marcar como entregado"));
                 }
             }
 
@@ -78,14 +92,13 @@ public class DeliveryDAO {
     }
 
     public void confirmDelivery(int deliveryId, int userId, ApiCallback<Void> callback) {
-        // Nota: El endpoint solicitado no recibe userId, se asume que se maneja por sesión o el ID de entrega basta
         apiService.confirmDelivery(deliveryId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     callback.onSuccess(null);
                 } else {
-                    callback.onError("Error al confirmar entrega: " + response.code());
+                    callback.onError(getErrorMessage(response, "Error al confirmar entrega"));
                 }
             }
 

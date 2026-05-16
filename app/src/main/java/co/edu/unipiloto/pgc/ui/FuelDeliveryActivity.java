@@ -44,7 +44,7 @@ public class FuelDeliveryActivity extends BaseActivity {
         listaEntregas.setLayoutManager(new LinearLayoutManager(this));
 
         loadDeliveries();
-        setupBottomNavigation();
+        setupBottomNavigation(user);
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
@@ -68,29 +68,5 @@ public class FuelDeliveryActivity extends BaseActivity {
         });
     }
 
-    private void setupBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        
-        // Esta actividad corresponde a 'Solicitud' (entregas por gestionar) para el distribuidor
-        bottomNav.setSelectedItemId(R.id.nav_solicitud);
-        
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_solicitud) return true;
 
-            Intent nextIntent = null;
-            if (id == R.id.nav_inventario) {
-                nextIntent = new Intent(this, InventoryManagementActivity.class);
-            }
-
-            if (nextIntent != null) {
-                nextIntent.putExtra("user", user);
-                startActivity(nextIntent);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            }
-            return false;
-        });
-    }
 }
