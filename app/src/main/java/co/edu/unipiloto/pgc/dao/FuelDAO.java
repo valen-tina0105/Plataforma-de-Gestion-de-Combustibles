@@ -1,40 +1,44 @@
 package co.edu.unipiloto.pgc.dao;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import co.edu.unipiloto.pgc.database.DatabaseHelper;
 import co.edu.unipiloto.pgc.model.Fuel;
+import co.edu.unipiloto.pgc.network.ApiService;
+import co.edu.unipiloto.pgc.network.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FuelDAO {
-    private DatabaseHelper dbHelper;
+    private ApiService apiService;
 
-    public FuelDAO(Context context) {
-        dbHelper = new DatabaseHelper(context);
+    public interface FuelsCallback {
+        void onSuccess(ArrayList<Fuel> fuels);
+        void onError(String message);
     }
 
-    public ArrayList<Fuel> getAllFuels(){
-        ArrayList<Fuel> combustibles = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+    public FuelDAO(Context context) {
+        apiService = RetrofitClient.getClient().create(ApiService.class);
+    }
 
-        Cursor cursor = db.rawQuery(
-                "SELECT id, nombre " +
-                        "FROM Combustibles",
-                null
-        );
+    public void getAllFuels(FuelsCallback callback) {
+        Call<ArrayList<Fuel>> call = apiService.getAllFuels();
+        call.enqueue(new Callback<ArrayList<Fuel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Fuel>> call, Response<ArrayList<Fuel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onError("Error al obtener combustibles");
+                }
+            }
 
-        while(cursor.moveToNext()){
-            Fuel combustible = new Fuel();
-            combustible.setId(cursor.getInt(0));
-            combustible.setNombre(cursor.getString(1));
-
-            combustibles.add(combustible);
-        }
-
-        cursor.close();
-        return combustibles;
+            @Override
+            public void onFailure(Call<ArrayList<Fuel>> call, Throwable t) {
+                callback.onError("Error de red: " + t.getMessage());
+            }
+        });
     }
 }

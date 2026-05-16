@@ -63,21 +63,39 @@ public class RequestDeliveryActivity extends BaseActivity {
     }
 
     private void loadSpinners() {
-        distributors = userDAO.getAllDistributors();
-        fuels = fuelDAO.getAllFuels();
+        userDAO.getAllDistributors(new UserDAO.DistributorCallback() {
+            @Override
+            public void onSuccess(ArrayList<User> distributors) {
+                RequestDeliveryActivity.this.distributors = distributors;
+                ArrayList<String> distributorUsernames = new ArrayList<>();
+                for (User distributor : distributors) {
+                    distributorUsernames.add(distributor.getUsername());
+                }
+                ArrayAdapter<String> distAdapter = new ArrayAdapter<>(RequestDeliveryActivity.this, android.R.layout.simple_spinner_item, distributorUsernames);
+                distAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerDistribuidor.setAdapter(distAdapter);
+            }
 
-        ArrayList<String> distributorUsernames = new ArrayList<>();
-        for (User distributor : distributors) {
-            distributorUsernames.add(distributor.getUsername());
-        }
+            @Override
+            public void onError(String message) {
+                Toast.makeText(RequestDeliveryActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        ArrayAdapter<String> distAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, distributorUsernames);
-        distAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDistribuidor.setAdapter(distAdapter);
+        fuelDAO.getAllFuels(new FuelDAO.FuelsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Fuel> fuelsList) {
+                fuels = fuelsList;
+                ArrayAdapter<Fuel> fuelAdapter = new ArrayAdapter<>(RequestDeliveryActivity.this, android.R.layout.simple_spinner_item, fuels);
+                fuelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerCombustible.setAdapter(fuelAdapter);
+            }
 
-        ArrayAdapter<Fuel> fuelAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, fuels);
-        fuelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCombustible.setAdapter(fuelAdapter);
+            @Override
+            public void onError(String message) {
+                Toast.makeText(RequestDeliveryActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void createRequest() {
@@ -89,20 +107,32 @@ public class RequestDeliveryActivity extends BaseActivity {
 
         double cantidad = Double.parseDouble(cantidadStr);
         int selectedIndex = spinnerDistribuidor.getSelectedItemPosition();
+        if (distributors == null || distributors.isEmpty()) return;
         User distributor = distributors.get(selectedIndex);
         Fuel fuel = (Fuel) spinnerCombustible.getSelectedItem();
 
         Delivery delivery = new Delivery();
-        delivery.setEstacion(user);
-        delivery.setDistribuidor(distributor);
+        delivery.setEstacionId(user.getId());
+        delivery.setDistribuidorId(distributor.getId());
         delivery.setCombustible(fuel);
         delivery.setCantidad(cantidad);
         delivery.setPlaca("PENDIENTE"); // Initial placeholder for placa
         delivery.setEstado("PENDIENTE");
 
-        deliveryDAO.insertDelivery(delivery);
-        Toast.makeText(this, "Solicitud creada con éxito", Toast.LENGTH_SHORT).show();
-        editCantidad.setText("");
+        deliveryDAO.insertDelivery(delivery, new DeliveryDAO.ApiCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                runOnUiThread(() -> {
+                    Toast.makeText(RequestDeliveryActivity.this, "Solicitud creada con éxito", Toast.LENGTH_SHORT).show();
+                    editCantidad.setText("");
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(RequestDeliveryActivity.this, message, Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 
     private void setupBottomNavigation() {

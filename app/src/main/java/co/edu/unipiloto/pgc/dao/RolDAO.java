@@ -8,34 +8,43 @@ import java.util.ArrayList;
 
 import co.edu.unipiloto.pgc.database.DatabaseHelper;
 import co.edu.unipiloto.pgc.model.Rol;
+import co.edu.unipiloto.pgc.model.User;
+import co.edu.unipiloto.pgc.network.ApiService;
+import co.edu.unipiloto.pgc.network.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RolDAO {
-    private DatabaseHelper dbHelper;
 
+    private ApiService apiService;
+
+    public interface RolesCallbacK {
+        void onSuccess(ArrayList<Rol> roles);
+        void onError(String message);
+    }
     public RolDAO(Context context) {
-        dbHelper = new DatabaseHelper(context);
+        apiService = RetrofitClient.getClient().create(ApiService.class);
     }
 
-    public ArrayList<Rol> getAllRoles(){
-        ArrayList<Rol> roles = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+    public void getAllRoles(RolesCallbacK callback){
+        Call<ArrayList<Rol>> call = apiService.getAllRoles();
 
-        Cursor cursor = db.rawQuery(
-                "SELECT id, nombre " +
-                        "FROM Roles",
-                null
-        );
+        call.enqueue(new Callback<ArrayList<Rol>>(){
 
-        while(cursor.moveToNext()){
-            Rol rol = new Rol();
-            rol.setId(cursor.getInt(0));
-            rol.setNombre(cursor.getString(1));
+            @Override
+            public void onResponse(Call<ArrayList<Rol>> call, Response<ArrayList<Rol>> response) {
+                if (response.isSuccessful() && response.body() != null){
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onError("Error al obtener roles");
+                }
+            }
 
-            roles.add(rol);
-        }
-
-        cursor.close();
-        return roles;
+            @Override
+            public void onFailure(Call<ArrayList<Rol>> call, Throwable t) {
+                callback.onError("Error de red: " + t.getMessage());
+            }
+        });
     }
-
 }

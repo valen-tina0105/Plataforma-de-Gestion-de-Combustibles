@@ -50,7 +50,6 @@ public class ConfirmDeliveryAdapter extends RecyclerView.Adapter<ConfirmDelivery
         holder.txtCantidad.setText("Cantidad: " + delivery.getCantidad());
         holder.txtEstado.setText("Estado: " + delivery.getEstado());
         
-        // El botón debe mostrarse únicamente cuando el estado sea: ENTREGADO
         if ("ENTREGADO".equals(delivery.getEstado())) {
             holder.btnConfirmar.setVisibility(View.VISIBLE);
         } else {
@@ -65,12 +64,23 @@ public class ConfirmDeliveryAdapter extends RecyclerView.Adapter<ConfirmDelivery
                 .setTitle("Confirmar recepción")
                 .setMessage("¿Deseas confirmar la recepción de esta entrega?")
                 .setPositiveButton("Sí", (dialog, which) -> {
-                    try {
-                        deliveryDAO.confirmDelivery(delivery.getId(), user.getId());
-                        Toast.makeText(context, "Entrega confirmada", Toast.LENGTH_SHORT).show();
-                        reloadCallback.run();
-                    } catch (Exception e) {
-                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                    if (deliveryDAO != null) {
+                        deliveryDAO.confirmDelivery(delivery.getId(), user.getId(), new DeliveryDAO.ApiCallback<Void>() {
+                            @Override
+                            public void onSuccess(Void result) {
+                                ((android.app.Activity) context).runOnUiThread(() -> {
+                                    Toast.makeText(context, "Entrega confirmada", Toast.LENGTH_SHORT).show();
+                                    if (reloadCallback != null) {
+                                        reloadCallback.run();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onError(String message) {
+                                ((android.app.Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+                            }
+                        });
                     }
                 })
                 .setNegativeButton("Cancelar", null)

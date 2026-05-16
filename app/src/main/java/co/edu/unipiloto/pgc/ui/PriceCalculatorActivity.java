@@ -2,6 +2,7 @@ package co.edu.unipiloto.pgc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -20,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.dao.FuelDAO;
@@ -40,7 +42,7 @@ import co.edu.unipiloto.pgc.ui.adapters.TransactionAdapter;
 
 public class PriceCalculatorActivity extends BaseActivity {
 
-    private ArrayList<Transaction> transactions;
+    private ArrayList<Transaction> transactions = new ArrayList<>();
     private TransactionDAO transactionDAO;
     private ArrayList<Rule> rules;
     private RuleDAO ruleDAO;
@@ -51,6 +53,8 @@ public class PriceCalculatorActivity extends BaseActivity {
     private ArrayList<Price> prices;
     private PriceDAO priceDAO;
     private Spinner tipoCombustible;
+    private RecyclerView listaTransacciones;
+    private TextView totalTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,32 +65,74 @@ public class PriceCalculatorActivity extends BaseActivity {
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
         transactionDAO = new TransactionDAO(this);
-        transactions = transactionDAO.getAllTransactions(user);
+        transactionDAO.getAllTransactions(user, new TransactionDAO.TransactionsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Transaction> result) {
+                runOnUiThread(() -> {
+                    transactions = result;
+                    adapterTransacciones = new TransactionAdapter(transactions);
+                    listaTransacciones.setAdapter(adapterTransacciones);
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Log.e("PriceCalculatorActivity", message));
+            }
+        });
         ruleDAO = new RuleDAO(this);
-        rules = ruleDAO.getAllRules();
+        ruleDAO.getAllRules(new RuleDAO.RulesCallbacK() {
+            @Override
+            public void onSuccess(ArrayList<Rule> rules) {
+                PriceCalculatorActivity.this.rules = rules;
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e("PriceCalculatorActivity", "Error al obtener reglas: " + message);
+            }
+        });
         priceDAO = new PriceDAO(this);
-        prices = priceDAO.getAllPrices(user);
+        priceDAO.getAllPrices(user, new PriceDAO.PricesCallback() {
+            @Override
+            public void onSuccess(ArrayList<Price> pricesList) {
+                prices = pricesList;
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e("PriceCalculatorActivity", "Error al obtener precios: " + message);
+            }
+        });
+
         inventoryDAO = new InventoryDAO(this);
-        inventories = inventoryDAO.getAllInventories(user);
+        loadInventories();
+        
         tipoCombustible = findViewById(R.id.tipoCombustible);
+        totalTextView = findViewById(R.id.total);
 
         FuelDAO fuelDAO = new FuelDAO(this);
-        ArrayList<Fuel> listaCombustibles = fuelDAO.getAllFuels();
+        fuelDAO.getAllFuels(new FuelDAO.FuelsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Fuel> fuelsList) {
+                ArrayAdapter<Fuel> adapter = new ArrayAdapter<>(
+                        PriceCalculatorActivity.this,
+                        android.R.layout.simple_spinner_item,
+                        fuelsList
+                );
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                tipoCombustible.setAdapter(adapter);
+            }
 
-        ArrayAdapter<Fuel> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                listaCombustibles
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        tipoCombustible.setAdapter(adapter);
+            @Override
+            public void onError(String message) {
+                Toast.makeText(PriceCalculatorActivity.this, "Error al cargar combustibles: " + message, Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        alerta();
-
-        RecyclerView listaTransacciones = findViewById(R.id.listaTransacciones);
+        listaTransacciones = findViewById(R.id.listaTransacciones);
         listaTransacciones.setLayoutManager(new LinearLayoutManager(this));
-
-        adapterTransacciones = new TransactionAdapter(transactions);
+        adapterTransacciones = new TransactionAdapter(new ArrayList<>());
         listaTransacciones.setAdapter(adapterTransacciones);
 
         Button btnCalcular = findViewById(R.id.btnCalcular);
@@ -96,6 +142,21 @@ public class PriceCalculatorActivity extends BaseActivity {
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
+    }
+
+    private void loadInventories() {
+        inventoryDAO.getAllInventories(user, new InventoryDAO.InventoriesCallback() {
+            @Override
+            public void onSuccess(ArrayList<Inventory> inventoriesList) {
+                inventories = inventoriesList;
+                alerta();
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e("PriceCalculator", "Error al cargar inventarios: " + message);
+            }
+        });
     }
 
     private void setupBottomNavigation() {
@@ -132,7 +193,6 @@ public class PriceCalculatorActivity extends BaseActivity {
         Spinner tipoVehiculo = findViewById(R.id.tipoVehiculo);
         EditText textoCantidad = findViewById(R.id.textoCantidad);
         EditText textoUsername = findViewById(R.id.textoUsername);
-        TextView total = findViewById(R.id.total);
         String tipoDeVehiculo = tipoVehiculo.getSelectedItem().toString();
 
         if (textoCantidad.getText().toString().isEmpty()) {
@@ -145,22 +205,59 @@ public class PriceCalculatorActivity extends BaseActivity {
             return;
         }
 
-        int cantidad = Integer.parseInt(textoCantidad.getText().toString());
-        String username = textoUsername.getText().toString();
-
-        UserDAO userDAO = new UserDAO(this);
-        User usuarioCliente = userDAO.getUserByUsername(username);
-
-        if (usuarioCliente == null) {
-            Toast.makeText(this, "Usuario no existe", Toast.LENGTH_SHORT).show();
+        double cantidad;
+        try {
+            cantidad = Double.parseDouble(textoCantidad.getText().toString());
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Ingrese una cantidad válida", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        SubsidyDAO subsidyDAO = new SubsidyDAO(this);
-        Subsidy subsidy = subsidyDAO.getSubsidyById(usuarioCliente);
+        String username = textoUsername.getText().toString();
 
-        if (rules.isEmpty()) {
-            Toast.makeText(this, "No hay ninguna regla establecida", Toast.LENGTH_SHORT).show();
+        UserDAO userDAO = new UserDAO(this);
+
+        userDAO.getUserByUsername(username, new UserDAO.LoginCallback() {
+
+            @Override
+            public void onSuccess(User usuarioCliente) {
+
+                runOnUiThread(() -> {
+
+                    SubsidyDAO subsidyDAO = new SubsidyDAO(PriceCalculatorActivity.this);
+                    subsidyDAO.getSubsidyById(usuarioCliente, new SubsidyDAO.SubsidyCallback() {
+                        @Override
+                        public void onSuccess(Subsidy subsidy) {
+                            processCalculation(usuarioCliente, subsidy, cantidad, tipoDeVehiculo, textoCantidad, textoUsername, tipoVehiculo);
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            processCalculation(usuarioCliente, null, cantidad, tipoDeVehiculo, textoCantidad, textoUsername, tipoVehiculo);
+                        }
+                    });
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+
+                runOnUiThread(() ->
+                        Toast.makeText(
+                                PriceCalculatorActivity.this,
+                                "Usuario no existe",
+                                Toast.LENGTH_SHORT
+                        ).show()
+                );
+            }
+        });
+    }
+
+    private void processCalculation(User usuarioCliente, Subsidy subsidy, double cantidad, String tipoDeVehiculo, EditText textoCantidad, EditText textoUsername, Spinner tipoVehiculo) {
+        if (rules == null || rules.isEmpty()) {
+            Toast.makeText(PriceCalculatorActivity.this,
+                    "No hay ninguna regla establecida",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -168,127 +265,162 @@ public class PriceCalculatorActivity extends BaseActivity {
         double totalConDescuento = 0;
 
         Fuel fuel = (Fuel) tipoCombustible.getSelectedItem();
+        if (fuel == null) return;
 
-        for (Price price : prices){
+        for (Price price : prices) {
+
             if (price.getCombustible().getId() == fuel.getId()) {
+
                 totalReal = cantidad * price.getPrecio();
+
                 if (subsidy != null && subsidy.getSubsidio() == 1) {
+
                     double porcentaje = subsidy.getPorcentaje();
                     double descuento = totalReal * (porcentaje / 100.0);
                     totalConDescuento = totalReal - descuento;
+
                 } else {
                     totalConDescuento = totalReal;
                 }
-                for (Inventory inventory : inventories){
-                    if (inventory.getCombustible().getId() == fuel.getId()){
-                        double nuevaCantidad = inventory.getCantidadCombustible() - cantidad;
+
+                if (inventories == null) {
+                    Toast.makeText(this, "Inventario no cargado aún", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                for (Inventory inventory : inventories) {
+
+                    if (inventory.getCombustible().getId() == fuel.getId()) {
+
+                        double nuevaCantidad =
+                                inventory.getCantidadActual() - cantidad;
+
                         if (nuevaCantidad < 0) {
-                            Toast.makeText(this, "No hay suficiente combustible", Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(
+                                    PriceCalculatorActivity.this,
+                                    "No hay suficiente combustible",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+
                             return;
                         }
-                        inventoryDAO.actualizarCantidad(inventory.getId(), nuevaCantidad);
-                        inventory.setCantidadCombustible(nuevaCantidad);
+
+                        inventoryDAO.actualizarCantidad(
+                                inventory.getId(),
+                                nuevaCantidad,
+                                new InventoryDAO.UpdateCallback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        inventory.setCantidadActual(nuevaCantidad);
+                                        alerta();
+                                    }
+
+                                    @Override
+                                    public void onError(String message) {
+                                        Log.e("PriceCalculator", "Error al actualizar cantidad: " + message);
+                                    }
+                                }
+                        );
                     }
                 }
+
                 break;
             }
         }
 
-        if (subsidy != null && subsidy.getSubsidio() == 1) {
-            double descuento = totalReal - totalConDescuento;
-            Toast.makeText(this, "Descuento aplicado: $" + descuento, Toast.LENGTH_SHORT).show();
-        }
-
-        if (subsidy != null && subsidy.getSubsidio() == 1) {
-            total.setText("Total con subsidio: " + totalConDescuento + "$");
-        } else {
-            total.setText("Total: " + totalReal + "$");
-        }
+        final double finalTotal = totalConDescuento;
+        runOnUiThread(() -> {
+            totalTextView.setText(String.format(Locale.getDefault(), "Total: $%.2f", finalTotal));
+        });
 
         Transaction transaction = new Transaction();
+
         transaction.setTipoVehiculo(tipoDeVehiculo);
         transaction.setCombustible(fuel);
         transaction.setCantidad(cantidad);
         transaction.setTotal(totalConDescuento);
-        transaction.setEstacion(user);
-        transaction.setUsuario(usuarioCliente);
-        transactionDAO.insertarTransaccion(transaction);
-        transactions = transactionDAO.getAllTransactions(user);
-        adapterTransacciones.updateList(transactions);
+        transaction.setEstacionId(user.getId());
+        transaction.setEstacionUsername(user.getUsername());
+        transaction.setUserId(usuarioCliente.getId());
+        transaction.setUserUsername(usuarioCliente.getUsername());
+
+        transactionDAO.insertarTransaccion(transaction, new TransactionDAO.TransactionsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Transaction> result) {
+                runOnUiThread(() -> {
+                    transactionDAO.getAllTransactions(user, new TransactionDAO.TransactionsCallback() {
+                        @Override
+                        public void onSuccess(ArrayList<Transaction> result) {
+                            runOnUiThread(() -> {
+                                transactions = result;
+                                adapterTransacciones.updateList(transactions);
+                            });
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            runOnUiThread(() -> Log.e("PriceCalculatorActivity", message));
+                        }
+                    });
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Log.e("PriceCalculatorActivity", message));
+            }
+        });
 
         textoCantidad.setText("");
         textoUsername.setText("");
         tipoVehiculo.setSelection(0);
         tipoCombustible.setSelection(0);
-        alerta();
     }
 
     public void alerta(){
-
+        if (inventories == null) return;
         for(Inventory inventory:inventories){
             switch(inventory.getCombustible().getId()){
                 case 1:
-                    if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
-                        Snackbar.make(findViewById(android.R.id.content),
-                                        "Cantidad de Gasolina Corriente muy bajo",
-                                        Snackbar.LENGTH_LONG)
-                                .setAction("Ver", v -> {
-                                    Intent intent = new Intent(this, InventoryManagementActivity.class);
-                                    intent.putExtra("user", user);
-                                    startActivity(intent);
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                })
-                                .show();
+                    if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
+                        showLowFuelSnackbar("Cantidad de Gasolina Corriente muy bajo");
                         return;
                     }
                     break;
                 case 2:
-                    if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
-                        Snackbar.make(findViewById(android.R.id.content),
-                                        "Cantidad de Gasolina Extra muy bajo",
-                                        Snackbar.LENGTH_LONG)
-                                .setAction("Ver", v -> {
-                                    Intent intent = new Intent(this, InventoryManagementActivity.class);
-                                    intent.putExtra("user", user);
-                                    startActivity(intent);
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                })
-                                .show();
+                    if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
+                        showLowFuelSnackbar("Cantidad de Gasolina Extra muy bajo");
                         return;
                     }
                     break;
                 case 3:
-                    if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
-                        Snackbar.make(findViewById(android.R.id.content),
-                                        "Cantidad de ACPM(Diésel) muy bajo",
-                                        Snackbar.LENGTH_LONG)
-                                .setAction("Ver", v -> {
-                                    Intent intent = new Intent(this, InventoryManagementActivity.class);
-                                    intent.putExtra("user", user);
-                                    startActivity(intent);
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                })
-                                .show();
+                    if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
+                        showLowFuelSnackbar("Cantidad de ACPM(Diésel) muy bajo");
                         return;
                     }
                     break;
                 case 4:
-                    if(inventory.getCantidadCombustible()<=inventory.getNivelMinimo()){
-                        Snackbar.make(findViewById(android.R.id.content),
-                                        "Cantidad de Gas Natural Vehicular Corriente muy bajo",
-                                        Snackbar.LENGTH_LONG)
-                                .setAction("Ver", v -> {
-                                    Intent intent = new Intent(this, InventoryManagementActivity.class);
-                                    intent.putExtra("user", user);
-                                    startActivity(intent);
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                })
-                                .show();
+                    if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
+                        showLowFuelSnackbar("Cantidad de Gas Natural Vehicular Corriente muy bajo");
                         return;
                     }
                     break;
             }
         }
+    }
+
+    private void showLowFuelSnackbar(String message) {
+        Snackbar.make(findViewById(android.R.id.content),
+                        message,
+                        Snackbar.LENGTH_LONG)
+                .setAction("Ver", v -> {
+                    Intent intent = new Intent(this, InventoryManagementActivity.class);
+                    intent.putExtra("user", user);
+                    startActivity(intent);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                })
+                .show();
     }
 
 }

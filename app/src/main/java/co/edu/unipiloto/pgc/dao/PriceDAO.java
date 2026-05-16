@@ -11,65 +11,41 @@ import co.edu.unipiloto.pgc.model.Fuel;
 import co.edu.unipiloto.pgc.model.Price;
 import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.User;
+import co.edu.unipiloto.pgc.network.ApiService;
+import co.edu.unipiloto.pgc.network.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PriceDAO {
+    private ApiService apiService;
 
-    private DatabaseHelper dbHelper;
+    public interface PricesCallback {
+        void onSuccess(ArrayList<Price> prices);
 
-    public PriceDAO(Context context) {
-        dbHelper = new DatabaseHelper(context);
+        void onError(String message);
     }
 
-    public ArrayList<Price> getAllPrices(User estacionId){
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        ArrayList<Price> prices = new ArrayList<>();
+    public PriceDAO(Context context) {
+        apiService = RetrofitClient.getClient().create(ApiService.class);
+    }
 
-        Cursor cursor = db.rawQuery(
-                "SELECT " +
-                        "p.id, p.precio, " +
-                        "c.id, c.nombre, " +
-                        "u.id, u.nombre_completo, u.username, u.email, u.password, " +
-                        "u.genero, u.direccion, u.fecha_nacimiento, " +
-                        "r.id, r.nombre " +
-                        "FROM Precios p " +
-                        "INNER JOIN Combustibles c ON p.id_combustible = c.id " +
-                        "INNER JOIN Users u ON p.id_estacion = u.id " +
-                        "INNER JOIN Roles r ON u.rol_id = r.id " +
-                        "WHERE u.id = ?",
-                new String[]{String.valueOf(estacionId.getId())}
-        );
+    public void getAllPrices(User estacionId, PricesCallback callback) {
+        Call<ArrayList<Price>> call = apiService.getAllPrices(estacionId.getId());
+        call.enqueue(new Callback<ArrayList<Price>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Price>> call, Response<ArrayList<Price>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onError("Error al obtener precios");
+                }
+            }
 
-        while (cursor.moveToNext()) {
-            Price price = new Price();
-            price.setId(cursor.getInt(0));
-            price.setPrecio(cursor.getDouble(1));
-
-            Fuel fuel = new Fuel();
-            fuel.setId(cursor.getInt(2));
-            fuel.setNombre(cursor.getString(3));
-
-            User user = new User();
-            user.setId(cursor.getInt(4));
-            user.setNombreCompleto(cursor.getString(5));
-            user.setUsername(cursor.getString(6));
-            user.setEmail(cursor.getString(7));
-            user.setPassword(cursor.getString(8));
-            user.setGenero(cursor.getString(9));
-            user.setDireccion(cursor.getString(10));
-            user.setFechaNacimiento(cursor.getString(11));
-
-            Rol rol = new Rol();
-            rol.setId(cursor.getInt(12));
-            rol.setNombre(cursor.getString(13));
-
-            user.setRol(rol);
-            price.setCombustible(fuel);
-            price.setEstacion(user);
-            prices.add(price);
-
-
-        }
-        cursor.close();
-        return prices;
+            @Override
+            public void onFailure(Call<ArrayList<Price>> call, Throwable t) {
+                callback.onError("Error de red: " + t.getMessage());
+            }
+        });
     }
 }

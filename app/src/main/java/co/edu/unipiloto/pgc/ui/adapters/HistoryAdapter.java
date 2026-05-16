@@ -36,7 +36,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Transact
         holder.viewCantidad.setText("Cantidad: " + transactions.get(position).getCantidad());
         holder.viewTotal.setText("Total: " + transactions.get(position).getTotal());
         holder.viewFecha.setText("Fecha: " + transactions.get(position).getFechaFormateada());
-        holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacion().getUsername());
+        holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacionUsername());
         holder.viewEstado.setText("Estado: " + transactions.get(position).getEstado());
     }
 

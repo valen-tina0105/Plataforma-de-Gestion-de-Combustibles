@@ -5,22 +5,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class Transaction {
+public class Transaction implements Serializable {
     private int id;
-    private User estacion;
+    private int estacionId;
+    private String estacionUsername;
     private String tipoVehiculo;
     private double total;
     private double cantidad;
-    private Date fecha;
-    private User usuario;
+    private int userId;
+    private String userUsername;
     private String fechaFormateada;
     private String estado;
     private Fuel combustible;
 
     public Transaction() {
-        fecha = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        fechaFormateada = formatter.format(fecha);
     }
 
     public int getId() {
@@ -31,12 +29,20 @@ public class Transaction {
         this.id = id;
     }
 
-    public User getEstacion() {
-        return estacion;
+    public int getEstacionId() {
+        return estacionId;
     }
 
-    public void setEstacion(User estacion) {
-        this.estacion = estacion;
+    public void setEstacionId(int estacionId) {
+        this.estacionId = estacionId;
+    }
+
+    public String getEstacionUsername() {
+        return estacionUsername;
+    }
+
+    public void setEstacionUsername(String estacionUsername) {
+        this.estacionUsername = estacionUsername;
     }
 
     public String getTipoVehiculo() {
@@ -63,14 +69,6 @@ public class Transaction {
         this.cantidad = cantidad;
     }
 
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
     public String getFechaFormateada() {
         return fechaFormateada;
     }
@@ -87,12 +85,20 @@ public class Transaction {
         this.estado = estado;
     }
 
-    public User getUsuario() {
-        return usuario;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUsuario(User usuario) {
-        this.usuario = usuario;
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getUserUsername() {
+        return userUsername;
+    }
+
+    public void setUserUsername(String userUsername) {
+        this.userUsername = userUsername;
     }
 
     public Fuel getCombustible() {

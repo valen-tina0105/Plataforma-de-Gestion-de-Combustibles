@@ -12,393 +12,133 @@ import co.edu.unipiloto.pgc.model.Movement;
 import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
+import co.edu.unipiloto.pgc.network.ApiService;
+import co.edu.unipiloto.pgc.network.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TransactionDAO {
     private DatabaseHelper dbHelper;
+    private ApiService apiService;
+
+    public interface TransactionsCallback {
+        void onSuccess(ArrayList<Transaction> transactions);
+        void onError(String message);
+    }
 
     public TransactionDAO(Context context) {
         dbHelper = new DatabaseHelper(context);
+        apiService = RetrofitClient.getClient().create(ApiService.class);
     }
 
-    public ArrayList<Transaction> getAllTransactions(User userId){
-        ArrayList<Transaction> transactions = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery(
-                "SELECT t.id, t.tipo_vehiculo, t.cantidad, t.total, t.fecha, " +
-                        "c.id, c.nombre, " +
-                        "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
-                        "r.id, r.nombre " +
-                        "FROM Transacciones t " +
-                        "INNER JOIN Combustibles c ON t.id_combustible = c.id " +
-                        "INNER JOIN Users u ON t.user_id = u.id " +
-                        "INNER JOIN Roles r ON u.rol_id = r.id " +
-                        "WHERE t.estacion_id = ?",
-                new String[]{String.valueOf(userId.getId())}
-        );
-
-        while(cursor.moveToNext()){
-            Transaction transaction = new Transaction();
-            transaction.setId(cursor.getInt(0));
-            transaction.setTipoVehiculo(cursor.getString(1));
-            transaction.setCantidad(cursor.getDouble(2));
-            transaction.setTotal(cursor.getDouble(3));
-            transaction.setFechaFormateada(cursor.getString(4));
-
-            Fuel fuel = new Fuel();
-            fuel.setId(cursor.getInt(5));
-            fuel.setNombre(cursor.getString(6));
-
-            User user = new User();
-            user.setId(cursor.getInt(7));
-            user.setNombreCompleto(cursor.getString(8));
-            user.setUsername(cursor.getString(9));
-            user.setEmail(cursor.getString(10));
-            user.setPassword(cursor.getString(11));
-            user.setGenero(cursor.getString(12));
-            user.setDireccion(cursor.getString(13));
-            user.setFechaNacimiento(cursor.getString(14));
-
-            Rol rol = new Rol();
-            rol.setId(cursor.getInt(15));
-            rol.setNombre(cursor.getString(16));
-
-            user.setRol(rol);
-            transaction.setUsuario(user);
-            transaction.setEstacion(userId);
-            transaction.setCombustible(fuel);
-
-            transactions.add(transaction);
-        }
-
-        cursor.close();
-        return transactions;
-    }
-
-    public ArrayList<Transaction> getAllTransactionsByUser(User userId){
-        ArrayList<Transaction> transactions = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery(
-                "SELECT t.id, t.tipo_vehiculo, t.cantidad, t.total, t.fecha, " +
-                        "c.id, c.nombre, " +
-                        "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
-                        "ru.id, ru.nombre, " +
-                        "e.id, e.nombre_completo, e.username, e.email, e.password, e.genero, e.direccion, e.fecha_nacimiento, " +
-                        "re.id, re.nombre " +
-                        "FROM Transacciones t " +
-                        "INNER JOIN Combustibles c ON t.id_combustible = c.id " +
-                        "INNER JOIN Users u ON t.user_id = u.id " +
-                        "INNER JOIN Roles ru ON u.rol_id = ru.id " +
-                        "INNER JOIN Users e ON t.estacion_id = e.id " +
-                        "INNER JOIN Roles re ON e.rol_id = re.id " +
-                        "WHERE t.user_id = ? " +
-                        "ORDER BY t.fecha ASC",
-
-                new String[]{String.valueOf(userId.getId())}
-        );
-
-        while(cursor.moveToNext()){
-            Transaction transaction = new Transaction();
-            transaction.setId(cursor.getInt(0));
-            transaction.setTipoVehiculo(cursor.getString(1));
-            transaction.setCantidad(cursor.getDouble(2));
-            transaction.setTotal(cursor.getDouble(3));
-            transaction.setFechaFormateada(cursor.getString(4));
-
-            Fuel fuel = new Fuel();
-            fuel.setId(cursor.getInt(5));
-            fuel.setNombre(cursor.getString(6));
-
-            User usuario = new User();
-            usuario.setId(cursor.getInt(7));
-            usuario.setNombreCompleto(cursor.getString(8));
-            usuario.setUsername(cursor.getString(9));
-            usuario.setEmail(cursor.getString(10));
-            usuario.setPassword(cursor.getString(11));
-            usuario.setGenero(cursor.getString(12));
-            usuario.setDireccion(cursor.getString(13));
-            usuario.setFechaNacimiento(cursor.getString(14));
-
-            Rol rolUsuario = new Rol();
-            rolUsuario.setId(cursor.getInt(15));
-            rolUsuario.setNombre(cursor.getString(16));
-            usuario.setRol(rolUsuario);
-
-            User estacion = new User();
-            estacion.setId(cursor.getInt(17));
-            estacion.setNombreCompleto(cursor.getString(18));
-            estacion.setUsername(cursor.getString(19));
-            estacion.setEmail(cursor.getString(20));
-            estacion.setPassword(cursor.getString(21));
-            estacion.setGenero(cursor.getString(22));
-            estacion.setDireccion(cursor.getString(23));
-            estacion.setFechaNacimiento(cursor.getString(24));
-
-            Rol rolEstacion = new Rol();
-            rolEstacion.setId(cursor.getInt(25));
-            rolEstacion.setNombre(cursor.getString(26));
-            estacion.setRol(rolEstacion);
-
-            transaction.setUsuario(usuario);
-            transaction.setEstacion(estacion);
-            transaction.setCombustible(fuel);
-
-            transactions.add(transaction);
-        }
-
-        cursor.close();
-        return transactions;
-    }
-
-    public ArrayList<Transaction> getTransactionsByUserOrderedByStation(User userId){
-        ArrayList<Transaction> transactions = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery(
-                "SELECT t.id, t.tipo_vehiculo, t.cantidad, t.total, t.fecha, " +
-                        "c.id, c.nombre, " +
-                        "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
-                        "ru.id, ru.nombre, " +
-                        "e.id, e.nombre_completo, e.username, e.email, e.password, e.genero, e.direccion, e.fecha_nacimiento, " +
-                        "re.id, re.nombre " +
-                        "FROM Transacciones t " +
-                        "INNER JOIN Combustibles c ON t.id_combustible = c.id " +
-                        "INNER JOIN Users u ON t.user_id = u.id " +
-                        "INNER JOIN Roles ru ON u.rol_id = ru.id " +
-                        "INNER JOIN Users e ON t.estacion_id = e.id " +
-                        "INNER JOIN Roles re ON e.rol_id = re.id " +
-                        "WHERE t.user_id = ? " +
-                        "ORDER BY e.nombre_completo ASC, t.fecha DESC",
-
-                new String[]{String.valueOf(userId.getId())}
-        );
-
-        while(cursor.moveToNext()){
-            Transaction transaction = new Transaction();
-            transaction.setId(cursor.getInt(0));
-            transaction.setTipoVehiculo(cursor.getString(1));
-            transaction.setCantidad(cursor.getDouble(2));
-            transaction.setTotal(cursor.getDouble(3));
-            transaction.setFechaFormateada(cursor.getString(4));
-
-            Fuel fuel = new Fuel();
-            fuel.setId(cursor.getInt(5));
-            fuel.setNombre(cursor.getString(6));
-
-            User usuario = new User();
-            usuario.setId(cursor.getInt(7));
-            usuario.setNombreCompleto(cursor.getString(8));
-            usuario.setUsername(cursor.getString(9));
-            usuario.setEmail(cursor.getString(10));
-            usuario.setPassword(cursor.getString(11));
-            usuario.setGenero(cursor.getString(12));
-            usuario.setDireccion(cursor.getString(13));
-            usuario.setFechaNacimiento(cursor.getString(14));
-
-            Rol rolUsuario = new Rol();
-            rolUsuario.setId(cursor.getInt(15));
-            rolUsuario.setNombre(cursor.getString(16));
-            usuario.setRol(rolUsuario);
-
-            User estacion = new User();
-            estacion.setId(cursor.getInt(17));
-            estacion.setNombreCompleto(cursor.getString(18));
-            estacion.setUsername(cursor.getString(19));
-            estacion.setEmail(cursor.getString(20));
-            estacion.setPassword(cursor.getString(21));
-            estacion.setGenero(cursor.getString(22));
-            estacion.setDireccion(cursor.getString(23));
-            estacion.setFechaNacimiento(cursor.getString(24));
-
-            Rol rolEstacion = new Rol();
-            rolEstacion.setId(cursor.getInt(25));
-            rolEstacion.setNombre(cursor.getString(26));
-            estacion.setRol(rolEstacion);
-
-            transaction.setUsuario(usuario);
-            transaction.setEstacion(estacion);
-            transaction.setCombustible(fuel);
-
-            transactions.add(transaction);
-        }
-
-        cursor.close();
-        return transactions;
-    }
-
-    public ArrayList<Transaction> getTransactionsByUserOrderedByDate(User userId){
-        ArrayList<Transaction> transactions = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery(
-                "SELECT t.id, t.tipo_vehiculo, t.cantidad, t.total, t.fecha, " +
-                        "c.id, c.nombre, " +
-                        "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
-                        "ru.id, ru.nombre, " +
-                        "e.id, e.nombre_completo, e.username, e.email, e.password, e.genero, e.direccion, e.fecha_nacimiento, " +
-                        "re.id, re.nombre " +
-                        "FROM Transacciones t " +
-                        "INNER JOIN Combustibles c ON t.id_combustible = c.id " +
-                        "INNER JOIN Users u ON t.user_id = u.id " +
-                        "INNER JOIN Roles ru ON u.rol_id = ru.id " +
-                        "INNER JOIN Users e ON t.estacion_id = e.id " +
-                        "INNER JOIN Roles re ON e.rol_id = re.id " +
-                        "WHERE t.user_id = ? " +
-                        "ORDER BY t.fecha DESC",
-
-                new String[]{String.valueOf(userId.getId())}
-        );
-
-        while(cursor.moveToNext()){
-            Transaction transaction = new Transaction();
-            transaction.setId(cursor.getInt(0));
-            transaction.setTipoVehiculo(cursor.getString(1));
-            transaction.setCantidad(cursor.getDouble(2));
-            transaction.setTotal(cursor.getDouble(3));
-            transaction.setFechaFormateada(cursor.getString(4));
-
-            Fuel fuel = new Fuel();
-            fuel.setId(cursor.getInt(5));
-            fuel.setNombre(cursor.getString(6));
-
-            User usuario = new User();
-            usuario.setId(cursor.getInt(7));
-            usuario.setNombreCompleto(cursor.getString(8));
-            usuario.setUsername(cursor.getString(9));
-            usuario.setEmail(cursor.getString(10));
-            usuario.setPassword(cursor.getString(11));
-            usuario.setGenero(cursor.getString(12));
-            usuario.setDireccion(cursor.getString(13));
-            usuario.setFechaNacimiento(cursor.getString(14));
-
-            Rol rolUsuario = new Rol();
-            rolUsuario.setId(cursor.getInt(15));
-            rolUsuario.setNombre(cursor.getString(16));
-            usuario.setRol(rolUsuario);
-
-            User estacion = new User();
-            estacion.setId(cursor.getInt(17));
-            estacion.setNombreCompleto(cursor.getString(18));
-            estacion.setUsername(cursor.getString(19));
-            estacion.setEmail(cursor.getString(20));
-            estacion.setPassword(cursor.getString(21));
-            estacion.setGenero(cursor.getString(22));
-            estacion.setDireccion(cursor.getString(23));
-            estacion.setFechaNacimiento(cursor.getString(24));
-
-            Rol rolEstacion = new Rol();
-            rolEstacion.setId(cursor.getInt(25));
-            rolEstacion.setNombre(cursor.getString(26));
-            estacion.setRol(rolEstacion);
-
-            transaction.setUsuario(usuario);
-            transaction.setEstacion(estacion);
-            transaction.setCombustible(fuel);
-
-            transactions.add(transaction);
-        }
-
-        cursor.close();
-        return transactions;
-    }
-
-    public ArrayList<Transaction> getValidatedTransactions(){
-        ArrayList<Transaction> transactions = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery(
-                "SELECT t.id, t.tipo_vehiculo, t.cantidad, t.total, t.fecha, " +
-                        "c.id, c.nombre, " +
-                        "p.precio, (p.precio * t.cantidad), " +
-                        "e.id, e.nombre_completo, e.username, e.email, e.password, e.genero, e.direccion, e.fecha_nacimiento, " +
-                        "u.id, u.nombre_completo, u.username, u.email, u.password, u.genero, u.direccion, u.fecha_nacimiento, " +
-                        "roe.id, roe.nombre, " +
-                        "rou.id, rou.nombre, " +
-                        "CASE WHEN t.total = (p.precio * t.cantidad) " +
-                        "THEN 'CUMPLE' ELSE 'NO CUMPLE' END " +
-                        "FROM Transacciones t " +
-                        "INNER JOIN Combustibles c ON t.id_combustible = c.id " +
-                        "INNER JOIN Precios p ON p.id_combustible = t.id_combustible " +
-                        "AND p.id_estacion = t.estacion_id " +
-                        "INNER JOIN Users u ON t.estacion_id = u.id " +
-                        "INNER JOIN Roles rou ON u.rol_id = rou.id " +
-                        "INNER JOIN Users e ON t.estacion_id = e.id " +
-                        "INNER JOIN Roles roe ON e.rol_id = roe.id ",
-                null
-        );
-
-        while(cursor.moveToNext()){
-            Transaction transaction = new Transaction();
-            transaction.setId(cursor.getInt(0));
-            transaction.setTipoVehiculo(cursor.getString(1));
-            transaction.setCantidad(cursor.getDouble(2));
-            transaction.setTotal(cursor.getDouble(3));
-            transaction.setFechaFormateada(cursor.getString(4));
-
-            Fuel fuel = new Fuel();
-            fuel.setId(cursor.getInt(5));
-            fuel.setNombre(cursor.getString(6));
-
-            User estacion = new User();
-            estacion.setId(cursor.getInt(9));
-            estacion.setNombreCompleto(cursor.getString(10));
-            estacion.setUsername(cursor.getString(11));
-            estacion.setEmail(cursor.getString(12));
-            estacion.setPassword(cursor.getString(13));
-            estacion.setGenero(cursor.getString(14));
-            estacion.setDireccion(cursor.getString(15));
-            estacion.setFechaNacimiento(cursor.getString(16));
-
-            User user = new User();
-            user.setId(cursor.getInt(17));
-            user.setNombreCompleto(cursor.getString(18));
-            user.setUsername(cursor.getString(19));
-            user.setEmail(cursor.getString(20));
-            user.setPassword(cursor.getString(21));
-            user.setGenero(cursor.getString(22));
-            user.setDireccion(cursor.getString(23));
-            user.setFechaNacimiento(cursor.getString(24));
-
-            Rol rolEstacion = new Rol();
-            rolEstacion.setId(cursor.getInt(25));
-            rolEstacion.setNombre(cursor.getString(26));
-
-            Rol rolUsuario = new Rol();
-            rolUsuario.setId(cursor.getInt(27));
-            rolUsuario.setNombre(cursor.getString(28));
-
-            transaction.setEstado(cursor.getString(29));
-
-            user.setRol(rolUsuario);
-            estacion.setRol(rolEstacion);
-            transaction.setEstacion(estacion);
-            transaction.setUsuario(user);
-            transaction.setCombustible(fuel);
-
-            transactions.add(transaction);
-        }
-
-        cursor.close();
-        return transactions;
-    }
-
-    public void insertarTransaccion(Transaction transaction){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        db.execSQL(
-                "INSERT INTO Transacciones " +
-                        "(estacion_id, user_id, tipo_vehiculo, cantidad, total, fecha, id_combustible) " +
-                        "VALUES (?,?,?,?,?,?,?)",
-                new Object[]{
-                        transaction.getEstacion().getId(),
-                        transaction.getUsuario() != null ? transaction.getUsuario().getId() : null,
-                        transaction.getTipoVehiculo(),
-                        transaction.getCantidad(),
-                        transaction.getTotal(),
-                        transaction.getFechaFormateada(),
-                        transaction.getCombustible().getId()
+    public void getAllTransactions(User user, TransactionsCallback callback) {
+        apiService.getTransactionsByStation(user.getId()).enqueue(new Callback<ArrayList<Transaction>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Transaction>> call, Response<ArrayList<Transaction>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onError("Error al obtener transacciones: " + response.code());
                 }
-        );
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Transaction>> call, Throwable t) {
+                callback.onError(t.getMessage());
+            }
+        });
+    }
+
+    public void getAllTransactionsByUser(User user, TransactionsCallback callback) {
+        apiService.getTransactionsByUser(user.getId()).enqueue(new Callback<ArrayList<Transaction>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Transaction>> call, Response<ArrayList<Transaction>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onError("Error al obtener transacciones: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Transaction>> call, Throwable t) {
+                callback.onError(t.getMessage());
+            }
+        });
+    }
+
+    public void getTransactionsByUserOrderedByStation(User user, TransactionsCallback callback) {
+        apiService.getTransactionsByUserOrderedByStation(user.getId()).enqueue(new Callback<ArrayList<Transaction>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Transaction>> call, Response<ArrayList<Transaction>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onError("Error al obtener transacciones: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Transaction>> call, Throwable t) {
+                callback.onError(t.getMessage());
+            }
+        });
+    }
+
+    public void getTransactionsByUserOrderedByDate(User user, TransactionsCallback callback) {
+        apiService.getTransactionsByUserOrderedByDate(user.getId()).enqueue(new Callback<ArrayList<Transaction>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Transaction>> call, Response<ArrayList<Transaction>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onError("Error al obtener transacciones: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Transaction>> call, Throwable t) {
+                callback.onError(t.getMessage());
+            }
+        });
+    }
+
+    public void getValidatedTransactions(TransactionsCallback callback) {
+        apiService.getValidatedTransactions().enqueue(new Callback<ArrayList<Transaction>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Transaction>> call, Response<ArrayList<Transaction>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onError("Error al obtener transacciones validadas: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Transaction>> call, Throwable t) {
+                callback.onError(t.getMessage());
+            }
+        });
+    }
+
+
+
+    public void insertarTransaccion(Transaction transaction, TransactionsCallback callback){
+        apiService.insertTransaction(transaction).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(null);
+                } else {
+                    callback.onError("Error al insertar transacción: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.onError(t.getMessage());
+            }
+        });
     }
 }

@@ -36,8 +36,8 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.Purcha
         holder.viewCantidad.setText("Cantidad: " + transactions.get(position).getCantidad());
         holder.viewTotal.setText("Total: " + transactions.get(position).getTotal());
         holder.viewFecha.setText("Fecha: " + transactions.get(position).getFechaFormateada());
-        holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacion().getUsername());
-        holder.viewUsuario.setText("Usuario: " + transactions.get(position).getUsuario().getUsername());
+        holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacionUsername());
+        holder.viewUsuario.setText("Usuario: " + transactions.get(position).getUserUsername());
     }
 
     @Override

@@ -3,6 +3,7 @@ package co.edu.unipiloto.pgc.ui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -40,45 +41,77 @@ public class PriceRulesActivity extends BaseActivity {
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
         ruleDAO = new RuleDAO(this);
-        rules = ruleDAO.getAllRules();
 
         RecyclerView listaReglas = findViewById(R.id.listaReglas);
         listaReglas.setLayoutManager(new LinearLayoutManager(this));
+        ruleDAO.getAllRules(new RuleDAO.RulesCallbacK() {
+            @Override
+            public void onSuccess(ArrayList<Rule> rules) {
+                PriceRulesActivity.this.rules = rules;
+                adapterReglas = new RulesAdapter(rules);
+                listaReglas.setAdapter(adapterReglas);
+            }
 
-        adapterReglas = new RulesAdapter(rules);
-        listaReglas.setAdapter(adapterReglas);
-        
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(PriceRulesActivity.this, message, Toast.LENGTH_SHORT).show());
+            }
+        });
+
+
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
 
         Button btnGuardar = findViewById(R.id.btnGuardar);
         btnGuardar.setOnClickListener(this::onSendRule);
     }
+
     @SuppressLint("NotifyDataSetChanged")
     public void onSendRule(View view) {
-            Spinner tipoVehiculo = findViewById(R.id.tipoVehiculo);
-            String tipo = tipoVehiculo.getSelectedItem().toString();
+        Spinner tipoVehiculo = findViewById(R.id.tipoVehiculo);
+        String tipo = tipoVehiculo.getSelectedItem().toString();
 
-            EditText precio = findViewById(R.id.precio);
+        EditText precio = findViewById(R.id.precio);
 
-            if(precio.getText().toString().isEmpty()){
-                Toast.makeText(this, "El precio no puede estar vacio", Toast.LENGTH_SHORT).show();
-                return;
+        if (precio.getText().toString().isEmpty()) {
+            Toast.makeText(this, "El precio no puede estar vacio", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int textoPrecio = Integer.parseInt(precio.getText().toString());
+
+        Rule rule = new Rule();
+        rule.setTipoVehiculo(tipo);
+        rule.setPrecio(textoPrecio);
+        rule.setAdminUsername(user.getUsername());
+        rule.setAdminId(user.getId());
+
+        ruleDAO.guardarRegla(rule, new RuleDAO.RuleCallback() {
+            @Override
+            public void onSuccess(Rule rule) {
+                ruleDAO.getAllRules(new RuleDAO.RulesCallbacK() {
+                    @Override
+                    public void onSuccess(ArrayList<Rule> rules) {
+                        PriceRulesActivity.this.rules = rules;
+                        adapterReglas.updateList(rules);
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        runOnUiThread(() -> Toast.makeText(PriceRulesActivity.this, message, Toast.LENGTH_SHORT).show());
+                    }
+                });
+                precio.setText("");
+
             }
 
-            int textoPrecio = Integer.parseInt(precio.getText().toString());
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(PriceRulesActivity.this, message, Toast.LENGTH_SHORT).show());
+            }
+        });
 
-            Rule rule = new Rule();
-            rule.setTipoVehiculo(tipo);
-            rule.setPrecio(textoPrecio);
-            rule.setAdmin(user);
 
-            ruleDAO.guardarRegla(rule);
-
-            rules = ruleDAO.getAllRules();
-            adapterReglas.updateList(rules);
-
-            precio.setText("");
     }
 
 }

@@ -63,6 +63,8 @@ public class PriceConsultationActivity extends BaseActivity {
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+        stationDAO = new StationDAO(this);
+
         // Carga inicial con ubicación por defecto
         updateStationsList(currentLat, currentLon);
         
@@ -71,8 +73,6 @@ public class PriceConsultationActivity extends BaseActivity {
     }
 
     private void openGoogleMapsForGasStations() {
-        // Usar geo:0,0?q=... es la forma más efectiva para que Google Maps use
-        // la ubicación actual del GPS del dispositivo directamente para la búsqueda.
         Uri gmmIntentUri = Uri.parse("geo:0,0?q=estaciones+de+servicio");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         
@@ -124,7 +124,6 @@ public class PriceConsultationActivity extends BaseActivity {
                 updateStationsList(currentLat, currentLon);
             }
             
-            // Siempre intentamos una actualización fresca
             requestSingleUpdate();
             
         } catch (SecurityException e) {
@@ -151,13 +150,19 @@ public class PriceConsultationActivity extends BaseActivity {
     }
 
     private void updateStationsList(double latUser, double lonUser) {
-        if (stationDAO == null) {
-            stationDAO = new StationDAO(this);
-        }
-        stations = stationDAO.getAllStations(latUser, lonUser);
+        stationDAO.getNearbyStations(latUser, lonUser, new StationDAO.StationsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Station> stationsList) {
+                stations = stationsList;
+                adapterEstaciones = new StationsAdapter(PriceConsultationActivity.this, stations);
+                listaEstaciones.setAdapter(adapterEstaciones);
+            }
 
-        adapterEstaciones = new StationsAdapter(this, stations);
-        listaEstaciones.setAdapter(adapterEstaciones);
+            @Override
+            public void onError(String message) {
+                Toast.makeText(PriceConsultationActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

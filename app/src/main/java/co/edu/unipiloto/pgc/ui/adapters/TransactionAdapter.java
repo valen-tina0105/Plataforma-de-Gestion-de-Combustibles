@@ -31,11 +31,11 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     @Override
     public void onBindViewHolder(@NonNull TransactionAdapter.TransactionViewHolder holder, int position) {
         holder.viewTransaccion.setText("Transaccion " + (position + 1));
-        holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacion().getUsername());
+        holder.viewEstacion.setText("Estacion: " + transactions.get(position).getEstacionUsername());
         holder.viewTipoVehiculo.setText("Tipo de vehiculo: " + transactions.get(position).getTipoVehiculo());
         holder.viewCombustible.setText("Tipo de combustible: " + transactions.get(position).getCombustible());
         holder.viewCantidad.setText("Cantidad: " + transactions.get(position).getCantidad());
-        holder.viewUsuario.setText("Usuario: " + transactions.get(position).getUsuario().getUsername());
+        holder.viewUsuario.setText("Usuario: " + transactions.get(position).getUserUsername());
         holder.viewTotal.setText("Total: " + transactions.get(position).getTotal());
         holder.viewFecha.setText("Fecha: " + transactions.get(position).getFechaFormateada());
     }

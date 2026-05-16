@@ -11,7 +11,7 @@ public class Movement implements Serializable {
     private Double total;
     private String fecha;
     private User estacion;
-    private User usuario; // Representa al cliente o al distribuidor
+    private User usuario;
     private String tipoMovimiento;
 
     public Movement() {

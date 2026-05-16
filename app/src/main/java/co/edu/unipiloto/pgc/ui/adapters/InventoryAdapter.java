@@ -31,9 +31,9 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
     @Override
     public void onBindViewHolder(@NonNull InventoryAdapter.InventoryViewHolder holder, int position) {
         holder.viewInventario.setText("Inventario " + (position + 1));
-        holder.viewEstacion.setText("Estacion: " + inventories.get(position).getEstacion().getUsername());
+        holder.viewEstacion.setText("Estacion: " + inventories.get(position).getOwnerUsername());
         holder.viewCombustible.setText("Tipo de combustible: " + inventories.get(position).getCombustible().getNombre());
-        holder.viewCantidadCombustible.setText("Cantidad de combustible: " + inventories.get(position).getCantidadCombustible());
+        holder.viewCantidadCombustible.setText("Cantidad de combustible: " + inventories.get(position).getCantidadActual());
         holder.viewCapacidadMaxima.setText("Capacidad máxima: " + inventories.get(position).getCapacidadMaxima());
         holder.viewNivelMinimo.setText("Nivel minimo: " + inventories.get(position).getNivelMinimo());
     }

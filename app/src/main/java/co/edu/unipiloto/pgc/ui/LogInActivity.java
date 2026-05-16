@@ -2,6 +2,7 @@ package co.edu.unipiloto.pgc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -20,10 +21,7 @@ import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.User;
 
 public class LogInActivity extends BaseActivity {
-    private ArrayList<User> users;
-    private ArrayList<Rol> roles;
     private UserDAO userDAO;
-    private RolDAO rolDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +30,7 @@ public class LogInActivity extends BaseActivity {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.dark_blue));
         userDAO = new UserDAO(this);
-        users = userDAO.getAllUsers();
-        rolDAO = new RolDAO(this);
-        roles = rolDAO.getAllRoles();
+
         TextView signUp = findViewById(R.id.signUp);
 
         signUp.setOnClickListener(v -> {
@@ -50,18 +46,35 @@ public class LogInActivity extends BaseActivity {
     public void onLogIn(View view) {
         EditText textoUsuario = findViewById(R.id.textoUsuario),
                 textoContrasenia = findViewById(R.id.textoContrasenia);
-        User user = userDAO.logIn(
-                textoUsuario.getText().toString().trim(),
-                textoContrasenia.getText().toString().trim()
-        );
-        if (user == null) {
-            Toast.makeText(this, "Usuario o Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+        
+        String username = textoUsuario.getText().toString().trim();
+        String password = textoContrasenia.getText().toString().trim();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Por favor ingrese usuario y contraseña", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // Se usa el nuevo callback para hacer la llamada asíncrona de Retrofit
+        userDAO.logIn(username, password, new UserDAO.LoginCallback() {
+            @Override
+            public void onSuccess(User user) {
+                runOnUiThread(() -> proceedWithLogin(user));
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e("LogInActivity", "Error de inicio de sesión: " + message);
+                runOnUiThread(() -> Toast.makeText(LogInActivity.this, message, Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void proceedWithLogin(User user) {
         Intent intent;
         switch (user.getRol().getNombre()) {
             case "Estacion de servicio":
-                intent = new Intent(this, ConfirmDeliveryActivity.class);
+                intent = new Intent(this, RequestDeliveryActivity.class);
                 intent.putExtra("user", user);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

@@ -52,8 +52,8 @@ public class DeliveriesAdapter extends RecyclerView.Adapter<DeliveriesAdapter.De
         holder.viewFecha.setText("Fecha: " + delivery.getFechaFormateada());
         holder.viewCombustible.setText("Combustible: " + delivery.getCombustible().getNombre());
         holder.viewCantidad.setText("Cantidad: " + delivery.getCantidad());
-        holder.viewEstacionDestino.setText("Estacion Destino: " + delivery.getEstacion().getUsername());
-        holder.viewDistribuidor.setText("Distribuido por: " + delivery.getDistribuidor().getUsername());
+        holder.viewEstacionDestino.setText("Estacion Destino: " + delivery.getEstacionUsername());
+        holder.viewDistribuidor.setText("Distribuido por: " + delivery.getDistribuidorUsername());
         holder.viewEstado.setText("Estado: " + delivery.getEstado());
 
         if ("PENDIENTE".equals(delivery.getEstado())) {
@@ -81,11 +81,22 @@ public class DeliveriesAdapter extends RecyclerView.Adapter<DeliveriesAdapter.De
                 return;
             }
             if (deliveryDAO != null) {
-                deliveryDAO.markAsDelivered(delivery.getId(), placa);
-                Toast.makeText(context, "Entrega realizada. Estado: ENTREGADO", Toast.LENGTH_SHORT).show();
-                if (reloadCallback != null) {
-                    reloadCallback.run();
-                }
+                deliveryDAO.markAsDelivered(delivery.getId(), placa, new DeliveryDAO.ApiCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void result) {
+                        ((android.app.Activity) context).runOnUiThread(() -> {
+                            Toast.makeText(context, "Entrega realizada. Estado: ENTREGADO", Toast.LENGTH_SHORT).show();
+                            if (reloadCallback != null) {
+                                reloadCallback.run();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        ((android.app.Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+                    }
+                });
             }
         });
         builder.setNegativeButton("Cancelar", null);

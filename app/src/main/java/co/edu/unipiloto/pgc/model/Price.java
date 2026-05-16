@@ -4,7 +4,8 @@ public class Price {
 
     private int id;
     private double precio;
-    private User estacion;
+    private int ownerId;
+    private String ownerUsername;
     private Fuel combustible;
 
     public Price() {
@@ -16,14 +17,6 @@ public class Price {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public User getEstacion() {
-        return estacion;
-    }
-
-    public void setEstacion(User estacion) {
-        this.estacion = estacion;
     }
 
     public Fuel getCombustible() {
@@ -40,5 +33,21 @@ public class Price {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
+
+    public void setOwnerUsername(String ownerUsername) {
+        this.ownerUsername = ownerUsername;
     }
 }
