@@ -71,7 +71,7 @@ public interface ApiService {
 
     //Delivery Services
     @POST("deliveries")
-    Call<Void> createDelivery(@Body Delivery delivery);
+    Call<Delivery> createDelivery(@Body Delivery delivery);
 
     @GET("deliveries/by-state")
     Call<ArrayList<Delivery>> getDeliveriesByState(@Query("userId") int userId, @Query("estado") String estado);

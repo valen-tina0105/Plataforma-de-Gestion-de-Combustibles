@@ -1,14 +1,18 @@
 package co.edu.unipiloto.pgc.dao;
 
 import android.content.Context;
+
 import co.edu.unipiloto.pgc.model.Delivery;
 import co.edu.unipiloto.pgc.model.User;
 import co.edu.unipiloto.pgc.network.ApiService;
 import co.edu.unipiloto.pgc.network.RetrofitClient;
+
 import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import java.util.ArrayList;
 
 public class DeliveryDAO {
@@ -17,6 +21,7 @@ public class DeliveryDAO {
 
     public interface ApiCallback<T> {
         void onSuccess(T result);
+
         void onError(String message);
     }
 
@@ -37,10 +42,10 @@ public class DeliveryDAO {
         return defaultMsg + ": " + response.code();
     }
 
-    public void insertDelivery(Delivery delivery, ApiCallback<Void> callback) {
-        apiService.createDelivery(delivery).enqueue(new Callback<Void>() {
+    public void insertDelivery(Delivery delivery, ApiCallback<Delivery> callback) {
+        apiService.createDelivery(delivery).enqueue(new Callback<Delivery>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<Delivery> call, Response<Delivery> response) {
                 if (response.isSuccessful()) {
                     callback.onSuccess(null);
                 } else {
@@ -49,8 +54,9 @@ public class DeliveryDAO {
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<Delivery> call, Throwable t) {
                 callback.onError(t.getMessage());
+
             }
         });
     }

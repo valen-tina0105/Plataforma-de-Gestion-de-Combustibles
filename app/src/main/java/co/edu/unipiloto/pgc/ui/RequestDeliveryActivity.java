@@ -119,9 +119,9 @@ public class RequestDeliveryActivity extends BaseActivity {
         delivery.setPlaca("PENDIENTE"); // Initial placeholder for placa
         delivery.setEstado("PENDIENTE");
 
-        deliveryDAO.insertDelivery(delivery, new DeliveryDAO.ApiCallback<Void>() {
+        deliveryDAO.insertDelivery(delivery, new DeliveryDAO.ApiCallback<Delivery>() {
             @Override
-            public void onSuccess(Void result) {
+            public void onSuccess(Delivery result) {
                 runOnUiThread(() -> {
                     Toast.makeText(RequestDeliveryActivity.this, "Solicitud creada con éxito", Toast.LENGTH_SHORT).show();
                     editCantidad.setText("");
