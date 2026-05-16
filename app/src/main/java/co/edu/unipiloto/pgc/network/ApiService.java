@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import co.edu.unipiloto.pgc.model.Delivery;
 import co.edu.unipiloto.pgc.model.Fuel;
 import co.edu.unipiloto.pgc.model.Inventory;
+import co.edu.unipiloto.pgc.model.Movement;
 import co.edu.unipiloto.pgc.model.Price;
 import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.Rule;
@@ -102,4 +103,14 @@ public interface ApiService {
     //Price Services
     @GET("prices/{id}")
     Call<ArrayList<Price>> getAllPrices(@Path("id") int estacionId);
+
+    //Movement Services
+    @GET("movements/{id}")
+    Call<ArrayList<Movement>> getAllMovements(@Path("id") int userId);
+
+    @GET("movements/type/{id}")
+    Call<ArrayList<Movement>> getMovementsOrderByType(@Path("id") int userId);
+
+    @GET("movements/date/{id}")
+    Call<ArrayList<Movement>> getMovementsByDate(@Path("id") int userId);
 }

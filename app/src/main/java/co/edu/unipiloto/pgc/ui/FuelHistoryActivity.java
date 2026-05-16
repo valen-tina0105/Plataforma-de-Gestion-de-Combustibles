@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -38,13 +39,25 @@ public class FuelHistoryActivity extends BaseActivity {
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
         movementDAO = new MovementDAO(this);
-        movements = movementDAO.getAllMovements(user);
+        movements = new ArrayList<>();
+
 
         ListView listaMovimientos = findViewById(R.id.listaMovimientos);
 
         adapterMovimientos = new MovementAdapter(this, movements);
         listaMovimientos.setAdapter(adapterMovimientos);
+        movementDAO.getAllMovements(user, new MovementDAO.MovementCallback() {
+            @Override
+            public void onSuccess(ArrayList<Movement> movements) {
+                FuelHistoryActivity.this.movements = movements;
+                runOnUiThread(() -> adapterMovimientos.updateList(movements));
+            }
 
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(FuelHistoryActivity.this, "Error al cargar movimientos: " + message, Toast.LENGTH_SHORT).show());
+            }
+        });
         Button btnFiltrar = findViewById(R.id.btnFiltrar);
         btnFiltrar.setOnClickListener(this::onFilter);
 
@@ -89,13 +102,45 @@ public class FuelHistoryActivity extends BaseActivity {
         int posicion = filter.getSelectedItemPosition();
 
         if (posicion == 0) {
-            movements = movementDAO.getAllMovements(user);
+            movementDAO.getAllMovements(user, new MovementDAO.MovementCallback() {
+                @Override
+                public void onSuccess(ArrayList<Movement> movements) {
+                    FuelHistoryActivity.this.movements = movements;
+                    runOnUiThread(() -> adapterMovimientos.updateList(movements));
+                }
+
+                @Override
+                public void onError(String message) {
+                    runOnUiThread(() -> Toast.makeText(FuelHistoryActivity.this, "Error al cargar movimientos: " + message, Toast.LENGTH_SHORT).show());
+                }
+            });
         } else if (posicion == 1) {
-            movements = movementDAO.getMovementsOrderByType(user);
+            movementDAO.getMovementsOrderByType(user, new MovementDAO.MovementCallback() {
+                @Override
+                public void onSuccess(ArrayList<Movement> movements) {
+                    FuelHistoryActivity.this.movements = movements;
+                    runOnUiThread(() -> adapterMovimientos.updateList(movements));
+                }
+
+                @Override
+                public void onError(String message) {
+                    runOnUiThread(() -> Toast.makeText(FuelHistoryActivity.this, "Error al cargar movimientos: " + message, Toast.LENGTH_SHORT).show());
+                }
+            });
         } else if (posicion == 2) {
-            movements = movementDAO.getMovementsByDate(user);
+            movementDAO.getMovementsByDate(user, new MovementDAO.MovementCallback() {
+                @Override
+                public void onSuccess(ArrayList<Movement> movements) {
+                    FuelHistoryActivity.this.movements = movements;
+                    runOnUiThread(() -> adapterMovimientos.updateList(movements));
+                }
+
+                @Override
+                public void onError(String message) {
+                    runOnUiThread(() -> Toast.makeText(FuelHistoryActivity.this, "Error al cargar movimientos: " + message, Toast.LENGTH_SHORT).show());
+                }
+            });
         }
 
-        adapterMovimientos.updateList(movements);
     }
 }
