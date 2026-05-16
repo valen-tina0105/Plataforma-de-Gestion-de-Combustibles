@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ public class PriceValidationActivity extends BaseActivity {
     private ArrayList<Transaction> transactions;
     private TransactionDAO transactionDAO;
     private HistoryAdapter adapterHistorial;
+    private RecyclerView listaHistorial;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -32,14 +34,34 @@ public class PriceValidationActivity extends BaseActivity {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue_gradient_end));
         transactionDAO = new TransactionDAO(this);
-        transactions = transactionDAO.getValidatedTransactions();
-        RecyclerView listaHistorial = findViewById(R.id.listaHistorial);
+
+        listaHistorial = findViewById(R.id.listaHistorial);
         listaHistorial.setLayoutManager(new LinearLayoutManager(this));
 
-        adapterHistorial = new HistoryAdapter(transactions);
+        adapterHistorial = new HistoryAdapter(new ArrayList<>());
         listaHistorial.setAdapter(adapterHistorial);
+
+        loadTransactions();
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
+    }
+
+    private void loadTransactions() {
+        transactionDAO.getValidatedTransactions(new TransactionDAO.TransactionsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Transaction> result) {
+                runOnUiThread(() -> {
+                    transactions = result;
+                    adapterHistorial = new HistoryAdapter(transactions);
+                    listaHistorial.setAdapter(adapterHistorial);
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(PriceValidationActivity.this, message, Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 }

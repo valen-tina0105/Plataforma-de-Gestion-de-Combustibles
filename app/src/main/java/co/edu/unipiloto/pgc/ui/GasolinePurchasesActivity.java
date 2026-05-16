@@ -41,16 +41,36 @@ public class GasolinePurchasesActivity extends BaseActivity {
         setupToolbar(findViewById(R.id.toolbar), user);
 
         transactionDAO = new TransactionDAO(this);
-        transactions = transactionDAO.getAllTransactionsByUser(user);
 
         RecyclerView listaCompras = findViewById(R.id.listaCompras);
         listaCompras.setLayoutManager(new LinearLayoutManager(this));
 
-        adapterCompras = new PurchaseAdapter(transactions);
+        adapterCompras = new PurchaseAdapter(new ArrayList<>());
         listaCompras.setAdapter(adapterCompras);
+
+        loadTransactions();
 
         Button btnFiltrar = findViewById(R.id.btnFiltrar);
         btnFiltrar.setOnClickListener(this::onFilter);
+    }
+
+    private void loadTransactions() {
+        transactionDAO.getAllTransactionsByUser(user, new TransactionDAO.TransactionsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Transaction> result) {
+                runOnUiThread(() -> {
+                    transactions = result;
+                    adapterCompras.updateList(transactions);
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> {
+                    android.widget.Toast.makeText(GasolinePurchasesActivity.this, message, android.widget.Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -59,13 +79,37 @@ public class GasolinePurchasesActivity extends BaseActivity {
         int posicion = filter.getSelectedItemPosition();
 
         if (posicion == 0) {
-            transactions = transactionDAO.getAllTransactionsByUser(user);
+            loadTransactions();
         } else if (posicion == 1) {
-            transactions = transactionDAO.getTransactionsByUserOrderedByStation(user);
-        } else if (posicion == 2) {
-            transactions = transactionDAO.getTransactionsByUserOrderedByDate(user);
-        }
+            transactionDAO.getTransactionsByUserOrderedByStation(user, new TransactionDAO.TransactionsCallback() {
+                @Override
+                public void onSuccess(ArrayList<Transaction> result) {
+                    runOnUiThread(() -> {
+                        transactions = result;
+                        adapterCompras.updateList(transactions);
+                    });
+                }
 
-        adapterCompras.updateList(transactions);
+                @Override
+                public void onError(String message) {
+                    runOnUiThread(() -> android.widget.Toast.makeText(GasolinePurchasesActivity.this, message, android.widget.Toast.LENGTH_SHORT).show());
+                }
+            });
+        } else if (posicion == 2) {
+            transactionDAO.getTransactionsByUserOrderedByDate(user, new TransactionDAO.TransactionsCallback() {
+                @Override
+                public void onSuccess(ArrayList<Transaction> result) {
+                    runOnUiThread(() -> {
+                        transactions = result;
+                        adapterCompras.updateList(transactions);
+                    });
+                }
+
+                @Override
+                public void onError(String message) {
+                    runOnUiThread(() -> android.widget.Toast.makeText(GasolinePurchasesActivity.this, message, android.widget.Toast.LENGTH_SHORT).show());
+                }
+            });
+        }
     }
 }

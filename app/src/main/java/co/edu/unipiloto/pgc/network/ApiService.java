@@ -9,6 +9,7 @@ import co.edu.unipiloto.pgc.model.Rol;
 import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Station;
 import co.edu.unipiloto.pgc.model.Subsidy;
+import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -77,4 +78,23 @@ public interface ApiService {
 
     @PUT("deliveries/{id}/confirm")
     Call<Void> confirmDelivery(@Path("id") int id);
+
+    //Transaction Services
+    @GET("transactions")
+    Call<ArrayList<Transaction>> getTransactionsByStation(@Query("estacionId") int estacionId);
+
+    @GET("transactions/by-user")
+    Call<ArrayList<Transaction>> getTransactionsByUser(@Query("userId") int userId);
+
+    @GET("transactions/by-user-by-station")
+    Call<ArrayList<Transaction>> getTransactionsByUserOrderedByStation(@Query("userId") int userId);
+
+    @GET("transactions/by-user-by-date")
+    Call<ArrayList<Transaction>> getTransactionsByUserOrderedByDate(@Query("userId") int userId);
+
+    @GET("transactions/validated")
+    Call<ArrayList<Transaction>> getValidatedTransactions();
+
+    @POST("transactions/insert")
+    Call<Void> insertTransaction(@Body Transaction transaction);
 }

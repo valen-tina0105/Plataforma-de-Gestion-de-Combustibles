@@ -41,7 +41,7 @@ import co.edu.unipiloto.pgc.ui.adapters.TransactionAdapter;
 
 public class PriceCalculatorActivity extends BaseActivity {
 
-    private ArrayList<Transaction> transactions;
+    private ArrayList<Transaction> transactions = new ArrayList<>();
     private TransactionDAO transactionDAO;
     private ArrayList<Rule> rules;
     private RuleDAO ruleDAO;
@@ -52,6 +52,7 @@ public class PriceCalculatorActivity extends BaseActivity {
     private ArrayList<Price> prices;
     private PriceDAO priceDAO;
     private Spinner tipoCombustible;
+    private RecyclerView listaTransacciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,21 @@ public class PriceCalculatorActivity extends BaseActivity {
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
         transactionDAO = new TransactionDAO(this);
-        transactions = transactionDAO.getAllTransactions(user);
+        transactionDAO.getAllTransactions(user, new TransactionDAO.TransactionsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Transaction> result) {
+                runOnUiThread(() -> {
+                    transactions = result;
+                    adapterTransacciones = new TransactionAdapter(transactions);
+                    listaTransacciones.setAdapter(adapterTransacciones);
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Log.e("PriceCalculatorActivity", message));
+            }
+        });
         ruleDAO = new RuleDAO(this);
         ruleDAO.getAllRules(new RuleDAO.RulesCallbacK() {
             @Override
@@ -102,10 +117,9 @@ public class PriceCalculatorActivity extends BaseActivity {
             }
         });
 
-        RecyclerView listaTransacciones = findViewById(R.id.listaTransacciones);
+        listaTransacciones = findViewById(R.id.listaTransacciones);
         listaTransacciones.setLayoutManager(new LinearLayoutManager(this));
-
-        adapterTransacciones = new TransactionAdapter(transactions);
+        adapterTransacciones = new TransactionAdapter(new ArrayList<>());
         listaTransacciones.setAdapter(adapterTransacciones);
 
         Button btnCalcular = findViewById(R.id.btnCalcular);
@@ -178,7 +192,14 @@ public class PriceCalculatorActivity extends BaseActivity {
             return;
         }
 
-        int cantidad = Integer.parseInt(textoCantidad.getText().toString());
+        double cantidad;
+        try {
+            cantidad = Double.parseDouble(textoCantidad.getText().toString());
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Ingrese una cantidad válida", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String username = textoUsername.getText().toString();
 
         UserDAO userDAO = new UserDAO(this);
@@ -219,7 +240,7 @@ public class PriceCalculatorActivity extends BaseActivity {
         });
     }
 
-    private void processCalculation(User usuarioCliente, Subsidy subsidy, int cantidad, String tipoDeVehiculo, EditText textoCantidad, EditText textoUsername, Spinner tipoVehiculo) {
+    private void processCalculation(User usuarioCliente, Subsidy subsidy, double cantidad, String tipoDeVehiculo, EditText textoCantidad, EditText textoUsername, Spinner tipoVehiculo) {
         if (rules == null || rules.isEmpty()) {
             Toast.makeText(PriceCalculatorActivity.this,
                     "No hay ninguna regla establecida",
@@ -237,7 +258,7 @@ public class PriceCalculatorActivity extends BaseActivity {
 
             if (price.getCombustible().getId() == fuel.getId()) {
 
-                totalReal = (double) cantidad * price.getPrecio();
+                totalReal = cantidad * price.getPrecio();
 
                 if (subsidy != null && subsidy.getSubsidio() == 1) {
 
@@ -301,13 +322,37 @@ public class PriceCalculatorActivity extends BaseActivity {
         transaction.setCombustible(fuel);
         transaction.setCantidad(cantidad);
         transaction.setTotal(totalConDescuento);
-        transaction.setEstacion(user);
-        transaction.setUsuario(usuarioCliente);
+        transaction.setEstacionId(user.getId());
+        transaction.setEstacionUsername(user.getUsername());
+        transaction.setUserId(usuarioCliente.getId());
+        transaction.setUserUsername(usuarioCliente.getUsername());
 
-        transactionDAO.insertarTransaccion(transaction);
+        transactionDAO.insertarTransaccion(transaction, new TransactionDAO.TransactionsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Transaction> result) {
+                runOnUiThread(() -> {
+                    transactionDAO.getAllTransactions(user, new TransactionDAO.TransactionsCallback() {
+                        @Override
+                        public void onSuccess(ArrayList<Transaction> result) {
+                            runOnUiThread(() -> {
+                                transactions = result;
+                                adapterTransacciones.updateList(transactions);
+                            });
+                        }
 
-        transactions = transactionDAO.getAllTransactions(user);
-        adapterTransacciones.updateList(transactions);
+                        @Override
+                        public void onError(String message) {
+                            runOnUiThread(() -> Log.e("PriceCalculatorActivity", message));
+                        }
+                    });
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Log.e("PriceCalculatorActivity", message));
+            }
+        });
 
         textoCantidad.setText("");
         textoUsername.setText("");
