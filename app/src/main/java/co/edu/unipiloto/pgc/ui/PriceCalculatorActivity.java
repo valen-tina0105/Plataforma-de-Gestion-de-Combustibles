@@ -21,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import co.edu.unipiloto.pgc.R;
 import co.edu.unipiloto.pgc.dao.FuelDAO;
@@ -53,6 +54,7 @@ public class PriceCalculatorActivity extends BaseActivity {
     private PriceDAO priceDAO;
     private Spinner tipoCombustible;
     private RecyclerView listaTransacciones;
+    private TextView totalTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,12 +93,23 @@ public class PriceCalculatorActivity extends BaseActivity {
             }
         });
         priceDAO = new PriceDAO(this);
-        prices = priceDAO.getAllPrices(user);
-        
+        priceDAO.getAllPrices(user, new PriceDAO.PricesCallback() {
+            @Override
+            public void onSuccess(ArrayList<Price> pricesList) {
+                prices = pricesList;
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e("PriceCalculatorActivity", "Error al obtener precios: " + message);
+            }
+        });
+
         inventoryDAO = new InventoryDAO(this);
         loadInventories();
         
         tipoCombustible = findViewById(R.id.tipoCombustible);
+        totalTextView = findViewById(R.id.total);
 
         FuelDAO fuelDAO = new FuelDAO(this);
         fuelDAO.getAllFuels(new FuelDAO.FuelsCallback() {
@@ -315,6 +328,11 @@ public class PriceCalculatorActivity extends BaseActivity {
                 break;
             }
         }
+
+        final double finalTotal = totalConDescuento;
+        runOnUiThread(() -> {
+            totalTextView.setText(String.format(Locale.getDefault(), "Total: $%.2f", finalTotal));
+        });
 
         Transaction transaction = new Transaction();
 

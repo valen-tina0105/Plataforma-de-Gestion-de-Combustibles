@@ -72,7 +72,7 @@ public class UserInformationActivity extends BaseActivity {
 
             @Override
             public void onError(String message) {
-                txtTieneSubsidio.setText("✘ Error al verificar subsidio");
+                txtTieneSubsidio.setText("✘ No tiene subsidio");
                 txtPorcentaje.setVisibility(View.GONE);
             }
         });
