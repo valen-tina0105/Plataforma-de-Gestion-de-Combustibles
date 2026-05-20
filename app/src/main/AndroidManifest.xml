@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <queries>
         <intent>
@@ -77,6 +78,10 @@
             android:exported="false" />
         <activity
             android:name=".ui.PriceRulesActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".service.LowStockNotificationService"
             android:exported="false" />
     </application>
 

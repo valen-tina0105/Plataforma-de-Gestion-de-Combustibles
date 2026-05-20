@@ -1,10 +1,13 @@
 package co.edu.unipiloto.pgc.ui;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.content.pm.PackageManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,10 +42,12 @@ import co.edu.unipiloto.pgc.model.Rule;
 import co.edu.unipiloto.pgc.model.Subsidy;
 import co.edu.unipiloto.pgc.model.Transaction;
 import co.edu.unipiloto.pgc.model.User;
+import co.edu.unipiloto.pgc.service.LowStockNotificationService;
 import co.edu.unipiloto.pgc.ui.adapters.TransactionAdapter;
 
 public class PriceCalculatorActivity extends BaseActivity {
 
+    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 2001;
     private ArrayList<Transaction> transactions = new ArrayList<>();
     private TransactionDAO transactionDAO;
     private ArrayList<Rule> rules;
@@ -142,6 +148,8 @@ public class PriceCalculatorActivity extends BaseActivity {
 
         ImageButton btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnCerrarSesion.setOnClickListener(this::onLogOut);
+
+        requestNotificationPermissionIfNeeded();
     }
 
     private void loadInventories() {
@@ -357,25 +365,33 @@ public class PriceCalculatorActivity extends BaseActivity {
             switch(inventory.getCombustible().getId()){
                 case 1:
                     if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
-                        showLowFuelSnackbar("Cantidad de Gasolina Corriente muy bajo");
+                        String message = "Cantidad de Gasolina Corriente muy bajo";
+                        showLowFuelSnackbar(message);
+                        startLowStockNotificationService(message);
                         return;
                     }
                     break;
                 case 2:
                     if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
-                        showLowFuelSnackbar("Cantidad de Gasolina Extra muy bajo");
+                        String message = "Cantidad de Gasolina Extra muy bajo";
+                        showLowFuelSnackbar(message);
+                        startLowStockNotificationService(message);
                         return;
                     }
                     break;
                 case 3:
                     if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
-                        showLowFuelSnackbar("Cantidad de ACPM(Diésel) muy bajo");
+                        String message = "Cantidad de ACPM(Diésel) muy bajo";
+                        showLowFuelSnackbar(message);
+                        startLowStockNotificationService(message);
                         return;
                     }
                     break;
                 case 4:
                     if(inventory.getCantidadActual()<=inventory.getNivelMinimo()){
-                        showLowFuelSnackbar("Cantidad de Gas Natural Vehicular Corriente muy bajo");
+                        String message = "Cantidad de Gas Natural Vehicular Corriente muy bajo";
+                        showLowFuelSnackbar(message);
+                        startLowStockNotificationService(message);
                         return;
                     }
                     break;
@@ -394,6 +410,28 @@ public class PriceCalculatorActivity extends BaseActivity {
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 })
                 .show();
+    }
+
+    private void startLowStockNotificationService(String message) {
+        Intent intent = new Intent(this, LowStockNotificationService.class);
+        intent.putExtra(LowStockNotificationService.EXTRA_MESSAGE, message);
+        intent.putExtra(LowStockNotificationService.EXTRA_USER, user);
+        startService(intent);
+    }
+
+    private void requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return;
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    NOTIFICATION_PERMISSION_REQUEST_CODE
+            );
+        }
     }
 
 }
