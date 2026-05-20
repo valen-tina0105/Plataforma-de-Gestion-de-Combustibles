@@ -7,6 +7,11 @@
         android:title="Entregas" />
 
     <item
+        android:id="@+id/nav_odometer"
+        android:icon="@drawable/baseline_article_24"
+        android:title="@string/odometer_menu" />
+
+    <item
         android:id="@+id/nav_inventario"
         android:icon="@drawable/baseline_inventory_24"
         android:title="Inventario" />

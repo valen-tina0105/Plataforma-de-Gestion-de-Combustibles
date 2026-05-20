@@ -96,4 +96,13 @@ CREATE TABLE IF NOT EXISTS Entregas (
     FOREIGN KEY (confirmado_por) REFERENCES Users(id)
 );
 
+CREATE TABLE IF NOT EXISTS OdometerLogs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    delivery_id INTEGER NOT NULL,
+    timestamp INTEGER NOT NULL,
+    lat REAL NOT NULL,
+    lon REAL NOT NULL,
+    distance_total_m REAL NOT NULL
+);
+
 CREATE VIEW Movimientos AS SELECT t.id, t.tipo_vehiculo AS tipo, t.id_combustible, t.cantidad, t.total, t.fecha, t.estacion_id, t.user_id, 'SALIDA' AS tipo_movimiento FROM Transacciones t UNION ALL SELECT e.id, NULL AS tipo, e.id_combustible, e.cantidad, NULL AS total, e.fecha, e.estacion_destino_id AS estacion_id, e.distribuidor_id AS user_id, 'ENTRADA' AS tipo_movimiento FROM Entregas e WHERE e.estado = 'CONFIRMADO';

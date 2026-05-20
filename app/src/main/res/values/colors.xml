@@ -24,4 +24,5 @@
     <color name="input_text">#0F172A</color>
     <color name="button_blue">#2563EB</color>
     <color name="button_blue_dark">#1E40AF</color>
+    <color name="button_disabled">#4B5563</color>
 </resources>

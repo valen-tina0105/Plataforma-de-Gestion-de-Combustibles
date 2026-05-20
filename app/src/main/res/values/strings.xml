@@ -91,4 +91,16 @@
 
     <string name="mostrar_estaciones_mapa">Mostrar estaciones en el mapa</string>
     <string name="precios_de_combustible">Precios de Combustible</string>
+    <string name="odometer_title">Seguimiento de entrega</string>
+    <string name="odometer_delivery">Entrega</string>
+    <string name="odometer_location_value">Ubicación actual: %1$s</string>
+    <string name="odometer_location_value_default">Ubicación actual: -</string>
+    <string name="odometer_distance_value">Distancia recorrida: %1$s m</string>
+    <string name="odometer_distance_value_default">Distancia recorrida: 0 m</string>
+    <string name="odometer_start">Iniciar seguimiento</string>
+    <string name="odometer_stop">Detener seguimiento</string>
+    <string name="odometer_menu">Odómetro</string>
+    <string name="odometer_show_records">Mostrar registros</string>
+    <string name="odometer_report_title">Reporte de entregas</string>
+    <string name="odometer_report_total">Distancia total: %1$s m</string>
 </resources>

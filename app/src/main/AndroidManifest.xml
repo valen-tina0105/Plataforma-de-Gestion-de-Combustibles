@@ -80,8 +80,20 @@
             android:name=".ui.PriceRulesActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.OdometerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.OdometerReportActivity"
+            android:exported="false" />
+
         <service
             android:name=".service.LowStockNotificationService"
+            android:exported="false" />
+
+        <service
+            android:name=".service.OdometerBoundService"
             android:exported="false" />
     </application>
 

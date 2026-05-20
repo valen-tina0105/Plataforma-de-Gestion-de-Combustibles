@@ -51,6 +51,8 @@ public class BaseActivity extends AppCompatActivity {
                 nextIntent = new Intent(this, FuelDeliveryActivity.class);
             } else if (id == R.id.nav_precios){
                 nextIntent = new Intent(this, PriceManagmentActivity.class);
+            } else if (id == R.id.nav_odometer) {
+                nextIntent = new Intent(this, OdometerActivity.class);
             }
 
             if (nextIntent != null) {
